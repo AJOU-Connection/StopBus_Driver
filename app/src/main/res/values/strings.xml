@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">TestApplication</string>
     <string name="action_settings">Settings</string>
+    <string name="press">press</string>
+    <string name="hello_world">hello_world!!</string>
+    <string name="NextStation">NextStation</string>
+    <string name="CurrentStation">CurrentStation</string>
+    <string name="현재위치">현재위치</string>
 </resources>

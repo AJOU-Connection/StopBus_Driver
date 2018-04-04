@@ -6,28 +6,72 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <android.support.design.widget.AppBarLayout
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="match_parent">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+        <TextView
+            android:id="@+id/Bottom"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:background="#4a4a4b" />
 
-    </android.support.design.widget.AppBarLayout>
+        <TextView
+            android:id="@+id/Top"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:background="#4a4a4b" />
 
-    <include layout="@layout/content_test" />
+        <TextView
+            android:id="@+id/MyCar"
+            android:layout_width="212dp"
+            android:layout_height="219dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="192dp"
+            android:layout_marginTop="67dp"
+            android:background="@color/colorPrimaryDark"
+            android:textAlignment="center" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        <TextView
+            android:id="@+id/Fix_CurrentStation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/MyCar"
+            android:layout_centerHorizontal="true"
+            android:text="@string/현재위치" />
+
+        <TextView
+            android:id="@+id/CurrentStation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/Fix_CurrentStation"
+            android:layout_centerHorizontal="true"
+            android:text="@string/CurrentStation"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/NextStation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/CurrentStation"
+            android:layout_centerHorizontal="true"
+            android:text="@string/NextStation" />
+
+        <TextView
+            android:id="@+id/CurrentStation_WhiteBox"
+            android:layout_width="209dp"
+            android:layout_height="119dp"
+            android:layout_alignStart="@+id/MyCar"
+            android:layout_below="@+id/NextStation"
+            android:layout_marginStart="2dp"
+            android:background="@color/cardview_light_background" />
+
+    </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>
