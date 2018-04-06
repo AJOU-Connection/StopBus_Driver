@@ -6,4 +6,7 @@
     <string name="NextStation">NextStation</string>
     <string name="CurrentStation">CurrentStation</string>
     <string name="현재위치">현재위치</string>
+    <string name="다음위치">다음위치</string>
+    <string name="NextStationDirection">NextStationDirection</string>
+    <string name="NextStationButtom">NextStationButtom</string>
 </resources>

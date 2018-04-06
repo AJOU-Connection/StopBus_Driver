@@ -22,7 +22,7 @@ public class Route {
 
         FileInputStream fstream = null;
         try {
-            fstream = new FileInputStream("textfile.txt");
+            fstream = new FileInputStream("RouteData.txt");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

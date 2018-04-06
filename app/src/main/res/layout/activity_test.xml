@@ -14,7 +14,7 @@
         <TextView
             android:id="@+id/Bottom"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="20dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
             android:background="#4a4a4b" />
@@ -22,21 +22,19 @@
         <TextView
             android:id="@+id/Top"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="20dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:background="#4a4a4b" />
 
         <TextView
             android:id="@+id/MyCar"
-            android:layout_width="212dp"
-            android:layout_height="219dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="192dp"
-            android:layout_marginTop="67dp"
+            android:layout_width="208dp"
+            android:layout_height="238dp"
+            android:layout_centerInParent="true"
             android:background="@color/colorPrimaryDark"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimaryDark" />
 
         <TextView
             android:id="@+id/Fix_CurrentStation"
@@ -44,7 +42,21 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/MyCar"
             android:layout_centerHorizontal="true"
-            android:text="@string/현재위치" />
+            android:text="@string/현재위치"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="10sp"
+            tools:ignore="SmallSp" />
+
+        <TextView
+            android:id="@+id/Fix_NextStation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/CurrentStation_WhiteBox"
+            android:layout_centerHorizontal="true"
+            android:text="@string/다음위치"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="10sp"
+            tools:ignore="SmallSp" />
 
         <TextView
             android:id="@+id/CurrentStation"
@@ -53,7 +65,9 @@
             android:layout_below="@+id/Fix_CurrentStation"
             android:layout_centerHorizontal="true"
             android:text="@string/CurrentStation"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:textColor="@android:color/background_light"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/NextStation"
@@ -61,16 +75,61 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/CurrentStation"
             android:layout_centerHorizontal="true"
-            android:text="@string/NextStation" />
+            android:text="@string/NextStation"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/CurrentStation_WhiteBox"
-            android:layout_width="209dp"
-            android:layout_height="119dp"
+            android:layout_width="204dp"
+            android:layout_height="143dp"
             android:layout_alignStart="@+id/MyCar"
             android:layout_below="@+id/NextStation"
             android:layout_marginStart="2dp"
             android:background="@color/cardview_light_background" />
+
+        <TextView
+            android:id="@+id/NextStation_Buttom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/Fix_NextStation"
+            android:layout_centerHorizontal="true"
+            android:text="@string/NextStationButtom"
+            android:textColor="@android:color/background_light"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/NextStationDirection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/MyCar"
+            android:layout_centerHorizontal="true"
+            android:text="@string/NextStationDirection"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/RidePerson"
+            android:layout_width="194dp"
+            android:layout_height="36dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="106dp"
+            android:background="@android:color/holo_orange_light"
+            android:text="탈 사람이 있습니다."
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/GetOffPerson"
+            android:layout_width="193dp"
+            android:layout_height="38dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="95dp"
+            android:background="@android:color/holo_blue_light"
+            android:text="내릴 사람이 있습니다."
+            android:textAlignment="center" />
+
 
     </RelativeLayout>
 

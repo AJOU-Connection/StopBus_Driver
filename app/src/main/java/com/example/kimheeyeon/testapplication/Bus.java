@@ -8,8 +8,18 @@ public class Bus {
     private Date intervalTime;
     private String current_place;
 
-    public Bus() {
+    public String getBusNumber() {
+        return BusNumber;
+    }
+
+    private String BusNumber;
+
+    public Bus(String BusNum) {
         //text = "HaHaHaHaHa";
+        BusNumber = BusNum;
+
 
     }
+
+
 }
