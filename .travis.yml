@@ -15,5 +15,3 @@ android:
         - build-tools-27.0.3
         - android-26
 skip_cleanup: true
-script: 
-        - "sh script/build.sh"
