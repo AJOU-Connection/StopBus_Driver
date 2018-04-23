@@ -1,25 +1,23 @@
 language: android
 jdk :
-        - oraclejdk8
+    - oraclejdk8
 
 before_install:
-        - chmod +x gradlew
-              - chmod +rx app
+    - chmod +x gradlew
+    - chmod +rx app
 
 android:
-          components:
-                            - tools
-                                            - platform-tools
-                                                            - tools
-                                                                              #- extra-android-m2repository
-                                                                              #                # - extra-google-m2repository
-                                                                              #
-                                                                              #                              # The BuildTools version used by your project
-                                                                              #                                                 - build-tools-27.0.3
-                                                                              #
-                                                                              #                                                               # The SDK version used to compile your project
-                                                                              #                                                                                  - android-26
-                                                                              #
-                                                                              #                                                                                  skip_cleanup: true
-                                                                              #                                                                                  script: 
-                                                                              #                                                                                       - "sh script/build.sh"
+    components:
+        - tools
+        - platform-tools
+        - tools
+                                                                              
+          #- extra-android-m2repository
+          # - extra-google-m2repository
+          # The BuildTools version used by your project
+          - build-tools-27.0.3
+           # The SDK version used to compile your project
+          - android-26
+skip_cleanup: true
+script: 
+          - "sh script/build.sh"
