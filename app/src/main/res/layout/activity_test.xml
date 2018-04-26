@@ -29,8 +29,8 @@
 
         <TextView
             android:id="@+id/MyCar"
-            android:layout_width="208dp"
-            android:layout_height="238dp"
+            android:layout_width="448dp"
+            android:layout_height="376dp"
             android:layout_centerInParent="true"
             android:background="@color/colorPrimaryDark"
             android:textAlignment="center"
@@ -81,18 +81,17 @@
 
         <TextView
             android:id="@+id/CurrentStation_WhiteBox"
-            android:layout_width="204dp"
-            android:layout_height="143dp"
+            android:layout_width="449dp"
+            android:layout_height="246dp"
             android:layout_alignStart="@+id/MyCar"
-            android:layout_below="@+id/NextStation"
-            android:layout_marginStart="2dp"
+            android:layout_centerVertical="true"
             android:background="@color/cardview_light_background" />
 
         <TextView
             android:id="@+id/NextStation_Buttom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/Fix_NextStation"
+            android:layout_above="@+id/NextStationDirection"
             android:layout_centerHorizontal="true"
             android:text="@string/NextStationButtom"
             android:textColor="@android:color/background_light"
