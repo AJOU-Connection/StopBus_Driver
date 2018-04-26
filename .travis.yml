@@ -26,9 +26,6 @@ script:
       
 android:
     components:
-        - tools
-        - platform-tools
-        - tools
         - build-tools-27.0.3
         - android-26
         - sys-img-armeabi-v7a-addon-google_apis-google-26
