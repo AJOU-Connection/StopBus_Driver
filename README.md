@@ -1,5 +1,5 @@
 # **아주대학교 2018-1학기 캡스톤디자인 Connection팀**
-[![Build Status](https://travis-ci.org/AJOU-Connection/StopBus_User.svg?branch=master)](https://travis-ci.org/AJOU-Connection/StopBus_User)
+[![Build Status](https://travis-ci.org/AJOU-Connection/StopBus_Driver.svg?branch=master)](https://travis-ci.org/AJOU-Connection/StopBus_Driver)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## **프로젝트 팀**
