@@ -1,7 +1,5 @@
 language: android
 sudo: false
-os:
-    - windows
 before_install:
     - chmod +x gradlew
     - android list targets
