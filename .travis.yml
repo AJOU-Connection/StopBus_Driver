@@ -42,4 +42,4 @@ branches:
     only:
         - master
 
-install : skeip
+install : skip
