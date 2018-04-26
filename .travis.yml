@@ -4,6 +4,7 @@ os:
     - windows
 before_install:
     - chmod +x gradlew
+    - android list targets
 env:
     global:
         - ANDROID_API_LEVEL=26
@@ -15,11 +16,16 @@ env:
             - tools
             - platform-tools
             - tools
+
             - build-tools-$ANDROID_BUILD_TOOLS_VERSION
+
             - android-$ANDROID_API_LEVEL
+
             - android-$EMULATOR_API_LEVEL
+
             - extra
             - add-on
+
             - sys-img-armeabi-v7a-android-21
             - extra-google-m2repository
             - extra-android-m2repository
