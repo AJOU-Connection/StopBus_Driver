@@ -14,7 +14,7 @@
         <TextView
             android:id="@+id/Bottom"
             android:layout_width="match_parent"
-            android:layout_height="20dp"
+            android:layout_height="60dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
             android:background="#4a4a4b" />
@@ -22,7 +22,7 @@
         <TextView
             android:id="@+id/Top"
             android:layout_width="match_parent"
-            android:layout_height="20dp"
+            android:layout_height="60dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:background="#4a4a4b" />
@@ -30,7 +30,7 @@
         <TextView
             android:id="@+id/MyCar"
             android:layout_width="448dp"
-            android:layout_height="376dp"
+            android:layout_height="405dp"
             android:layout_centerInParent="true"
             android:background="@color/colorPrimaryDark"
             android:textAlignment="center"
@@ -44,7 +44,7 @@
             android:layout_centerHorizontal="true"
             android:text="@string/현재위치"
             android:textColor="@android:color/darker_gray"
-            android:textSize="10sp"
+            android:textSize="18sp"
             tools:ignore="SmallSp" />
 
         <TextView
@@ -55,7 +55,7 @@
             android:layout_centerHorizontal="true"
             android:text="@string/다음위치"
             android:textColor="@android:color/darker_gray"
-            android:textSize="10sp"
+            android:textSize="18sp"
             tools:ignore="SmallSp" />
 
         <TextView
@@ -67,6 +67,7 @@
             android:text="@string/CurrentStation"
             android:textAlignment="center"
             android:textColor="@android:color/background_light"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
         <TextView
@@ -77,14 +78,13 @@
             android:layout_centerHorizontal="true"
             android:text="@string/NextStation"
             android:textColor="@android:color/darker_gray"
-            android:textSize="12sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/CurrentStation_WhiteBox"
-            android:layout_width="449dp"
+            android:layout_width="444dp"
             android:layout_height="246dp"
-            android:layout_alignStart="@+id/MyCar"
-            android:layout_centerVertical="true"
+            android:layout_centerInParent="true"
             android:background="@color/cardview_light_background" />
 
         <TextView
@@ -95,6 +95,7 @@
             android:layout_centerHorizontal="true"
             android:text="@string/NextStationButtom"
             android:textColor="@android:color/background_light"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
         <TextView
@@ -105,26 +106,28 @@
             android:layout_centerHorizontal="true"
             android:text="@string/NextStationDirection"
             android:textColor="@android:color/darker_gray"
-            android:textSize="12sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/RidePerson"
-            android:layout_width="194dp"
+            android:layout_width="373dp"
             android:layout_height="36dp"
+            android:layout_alignEnd="@+id/Fix_CurrentStation"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="106dp"
+            android:layout_marginEnd="-179dp"
+            android:layout_marginTop="285dp"
             android:background="@android:color/holo_orange_light"
             android:text="탈 사람이 있습니다."
             android:textAlignment="center" />
 
         <TextView
             android:id="@+id/GetOffPerson"
-            android:layout_width="193dp"
+            android:layout_width="359dp"
             android:layout_height="38dp"
+            android:layout_alignEnd="@+id/Fix_CurrentStation"
             android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="95dp"
+            android:layout_marginBottom="239dp"
+            android:layout_marginEnd="-166dp"
             android:background="@android:color/holo_blue_light"
             android:text="내릴 사람이 있습니다."
             android:textAlignment="center" />
