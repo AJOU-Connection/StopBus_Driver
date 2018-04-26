@@ -9,24 +9,19 @@ env:
         - ANDROID_BUILD_TOOLS_VERSION=27.0.3
         - EMULATOR_API_LEVEL=21
 
-    android:
-        components:
-            - tools
-            - platform-tools
-            - tools
-
-            - build-tools-$ANDROID_BUILD_TOOLS_VERSION
-
-            - android-26
-
-            - android-21
-
-            - extra
-            - add-on
-
-            - sys-img-armeabi-v7a-android-21
-            - extra-google-m2repository
-            - extra-android-m2repository
+android:
+    components:
+        - tools
+        - platform-tools
+        - tools
+        - build-tools-$ANDROID_BUILD_TOOLS_VERSION
+        - android-$ANDROID_API_LEVEL
+        - android-$EMULATOR_API_LEVEL
+        - extra
+        - add-on
+        - sys-img-armeabi-v7a-android-21
+        - extra-google-m2repository
+        - extra-android-m2repository
 
 before_script:
     - echo no | android create avd --force -n test -t android-$EMULATOR_API_LEVEL --abi armeabi-v7a
