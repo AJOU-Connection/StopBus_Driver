@@ -17,9 +17,9 @@ env:
 
             - build-tools-$ANDROID_BUILD_TOOLS_VERSION
 
-            - android-$ANDROID_API_LEVEL
+            - android-26
 
-            - android-$EMULATOR_API_LEVEL
+            - android-21
 
             - extra
             - add-on
@@ -32,4 +32,5 @@ before_script:
     - echo no | android create avd --force -n test -t android-$EMULATOR_API_LEVEL --abi armeabi-v7a
     - emulator -avd test -no-skin -no-audio -no-window &
     - android-wait-for-emulator
+    - adb devices
     - adb shell input keyevent 82 &
