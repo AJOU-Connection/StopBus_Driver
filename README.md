@@ -14,10 +14,9 @@
 여러 문제점들 중에서 가장 많은 부분을 차지하는 것은 **무정차 통과**이다. 이 문제를 해결하기 위해서 StopBus는 승하차벨 개념을 도입하여 승객과 버스기사의 편의를 향상시키고자 한다.
 
 
-## **StopBus for user 기능**
+## **StopBus for Driver 기능**
 
-- 유저 Permission
-- 유저 UI
+- Driver Panel UI
 
 ## **사용 기술**
 1. GitHub: 프로젝트 소스코드 버전 관리
