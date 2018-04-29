@@ -44,7 +44,7 @@
             android:layout_centerHorizontal="true"
             android:text="@string/현재위치"
             android:textColor="@android:color/darker_gray"
-            android:textSize="18sp"
+            android:textSize="17sp"
             tools:ignore="SmallSp" />
 
         <TextView
@@ -55,7 +55,7 @@
             android:layout_centerHorizontal="true"
             android:text="@string/다음위치"
             android:textColor="@android:color/darker_gray"
-            android:textSize="18sp"
+            android:textSize="17sp"
             tools:ignore="SmallSp" />
 
         <TextView
@@ -78,7 +78,7 @@
             android:layout_centerHorizontal="true"
             android:text="@string/NextStation"
             android:textColor="@android:color/darker_gray"
-            android:textSize="18sp" />
+            android:textSize="17sp" />
 
         <TextView
             android:id="@+id/CurrentStation_WhiteBox"
@@ -94,6 +94,7 @@
             android:layout_above="@+id/NextStationDirection"
             android:layout_centerHorizontal="true"
             android:text="@string/NextStationButtom"
+            android:textAlignment="center"
             android:textColor="@android:color/background_light"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -106,16 +107,15 @@
             android:layout_centerHorizontal="true"
             android:text="@string/NextStationDirection"
             android:textColor="@android:color/darker_gray"
-            android:textSize="18sp" />
+            android:textSize="17sp" />
 
         <TextView
             android:id="@+id/RidePerson"
             android:layout_width="373dp"
-            android:layout_height="36dp"
-            android:layout_alignEnd="@+id/Fix_CurrentStation"
+            android:layout_height="80dp"
             android:layout_alignParentTop="true"
-            android:layout_marginEnd="-179dp"
-            android:layout_marginTop="285dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="252dp"
             android:background="@android:color/holo_orange_light"
             android:text="탈 사람이 있습니다."
             android:textAlignment="center" />
@@ -123,7 +123,7 @@
         <TextView
             android:id="@+id/GetOffPerson"
             android:layout_width="359dp"
-            android:layout_height="38dp"
+            android:layout_height="80dp"
             android:layout_alignEnd="@+id/Fix_CurrentStation"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="239dp"

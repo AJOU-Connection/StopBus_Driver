@@ -1,4 +1,4 @@
-package socket;
+package com.example.kimheeyeon.testapplication;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,7 +7,8 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 /**
- * 1 대 1 소켓 통신 클라이언트 예제
+ * Class Name : Client
+ * For : Socket Communication
  */
 public class Client {
 

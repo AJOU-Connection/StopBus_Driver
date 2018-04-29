@@ -7,19 +7,22 @@ public class Bus {
 
     private Date intervalTime;
     private String current_place;
+    private String path;
+    private String BusNumber;
 
     public String getBusNumber() {
         return BusNumber;
     }
 
-    private String BusNumber;
 
-    public Bus(String BusNum) {
+    public void Bus(String BusNum) {
         //text = "HaHaHaHaHa";
         BusNumber = BusNum;
 
-
+        this.getBusPath(BusNumber);
     }
+
+    public void getBusPath(String BusNum){};
 
 
 }

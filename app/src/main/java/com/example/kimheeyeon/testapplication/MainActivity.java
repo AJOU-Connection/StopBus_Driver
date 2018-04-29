@@ -11,18 +11,14 @@ import java.net.URISyntaxException;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 
-//import java.net.Socket;
-//import java.net.URL;
-//import java.net.URLConnection;
-//import org.apache.http.util.ByteArrayBuffer;
-
-//private Socket mSocket;
 
 //socket 통신 구현해야함
 public class MainActivity extends Activity {
 
     private BufferedReader mIn;
     private PrintWriter mOut;
+
+//    private Client mSocket = new Client("19",90);
 
 //    private String html = "";
 //    private Handler mHandler;
