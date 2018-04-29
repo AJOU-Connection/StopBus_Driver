@@ -15,7 +15,7 @@ public class Bus {
     }
 
 
-    public void Bus(String BusNum) {
+    public Bus(String BusNum) {
         //text = "HaHaHaHaHa";
         BusNumber = BusNum;
 
