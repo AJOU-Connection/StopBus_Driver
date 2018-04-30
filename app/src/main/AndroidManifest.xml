@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.kimheeyeon.testapplication">
+    <!-- 네트워크 사용에 관한 permission -->
     <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:allowBackup="true"
