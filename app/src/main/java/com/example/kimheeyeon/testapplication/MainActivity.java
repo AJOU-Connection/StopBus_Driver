@@ -12,7 +12,7 @@ import android.content.ContentValues;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 
-//socket 통신 구현해야함
+
 public class MainActivity extends Activity {
 
     private BufferedReader mIn;
