@@ -246,7 +246,8 @@
             android:layout_centerHorizontal="true"
             android:text="탈 사람이 있습니다"
             android:textAlignment="center"
-            android:textSize="30sp" />
+            android:textSize="30sp"
+            android:visibility="invisible" />
 
         <TextView
             android:id="@+id/GetOffPerson_Text"
@@ -256,7 +257,8 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="279dp"
             android:text="내릴 사람이 있습니다"
-            android:textSize="30sp" />
+            android:textSize="30sp"
+            android:visibility="invisible" />
 
 
     </RelativeLayout>

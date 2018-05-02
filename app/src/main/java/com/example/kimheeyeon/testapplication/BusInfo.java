@@ -1,9 +1,12 @@
 package com.example.kimheeyeon.testapplication;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public class BusInfo {
     //for the information that not changed
 
-    private String path;
+    private Path[] paths;
     private String BusNumber;
     private int VehicleNumber;
 
@@ -17,12 +20,14 @@ public class BusInfo {
         return BusNumber;
     }
 
-    public String getPath() {
-        return path;
+    public Path[] getPath() {
+        return paths;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setPath(ArrayList<String> path) {
+        for(int i = 0; i < path.size() ; i++){
+            //this.paths[i] = path.get(i);
+        }
     }
 
     public void setBusNumber(String busNumber) {
