@@ -3,26 +3,28 @@ package com.example.kimheeyeon.testapplication;
 import java.util.Date;
 
 public class Bus {
-    //Bus가 가지고 있어야 하는 것. 현재 위치, 앞뒤버스와의 차
+    //Bus가 가지고 있어야 하는 것. 현재 위치, bus number, 차량 넘버
 
-    private Date intervalTime;
     private String current_place;
-    private String path;
-    private String BusNumber;
-
-    public String getBusNumber() {
-        return BusNumber;
-    }
+    private BusInfo BusInfo;
 
 
     public Bus(String BusNum) {
         //text = "HaHaHaHaHa";
-        BusNumber = BusNum;
 
-        this.getBusPath(BusNumber);
+        this.BusInfo = new BusInfo(BusNum);
+
     }
 
-    public void getBusPath(String BusNum){};
+    public String getBusNumber() {
+        return BusInfo.getBusNumber();
+    }
+
+    public void getBusPath(String BusNum){ }
+
+    public void getBusInfo(){
+
+    }
 
 
 }

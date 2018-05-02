@@ -15,10 +15,6 @@ import android.support.v7.app.AppCompatActivity;
 
 public class MainActivity extends Activity {
 
-    private BufferedReader mIn;
-    private PrintWriter mOut;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,8 +22,8 @@ public class MainActivity extends Activity {
 
 
         MyClass myClass = new MyClass();
-        TextView textView1 = (TextView)findViewById( R.id.Bottom );
-        textView1.setText( myClass.text );
+        //TextView textView1 = (TextView)findViewById( R.id.Bottom );
+        //textView1.setText( myClass.text );
 
 
         String url = "/";
@@ -35,13 +31,10 @@ public class MainActivity extends Activity {
         NetworkTask networkTask = new NetworkTask(url, null);
         networkTask.execute();
 
-        Bus AdvancedBus     =   new Bus("advanced");
-        Bus BackUpBus       =   new Bus("backup");
+        Bus PreviousBus     =   new Bus("Previous");
+        Bus NextBus       =   new Bus("Next");
         Bus MyBus           =   new Bus("my");
 
-
-        String ip = "192.168.0.10";
-        int port = 5555;
 
 
     }
