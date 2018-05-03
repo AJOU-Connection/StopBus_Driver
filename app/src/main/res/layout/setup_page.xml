@@ -1,8 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
 
-</android.support.constraint.CoordinatorLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <TextView
+            android:id="@+id/BackGround_black"
+            android:layout_width="739dp"
+            android:layout_height="457dp"
+            android:layout_centerInParent="true"
+            android:background="#484848" />
+
+        <TextView
+            android:id="@+id/BackGround_green"
+            android:layout_width="710dp"
+            android:layout_height="434dp"
+            android:layout_centerInParent="true"
+            android:background="#1a9174" />
+
+        <Button
+            android:id="@+id/Confirm_Button"
+            android:layout_width="105dp"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/Car_Number"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="171dp"
+            android:text="확인" />
+
+        <TextView
+            android:id="@+id/text_Stopbus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="449dp"
+            android:layout_marginTop="120dp"
+            android:text=" STOP BUS"
+            android:textColor="#e0ffff"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/text_Stopbus"
+            android:layout_marginEnd="452dp"
+            android:text="for"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_Stopbus"
+            android:layout_centerHorizontal="true"
+            android:text="BUS DRIVER"
+            android:textColor="@android:color/background_light"
+            android:textSize="26sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/Car_Number"
+            android:layout_width="518dp"
+            android:layout_height="59dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="250dp"
+            android:background="@android:color/background_light"
+            android:ems="10"
+            android:inputType="none|text|number"
+            android:text="차량 번호" />
+
+        <EditText
+            android:id="@+id/bus_Number"
+            android:layout_width="518dp"
+            android:layout_height="59dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="224dp"
+            android:background="@android:color/background_light"
+            android:ems="10"
+            android:inputType="none|text|number"
+            android:text="버스 번호" />
+
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>
