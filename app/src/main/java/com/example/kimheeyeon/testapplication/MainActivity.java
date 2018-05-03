@@ -4,6 +4,11 @@ import android.app.Activity;
 import android.os.Bundle;
 
 import android.widget.TextView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.view.View;
+
+import android.content.Intent;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -25,6 +30,15 @@ public class MainActivity extends Activity {
         //TextView textView1 = (TextView)findViewById( R.id.Bottom );
         //textView1.setText( myClass.text );
 
+        Button search = (Button) findViewById(R.id.Confirm_Button);
+        search.setOnClickListener(
+                new Button.OnClickListener() {
+                    public void onClick(View v) {
+                        Intent i = new Intent(MainActivity.this, DriverActivity.class);
+                        startActivity(i);
+                    }
+                }
+        );
 
         String url = "/";
         // AsyncTask를 통해 HttpURLConnection 수행.
@@ -56,8 +70,6 @@ public class MainActivity extends Activity {
             String result; // 요청 결과를 저장할 변수.
             RequestHttpURLConnection requestHttpURLConnection = new RequestHttpURLConnection();
             result = requestHttpURLConnection.request(url, values); // 해당 URL로 부터 결과물을 얻어온다.
-
-
 
             return result;
         }
