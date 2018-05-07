@@ -9,14 +9,38 @@ import java.io.IOException;
 import android.os.Environment;
 import android.util.Log;
 
-public class MakeJson{
+import android.content.Context;
+import android.net.Uri;
 
-    public static final String TAG = "MakeJson";
-    public static final String STRSAVEPATH = Environment.
+public class MakeFile{
+
+    private static final String TAG = "MakeFile";
+    private static final String STRSAVEPATH = Environment.
             getExternalStorageDirectory()+"/testfolder/";
-    public static final String STRSAVEPATH2 = Environment.
+    private static final String STRSAVEPATH2 = Environment.
             getExternalStorageDirectory()+"/testfolder2/";
-    public static final String SAVEFILEPATH = "MyFile.txt";
+    private static final String SAVEFILEPATH = "MyFile.txt";
+
+
+    public MakeFile(){
+
+    }
+
+    
+
+    public File getTempFile(Context context, String url) {
+
+        File file = new File(context.getFilesDir(), "temp");
+
+            try {
+                String fileName = Uri.parse(url).getLastPathSegment();
+                file = File.createTempFile(fileName, null, context.getCacheDir());
+            } catch (IOException e) {
+                    // Error while creating file
+            }
+
+        return file;
+    }
 
 
     /**
@@ -24,7 +48,7 @@ public class MakeJson{
      * 디렉토리 생성
      * @return dir
      */
-    private File makeDirectory(String dir_path){
+    public File MakeDirectory(String dir_path){
         File dir = new File(dir_path);
         if (!dir.exists())
         {
@@ -42,7 +66,7 @@ public class MakeJson{
      * @param dir
      * @return file
      */
-    private File makeFile(File dir , String file_path){
+    public File CreateFile(File dir , String file_path){
         File file = null;
         boolean isSuccess = false;
         if(dir.isDirectory()){
@@ -67,7 +91,7 @@ public class MakeJson{
      * (dir/file) 삭제 하기
      * @param file
      */
-    private boolean deleteFile(File file){
+    public boolean DeleteFile(File file){
         boolean result;
         if(file!=null&&file.exists()){
             file.delete();
@@ -83,7 +107,7 @@ public class MakeJson{
      * @param file
      * @return
      */
-    private boolean isFile(File file){
+    public boolean IsFile(File file){
         boolean result;
         if(file!=null&&file.exists()&&file.isFile()){
             result=true;
@@ -98,7 +122,7 @@ public class MakeJson{
      * @param dir
      * @return
      */
-    private boolean isDirectory(File dir){
+    public boolean IsDirectory(File dir){
         boolean result;
         if(dir!=null&&dir.isDirectory()){
             result=true;
@@ -113,7 +137,7 @@ public class MakeJson{
      * @param file
      * @return
      */
-    private boolean isFileExist(File file){
+    public boolean IsFileExist(File file){
         boolean result;
         if(file!=null&&file.exists()){
             result=true;
@@ -127,7 +151,7 @@ public class MakeJson{
      * 파일 이름 바꾸기
      * @param file
      */
-    private boolean reNameFile(File file , File new_name){
+    public boolean ReNameFile(File file , File new_name){
         boolean result;
         if(file!=null&&file.exists()&&file.renameTo(new_name)){
             result=true;
@@ -139,10 +163,10 @@ public class MakeJson{
 
     /**
      * 디렉토리에 안에 내용을 보여 준다.
-     * @param file
+     * @param
      * @return
      */
-    private String[] getList(File dir){
+    public String[] GetList(File dir){
         if(dir!=null&&dir.exists())
             return dir.list();
         return null;
@@ -154,7 +178,7 @@ public class MakeJson{
      * @param file_content
      * @return
      */
-    private boolean writeFile(File file , byte[] file_content){
+    public boolean WriteFile(File file , byte[] file_content){
         boolean result;
         FileOutputStream fos;
         if(file!=null&&file.exists()&&file_content!=null){
@@ -181,7 +205,7 @@ public class MakeJson{
      * 파일 읽어 오기
      * @param file
      */
-    private void readFile(File file){
+    private void ReadFile(File file){
         int readcount=0;
         if(file!=null&&file.exists()){
             try {

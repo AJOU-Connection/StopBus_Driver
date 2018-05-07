@@ -84,7 +84,7 @@
             android:textAlignment="center" />
 
         <EditText
-            android:id="@+id/bus_Number"
+            android:id="@+id/bus_ID"
             android:layout_width="518dp"
             android:layout_height="59dp"
             android:layout_alignParentTop="true"
@@ -92,7 +92,7 @@
             android:layout_marginTop="274dp"
             android:background="@android:color/background_light"
             android:ems="10"
-            android:text="버스 번호"
+            android:text="버스 ID"
             android:textAlignment="center" />
 
         <TextView
