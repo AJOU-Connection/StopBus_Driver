@@ -3,6 +3,7 @@ package com.example.kimheeyeon.testapplication;
 import android.app.Activity;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,6 +13,9 @@ import android.widget.ProgressBar;
 import android.content.Intent;
 
 import android.os.Handler;
+
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.io.*;
 import java.net.URISyntaxException;
 
@@ -21,6 +25,7 @@ import android.support.v7.app.AppCompatActivity;
 
 
 public class MainActivity extends Activity {
+    Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,10 +35,6 @@ public class MainActivity extends Activity {
         final ProgressBar P_Bar= (ProgressBar)findViewById(R.id.progressBar);
         P_Bar.setVisibility(View.INVISIBLE); //To set visible
 
-        MyClass myClass = new MyClass();
-        //TextView textView1 = (TextView)findViewById( R.id.Bottom );
-        //textView1.setText( myClass.text );
-
         Button search = (Button) findViewById(R.id.Confirm_Button);
         search.setOnClickListener(
                 new Button.OnClickListener() {
@@ -41,11 +42,22 @@ public class MainActivity extends Activity {
                         final TextView textView1 = (TextView)findViewById( R.id.bus_Number );
                         P_Bar.setVisibility(View.VISIBLE);
 
-                        Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
+                        String url = "http://stop-bus.tk/driver/register";
+                        // AsyncTask를 통해 HttpURLConnection 수행.
+//                        NetworkTask networkTask = new NetworkTask(url, null);
+////                        networkTask.execute();
+
+                        ConnectThread thread = new ConnectThread(url);
+                        thread.start();
+
+
+                        Handler handler2 = new Handler();
+                        handler2.postDelayed(new Runnable() {
                             public void run() {
                                 Intent intent = new Intent(MainActivity.this, DriverActivity.class);
+                                MyClass myclass = new MyClass("TEST");
                                 intent.putExtra("BUS_NAME", textView1.getText().toString()); //키 - 보낼 값(밸류)
+                                intent.putExtra("Class_Tet", myclass);
 
                                 startActivity(intent);
                             }
@@ -56,17 +68,74 @@ public class MainActivity extends Activity {
                 }
         );
 
-        String url = "/";
-        // AsyncTask를 통해 HttpURLConnection 수행.
-        NetworkTask networkTask = new NetworkTask(url, null);
-        networkTask.execute();
+//        String url = "stop-bus.tk/driver/register";
+//        // AsyncTask를 통해 HttpURLConnection 수행.
+//        NetworkTask networkTask = new NetworkTask(url, null);
+//        networkTask.execute();
 
-        Bus PreviousBus     =   new Bus("Previous");
-        Bus NextBus       =   new Bus("Next");
-        Bus MyBus           =   new Bus("my");
+    }
+
+    class ConnectThread extends Thread {
+        String urlStr;
+        public ConnectThread(String inStr){
+            urlStr = inStr;
+        }
+
+        public void run(){
+            try{
+                final String output = request(urlStr);
+                handler.post(new Runnable(){
+                    @Override
+                    public void run() {
+                        Log.d("gmmm", output);
+                        //txtMsg.setText(output);
+                    }
+                });
+            } catch (Exception ex){
+                ex.printStackTrace();
+            }
+        }
+
+        private String request(String urlStr){
+            StringBuilder output = new StringBuilder();
+
+            try{
+                URL url = new URL(urlStr);
+
+                HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+
+                if(conn != null){
+                    conn.setConnectTimeout(10000);
+                    conn.setRequestMethod("POST");
+                    conn.setDoInput(true);
+                    conn.setDoOutput(true);
+
+                    int resCode = conn.getResponseCode();
+                    if(resCode == HttpURLConnection.HTTP_OK){
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+                        String line = null;
+                        while(true){
+                            line = reader.readLine();
+                            if(line == null){
+                                break;
+                            }
+                            output.append(line + "\n");
+                        }
+                        reader.close();
+                        conn.disconnect();
+                    }
+                }
 
 
+            }catch(Exception ex){
+                Log.e("SampleHttp", "Exception in processing response",ex);
 
+            }
+
+            return output.toString();
+
+        }
     }
 
     public class NetworkTask extends AsyncTask<Void, Void, String> {
@@ -93,6 +162,8 @@ public class MainActivity extends Activity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+
+            //Log.d("info", s);
 
             //doInBackground()로 부터 리턴된 값이 onPostExecute()의 매개변수로 넘어오므로 s를 출력한다.
             //tv_outPut.setText(s);
