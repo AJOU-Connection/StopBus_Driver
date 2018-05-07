@@ -7,9 +7,11 @@ import android.widget.TextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import android.content.Intent;
 
+import android.os.Handler;
 import java.io.*;
 import java.net.URISyntaxException;
 
@@ -25,6 +27,8 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.setup_page);
 
+        final ProgressBar P_Bar= (ProgressBar)findViewById(R.id.progressBar);
+        P_Bar.setVisibility(View.INVISIBLE); //To set visible
 
         MyClass myClass = new MyClass();
         //TextView textView1 = (TextView)findViewById( R.id.Bottom );
@@ -34,8 +38,20 @@ public class MainActivity extends Activity {
         search.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
-                        Intent i = new Intent(MainActivity.this, DriverActivity.class);
-                        startActivity(i);
+                        final TextView textView1 = (TextView)findViewById( R.id.bus_Number );
+                        P_Bar.setVisibility(View.VISIBLE);
+
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            public void run() {
+                                Intent intent = new Intent(MainActivity.this, DriverActivity.class);
+                                intent.putExtra("BUS_NAME", textView1.getText().toString()); //키 - 보낼 값(밸류)
+
+                                startActivity(intent);
+                            }
+                        }, 2000);  // 2000은 2초를 의미합니다.
+
+
                     }
                 }
         );
