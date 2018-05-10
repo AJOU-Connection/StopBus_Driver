@@ -40,7 +40,6 @@ public class MainActivity extends Activity {
                     public void onClick(View v) {
                         final TextView textView1 = (TextView)findViewById( R.id.bus_ID );
                         busID =  Integer.parseInt(textView1.getText().toString());
-                        Log.d("testingview", String.valueOf(busID));
 
                         P_Bar.setVisibility(View.VISIBLE);
 
@@ -59,14 +58,17 @@ public class MainActivity extends Activity {
                         ConnectThread thread = new ConnectThread(url, sendData);
                         thread.start();
 
+                        try {
+                            thread.join();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
 
                         Handler handler2 = new Handler();
                         handler2.postDelayed(new Runnable() {
                             public void run() {
                                 Intent intent = new Intent(MainActivity.this, DriverActivity.class);
-                                MyClass myclass = new MyClass("TEST");
                                 intent.putExtra("BUS_NAME", textView1.getText().toString()); //키 - 보낼 값(밸류)
-                                intent.putExtra("Class_Tet", myclass);
                                 intent.putExtra("busData", settedBus);
 
                                 startActivity(intent);
@@ -79,7 +81,7 @@ public class MainActivity extends Activity {
 
     class ConnectThread extends Thread {
         String urlStr;
-       JSONObject s_Data;
+        JSONObject s_Data;
 
         public ConnectThread(String inStr, JSONObject map){
             urlStr = inStr;
