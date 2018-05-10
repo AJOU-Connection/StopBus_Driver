@@ -26,6 +26,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.io.*;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import org.json.JSONObject;
+
+
 
 public class MainActivity extends Activity {
     Handler handler = new Handler();
@@ -51,6 +57,9 @@ public class MainActivity extends Activity {
                         sendData.put("plateNo" , ((TextView) findViewById( R.id.Car_Number )).getText().toString());
                         sendData.put("routeID" , ((TextView) findViewById( R.id.bus_ID )).getText().toString());
 
+                        Log.d("sending", sendData.get("plateNo"));
+                        Log.d("sending", sendData.get("routeID"));
+
                         ConnectThread thread = new ConnectThread(url, sendData);
                         thread.start();
 
@@ -75,7 +84,7 @@ public class MainActivity extends Activity {
 
     class ConnectThread extends Thread {
         String urlStr;
-        HashMap<String, String> s_Data = new HashMap();
+        HashMap<String, String> s_Data;
 
         public ConnectThread(String inStr, HashMap<String, String> map){
             urlStr = inStr;
@@ -94,8 +103,48 @@ public class MainActivity extends Activity {
 
                     }
                 });
+
+                jsonParserList(output);
             } catch (Exception ex){
                 ex.printStackTrace();
+            }
+        }
+
+        public String[][] jsonParserList(String pRecvServerPage) {
+
+            Log.i("서버에서 받은 전체 내용 : ", pRecvServerPage);
+
+            try {
+                JSONObject json = new JSONObject(pRecvServerPage);
+                JSONArray jArr = json.getJSONArray("List");
+
+
+                // 받아온 pRecvServerPage를 분석하는 부분
+                String[] jsonName = {"header", "body"};
+                String[][] parseredData = new String[jArr.length()][jsonName.length];
+
+                for (int i = 0; i < jArr.length(); i++) {
+                    json = jArr.getJSONObject(i);
+                    if(json != null) {
+                        for(int j = 0; j < jsonName.length; j++) {
+                            parseredData[i][j] = json.getString(jsonName[j]);
+                        }
+                    }
+                }
+
+                // 분해 된 데이터를 확인하기 위한 부분
+
+                for(int i=0; i<parseredData.length; i++){
+                    Log.i("JSON을 분석한 데이터 "+i+" : ", parseredData[i][0]);
+                    Log.i("JSON을 분석한 데이터 "+i+" : ", parseredData[i][1]);
+                }
+
+                return parseredData;
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return null;
+
             }
         }
 
@@ -108,16 +157,17 @@ public class MainActivity extends Activity {
                 if (first) first = false;
                 else { // 첫 번째 매개변수가 아닌 경우엔 앞에 &를 붙임
                     result.append("&");
+                    Log.d("sending_true", result.toString());
                 }
 
                 try { // UTF-8로 주소에 키와 값을 붙임
                     result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
                     result.append("=");
-                    result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
+                    result.append(entry.getValue());
+                    Log.d("sending_true", result.toString());
+                    Log.d("sending_true", entry.getValue());
                 } catch (UnsupportedEncodingException ue) {
                     ue.printStackTrace();
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
             }
 
@@ -151,7 +201,6 @@ public class MainActivity extends Activity {
                         BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream())); // 서버의 응답을 읽기 위한 입력 스트림
                         while ((line = br.readLine()) != null) // 서버의 응답을 읽어옴
                             output.append(line);
-                        //response += line;
                     }
 
 

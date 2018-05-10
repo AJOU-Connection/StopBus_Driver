@@ -80,7 +80,7 @@
             android:background="@android:color/background_light"
             android:ems="10"
             android:inputType="text"
-            android:text="차량 번호"
+            android:text="경기00가1234"
             android:textAlignment="center" />
 
         <EditText
@@ -92,7 +92,7 @@
             android:layout_marginTop="274dp"
             android:background="@android:color/background_light"
             android:ems="10"
-            android:text="버스 ID"
+            android:text="234000026"
             android:textAlignment="center" />
 
         <TextView
