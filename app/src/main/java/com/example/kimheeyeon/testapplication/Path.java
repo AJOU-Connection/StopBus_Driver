@@ -5,11 +5,13 @@ public class Path {
 
     private String stationName;
     private int stationNumber;
+    private int stationSequence;
 
-    public Path(String S_Name, int S_Number){
+    public Path(String S_Name, String S_Number, String S_Seq){
 
         setStationName(S_Name);
-        setStationNumber(S_Number);
+        setStationNumber(Integer.parseInt(S_Number));
+        setStationSequence(Integer.parseInt(S_Seq));
 
     }
 
@@ -27,6 +29,14 @@ public class Path {
 
     public void setStationNumber(int stationNumber) {
         this.stationNumber = stationNumber;
+    }
+
+    public int getStationSequence() {
+        return stationSequence;
+    }
+
+    public void setStationSequence(int stationSequence) {
+        this.stationSequence = stationSequence;
     }
 
 }

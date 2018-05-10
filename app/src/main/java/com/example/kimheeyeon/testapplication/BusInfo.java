@@ -2,6 +2,7 @@ package com.example.kimheeyeon.testapplication;
 
 import android.util.Log;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Array;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 public class BusInfo {
     //for the information that not changed
 
-    private Path[] paths;
+    private ArrayList<Path> paths = new ArrayList<>();
     private String BusNumber = "";
     private int VehicleNumber = 0;
 
@@ -28,7 +29,7 @@ public class BusInfo {
         return BusNumber;
     }
 
-    public Path[] getPath() {
+    public ArrayList<Path> getPath() {
         return paths;
     }
 
@@ -42,6 +43,18 @@ public class BusInfo {
 
     }
 
+    public void putPath(JSONObject stationInfo){
+        try {
+            Path nPath = new Path(stationInfo.getString("stationName"), stationInfo.getString("stationNumber"),stationInfo.getString("stationSeq"));
+            this.paths.add(this.paths.size() , nPath);
+
+            Log.d("path", this.paths.get(this.paths.size()-1).getStationName());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void setBusNumber(String busNumber) {
         this.BusNumber = busNumber;
         Log.d("tag", this.BusNumber);
@@ -52,7 +65,7 @@ public class BusInfo {
     }
 
     public void setVehicleNumber(int vehicleNumber) {
-        VehicleNumber = vehicleNumber;
+        this.VehicleNumber = vehicleNumber;
     }
 
 }

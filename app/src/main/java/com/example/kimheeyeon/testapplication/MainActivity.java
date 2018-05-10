@@ -1,34 +1,22 @@
 package com.example.kimheeyeon.testapplication;
 
 import android.app.Activity;
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 
-import android.os.Environment;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import java.util.HashMap;
-import java.util.Map;
-
-
-import java.net.URLEncoder;
 import android.content.Intent;
-
 import android.os.Handler;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.io.*;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-
 import org.json.JSONObject;
 
 
@@ -36,6 +24,7 @@ import org.json.JSONObject;
 public class MainActivity extends Activity {
     Handler handler = new Handler();
     Bus settedBus = new Bus();
+    int busID = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,11 +39,13 @@ public class MainActivity extends Activity {
                 new Button.OnClickListener() {
                     public void onClick(View v) {
                         final TextView textView1 = (TextView)findViewById( R.id.bus_ID );
+                        busID =  Integer.parseInt(textView1.getText().toString());
+                        Log.d("testingview", String.valueOf(busID));
+
                         P_Bar.setVisibility(View.VISIBLE);
 
                         String url = "http://stop-bus.tk/driver/register";
 
-                        //HashMap<String, String> sendData = new HashMap();
                         JSONObject sendData = new JSONObject();
                         try {
                             sendData.put("plateNo" , ((TextView) findViewById( R.id.Car_Number )).getText().toString());
@@ -93,7 +84,6 @@ public class MainActivity extends Activity {
         public ConnectThread(String inStr, JSONObject map){
             urlStr = inStr;
             this.s_Data = map;
-
         }
 
         public void run(){
@@ -104,7 +94,6 @@ public class MainActivity extends Activity {
                     @Override
                     public void run() {
                         Log.d("gmmm", output);
-
                     }
                 });
 
@@ -128,27 +117,7 @@ public class MainActivity extends Activity {
                 Log.d("PARSING", jBody.getString("busNumber"));
 
                 settedBus.setBusInfo(jBody);
-
-                // 받아온 pRecvServerPage를 분석하는 부분
-//                String[] jsonName = {"busNumber", "stationList"};
-//                String[][] parseredData = new String[jArr.length()][jsonName.length];
-//
-//                for (int i = 0; i < jArr.length(); i++) {
-//                    json = jArr.getJSONObject(i);
-//                    if(json != null) {
-//                        for(int j = 0; j < jsonName.length; j++) {
-//                            parseredData[i][j] = json.getString(jsonName[j]);
-//                        }
-//                    }
-//                }
-
-                // 분해 된 데이터를 확인하기 위한 부분
-
-//                for(int i=0; i<parseredData.length; i++){
-//                    Log.i("JSON을 분석한 데이터 "+i+" : ", parseredData[i][0]);
-//                    Log.i("JSON을 분석한 데이터 "+i+" : ", parseredData[i][1]);
-//                }
-
+                settedBus.setVehicleNumber(busID);
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -183,17 +152,12 @@ public class MainActivity extends Activity {
                         while ((line = br.readLine()) != null) // 서버의 응답을 읽어옴
                             output.append(line);
                     }
-
                 }
-
-
             }catch(Exception ex){
                 Log.e("SampleHttp", "Exception in processing response",ex);
 
             }
-
             return output.toString();
-
         }
     }
 
