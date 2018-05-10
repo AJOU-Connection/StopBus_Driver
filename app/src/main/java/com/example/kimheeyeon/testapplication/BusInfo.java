@@ -1,5 +1,9 @@
 package com.example.kimheeyeon.testapplication;
 
+import android.util.Log;
+
+import org.json.JSONObject;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
@@ -7,8 +11,12 @@ public class BusInfo {
     //for the information that not changed
 
     private Path[] paths;
-    private String BusNumber;
-    private int VehicleNumber;
+    private String BusNumber = "";
+    private int VehicleNumber = 0;
+
+    public BusInfo(){
+
+    }
 
     public BusInfo(String BusNum) {
         setBusNumber(BusNum);
@@ -30,8 +38,13 @@ public class BusInfo {
         }
     }
 
+    public void setPaths(JSONObject stationList){
+
+    }
+
     public void setBusNumber(String busNumber) {
         this.BusNumber = busNumber;
+        Log.d("tag", this.BusNumber);
     }
 
     public int getVehicleNumber() {

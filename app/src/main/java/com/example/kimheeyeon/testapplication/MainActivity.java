@@ -35,6 +35,7 @@ import org.json.JSONObject;
 
 public class MainActivity extends Activity {
     Handler handler = new Handler();
+    Bus settedBus = new Bus();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +76,7 @@ public class MainActivity extends Activity {
                                 MyClass myclass = new MyClass("TEST");
                                 intent.putExtra("BUS_NAME", textView1.getText().toString()); //키 - 보낼 값(밸류)
                                 intent.putExtra("Class_Tet", myclass);
+                                intent.putExtra("busData", settedBus);
 
                                 startActivity(intent);
                             }
@@ -97,7 +99,6 @@ public class MainActivity extends Activity {
         public void run(){
 
             try{
-
                 final String output = request(urlStr, this.s_Data);
                 handler.post(new Runnable(){
                     @Override
@@ -113,71 +114,45 @@ public class MainActivity extends Activity {
             }
         }
 
-        private String[][] jsonParserList(String pRecvServerPage) {
+        private void jsonParserList(String pRecvServerPage) {
 
             Log.i("서버에서 받은 전체 내용 : ", pRecvServerPage);
 
             try {
-                JSONObject json = new JSONObject(pRecvServerPage);
-                JSONArray jArr = json.getJSONArray("List");
+                JSONObject jsonObject = new JSONObject(pRecvServerPage);
 
+                JSONObject jHeader = jsonObject.getJSONObject("header");  // JSONObject 추출
+                Log.d("PARSING", jHeader.getString("result"));
+
+                JSONObject jBody = jsonObject.getJSONObject("body");  // JSONObject 추출
+                Log.d("PARSING", jBody.getString("busNumber"));
+
+                settedBus.setBusInfo(jBody);
 
                 // 받아온 pRecvServerPage를 분석하는 부분
-                String[] jsonName = {"header", "body"};
-                String[][] parseredData = new String[jArr.length()][jsonName.length];
-
-                for (int i = 0; i < jArr.length(); i++) {
-                    json = jArr.getJSONObject(i);
-                    if(json != null) {
-                        for(int j = 0; j < jsonName.length; j++) {
-                            parseredData[i][j] = json.getString(jsonName[j]);
-                        }
-                    }
-                }
+//                String[] jsonName = {"busNumber", "stationList"};
+//                String[][] parseredData = new String[jArr.length()][jsonName.length];
+//
+//                for (int i = 0; i < jArr.length(); i++) {
+//                    json = jArr.getJSONObject(i);
+//                    if(json != null) {
+//                        for(int j = 0; j < jsonName.length; j++) {
+//                            parseredData[i][j] = json.getString(jsonName[j]);
+//                        }
+//                    }
+//                }
 
                 // 분해 된 데이터를 확인하기 위한 부분
 
-                for(int i=0; i<parseredData.length; i++){
-                    Log.i("JSON을 분석한 데이터 "+i+" : ", parseredData[i][0]);
-                    Log.i("JSON을 분석한 데이터 "+i+" : ", parseredData[i][1]);
-                }
+//                for(int i=0; i<parseredData.length; i++){
+//                    Log.i("JSON을 분석한 데이터 "+i+" : ", parseredData[i][0]);
+//                    Log.i("JSON을 분석한 데이터 "+i+" : ", parseredData[i][1]);
+//                }
 
-                return parseredData;
 
             } catch (JSONException e) {
                 e.printStackTrace();
-                return null;
-
             }
-        }
-
-
-
-
-        // 매개변수를 URL에 붙이는 함수
-        private String getPostString(HashMap<String, String> map) {
-            StringBuilder result = new StringBuilder();
-            boolean first = true; // 첫 번째 매개변수 여부
-
-            for (Map.Entry<String, String> entry : map.entrySet()) {
-                if (first) first = false;
-                else { // 첫 번째 매개변수가 아닌 경우엔 앞에 &를 붙임
-                    result.append("&");
-                    Log.d("sending_true", result.toString());
-                }
-
-                try { // UTF-8로 주소에 키와 값을 붙임
-                    result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
-                    result.append("=");
-                    result.append(entry.getValue());
-                    Log.d("sending_true", result.toString());
-                    Log.d("sending_true", entry.getValue());
-                } catch (UnsupportedEncodingException ue) {
-                    ue.printStackTrace();
-                }
-            }
-
-            return result.toString();
         }
 
         private String request(String urlStr, JSONObject map){
@@ -209,22 +184,6 @@ public class MainActivity extends Activity {
                             output.append(line);
                     }
 
-
-//                    int resCode = conn.getResponseCode();
-//                    if(resCode == HttpURLConnection.HTTP_OK){
-//                        BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-//
-//                        String line = null;
-//                        while(true){
-//                            line = reader.readLine();
-//                            if(line == null){
-//                                break;
-//                            }
-//                            output.append(line + "\n");
-//                        }
-//                        reader.close();
-//                        conn.disconnect();
-//                    }
                 }
 
 
