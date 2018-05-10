@@ -53,12 +53,16 @@ public class MainActivity extends Activity {
 
                         String url = "http://stop-bus.tk/driver/register";
 
-                        HashMap<String, String> sendData = new HashMap();
-                        sendData.put("plateNo" , ((TextView) findViewById( R.id.Car_Number )).getText().toString());
-                        sendData.put("routeID" , ((TextView) findViewById( R.id.bus_ID )).getText().toString());
-
-                        Log.d("sending", sendData.get("plateNo"));
-                        Log.d("sending", sendData.get("routeID"));
+                        //HashMap<String, String> sendData = new HashMap();
+                        JSONObject sendData = new JSONObject();
+                        try {
+                            sendData.put("plateNo" , ((TextView) findViewById( R.id.Car_Number )).getText().toString());
+                            sendData.put("routeID" , ((TextView) findViewById( R.id.bus_ID )).getText().toString());
+                            Log.d("sending", sendData.getString("plateNo"));
+                            Log.d("sending", sendData.getString("routeID"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
 
                         ConnectThread thread = new ConnectThread(url, sendData);
                         thread.start();
@@ -75,8 +79,6 @@ public class MainActivity extends Activity {
                                 startActivity(intent);
                             }
                         }, 2000);  // 2000은 2초를 의미합니다.
-
-
                     }
                 }
         );
@@ -84,17 +86,18 @@ public class MainActivity extends Activity {
 
     class ConnectThread extends Thread {
         String urlStr;
-        HashMap<String, String> s_Data;
+       JSONObject s_Data;
 
-        public ConnectThread(String inStr, HashMap<String, String> map){
+        public ConnectThread(String inStr, JSONObject map){
             urlStr = inStr;
             this.s_Data = map;
 
         }
 
-
         public void run(){
+
             try{
+
                 final String output = request(urlStr, this.s_Data);
                 handler.post(new Runnable(){
                     @Override
@@ -110,7 +113,7 @@ public class MainActivity extends Activity {
             }
         }
 
-        public String[][] jsonParserList(String pRecvServerPage) {
+        private String[][] jsonParserList(String pRecvServerPage) {
 
             Log.i("서버에서 받은 전체 내용 : ", pRecvServerPage);
 
@@ -148,6 +151,9 @@ public class MainActivity extends Activity {
             }
         }
 
+
+
+
         // 매개변수를 URL에 붙이는 함수
         private String getPostString(HashMap<String, String> map) {
             StringBuilder result = new StringBuilder();
@@ -174,7 +180,7 @@ public class MainActivity extends Activity {
             return result.toString();
         }
 
-        private String request(String urlStr, HashMap<String, String> map){
+        private String request(String urlStr, JSONObject map){
             StringBuilder output = new StringBuilder();
 
             try{
@@ -191,7 +197,7 @@ public class MainActivity extends Activity {
                     if (map != null) { // 웹 서버로 보낼 매개변수가 있는 경우우
                         OutputStream os = conn.getOutputStream(); // 서버로 보내기 위한 출력 스트림
                         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os, "UTF-8")); // UTF-8로 전송
-                        bw.write(getPostString(map)); // 매개변수 전송
+                        bw.write(map.toString()); // 매개변수 전송
                         bw.flush();
                         bw.close();
                         os.close();
