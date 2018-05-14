@@ -70,6 +70,7 @@ public class DriverActivity extends Activity{
 //            e.printStackTrace();
 //        }
     }
+
     class ConnectThread extends Thread {
         String urlStr;
         JSONObject s_Data;
@@ -108,6 +109,8 @@ public class DriverActivity extends Activity{
 
                 JSONObject jBody = jsonObject.getJSONObject("body");  // JSONObject 추출
                 //Log.d("PARSING", jBody.getString("frontBus"));
+
+                setBusInfo(jBody);
 
 
             } catch (JSONException e) {
@@ -149,6 +152,10 @@ public class DriverActivity extends Activity{
 
             }
             return output.toString();
+        }
+
+        private void setBusInfo(JSONObject Jinfo){
+
         }
     }
 }
