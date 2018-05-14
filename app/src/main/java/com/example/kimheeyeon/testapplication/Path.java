@@ -1,6 +1,8 @@
 package com.example.kimheeyeon.testapplication;
 
-public class Path {
+import java.io.Serializable;
+
+public class Path implements Serializable {
 
 
     private String stationName;

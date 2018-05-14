@@ -67,11 +67,17 @@ public class MainActivity extends Activity {
                         Handler handler2 = new Handler();
                         handler2.postDelayed(new Runnable() {
                             public void run() {
-                                Intent intent = new Intent(MainActivity.this, DriverActivity.class);
-                                intent.putExtra("BUS_NAME", textView1.getText().toString()); //키 - 보낼 값(밸류)
-                                intent.putExtra("busData", settedBus);
+                                try {
+                                    Intent intent = new Intent(MainActivity.this, DriverActivity.class);
+                                    intent.putExtra("BUS_NAME", textView1.getText().toString()); //키 - 보낼 값(밸류)
+                                    intent.putExtra("CAR_NUMBER", ((TextView) findViewById(R.id.Car_Number)).getText().toString());
+                                    Log.d("ack data", settedBus.getBusInfo().getBusNumber());
+                                    intent.putExtra("busData", settedBus);
 
-                                startActivity(intent);
+                                    startActivity(intent);
+                                }catch(Exception e){
+                                    e.printStackTrace();
+                                }
                             }
                         }, 2000);  // 2000은 2초를 의미합니다.
                     }

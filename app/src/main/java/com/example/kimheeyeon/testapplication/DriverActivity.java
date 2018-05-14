@@ -26,9 +26,14 @@ public class DriverActivity extends Activity{
 
         TextView textView1 = (TextView)findViewById( R.id.BusNum );
         Intent intent = getIntent();
-        //textView1.setText( intent.getStringExtra("BUS_NAME") );
+        textView1.setText( intent.getStringExtra("CAR_NUMBER") );
         Bus SettedBus = (Bus)intent.getSerializableExtra("busData");
-        textView1.setText( SettedBus.getBusInfo().getBusNumber() );
+        textView1.setText( SettedBus.getBusInfo().getBusNumber().concat("번"));
+
+        TextView FrontBus_Text = (TextView)findViewById(R.id.FrontBus_Text);
+
+
+
 
 
 

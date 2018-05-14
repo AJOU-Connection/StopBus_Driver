@@ -9,7 +9,7 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Bus  implements Serializable {
+public class Bus implements Serializable {
     //Bus가 가지고 있어야 하는 것. 현재 위치, bus number, 차량 넘버
 
     private String current_place;

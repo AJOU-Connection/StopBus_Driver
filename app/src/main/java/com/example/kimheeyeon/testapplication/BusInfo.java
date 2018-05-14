@@ -5,10 +5,11 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class BusInfo {
+public class BusInfo implements Serializable {
     //for the information that not changed
 
     private ArrayList<Path> paths = new ArrayList<>();
