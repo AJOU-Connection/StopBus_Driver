@@ -15,13 +15,11 @@ public class Bus implements Serializable {
     private String current_place;
     private BusInfo busInfo;
 
-    public Bus(){}
+    public Bus(){
+    }
 
     public Bus(String BusNum) {
-        //text = "HaHaHaHaHa";
-
         this.busInfo = new BusInfo(BusNum);
-
     }
 
     public String getCurrent_place() {
@@ -39,8 +37,6 @@ public class Bus implements Serializable {
     public void setBusInfo(JSONObject getInfo) {
         BusInfo testinfo = new BusInfo();
         try {
-            //Log.d("tag", getInfo.toString(6));
-            //Log.d("tag", getInfo.getString("busNumber"));
             testinfo.setBusNumber(getInfo.getString("busNumber"));
             Log.d("tag", getInfo.getString("stationList"));
             JSONArray sList = new JSONArray(getInfo.getString("stationList"));
@@ -49,8 +45,7 @@ public class Bus implements Serializable {
                 JSONObject binfo = sList.getJSONObject(i);
                 testinfo.putPath(binfo);
             }
-            //testinfo.setPaths(getInfo.getJSONObject("stationList"));
-            //Log.d("businfo", BusInfo.getBusNumber());
+
             this.setBusInfo(testinfo);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -61,8 +56,12 @@ public class Bus implements Serializable {
         this.busInfo = businfo;
     }
 
-    public void setVehicleNumber(int vehicleNumber) {
+    public void setVehicleNumber(String vehicleNumber) {
         this.busInfo.setVehicleNumber(vehicleNumber);
+    }
+
+    public void setCarNumber(String carNumber) {
+        this.busInfo.setCarNumber(carNumber);
     }
 
 

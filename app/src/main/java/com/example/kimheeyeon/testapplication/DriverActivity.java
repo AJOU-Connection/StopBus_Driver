@@ -2,73 +2,99 @@ package com.example.kimheeyeon.testapplication;
 
 import android.app.Activity;
 import android.os.Bundle;
-
 import android.os.Handler;
 import android.util.Log;
 import android.widget.TextView;
-import android.view.View;
-
 import android.content.Intent;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class DriverActivity extends Activity{
     Handler handler = new Handler();
+    Bus SettedBus = new Bus();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
 
-        TextView textView1 = (TextView)findViewById( R.id.BusNum );
-        Intent intent = getIntent();
-        textView1.setText( intent.getStringExtra("CAR_NUMBER") );
-        Bus SettedBus = (Bus)intent.getSerializableExtra("busData");
-        textView1.setText( SettedBus.getBusInfo().getBusNumber().concat("번"));
+        final Intent intent = getIntent();
 
+        //intent 로부터 받은 값 정리
+//        String busID =  intent.getStringExtra("BUS_ID");
+//        String car_num =  intent.getStringExtra("CAR_NUMBER");
+        SettedBus = (Bus)intent.getSerializableExtra("busData");
+        Log.d("check info", SettedBus.getBusInfo().getCarNumber());
+        Log.d("check info", SettedBus.getBusInfo().getVehicleNumber());
+
+
+        //상단에 출력할 버스 번호 (ex 720-2번)
+        TextView BusNum = (TextView)findViewById( R.id.BusNum );
+        BusNum.setText( SettedBus.getBusInfo().getBusNumber().concat("번"));
+
+        //앞 버스 위치 출력
         TextView FrontBus_Text = (TextView)findViewById(R.id.FrontBus_Text);
         FrontBus_Text.setText(SettedBus.getBusInfo().getPath().get(2).getStationName());
 
+        //현재 버스 위치 출력
         TextView CurrentStation = (TextView)findViewById(R.id.CurrentStation);
         CurrentStation.setText(SettedBus.getBusInfo().getPath().get(1).getStationName());
 
+        //뒷 버스 위치 출력
         TextView BackBus_Text = (TextView)findViewById(R.id.BackBus_Text);
         BackBus_Text.setText(SettedBus.getBusInfo().getPath().get(0).getStationName());
 
+        //현재 버스 다음 위치 출력
         TextView NextStation = (TextView)findViewById(R.id.NextStation);
         NextStation.setText(SettedBus.getBusInfo().getPath().get(2).getStationName());
 
+        //현재 버스 다음 위치 출력(밑 부분)
         TextView NextStation_Buttom = (TextView)findViewById(R.id.NextStation_Buttom);
         NextStation_Buttom.setText(SettedBus.getBusInfo().getPath().get(2).getStationName());
 
+        //현재 버스 방향 출력
         TextView NextStationDirection = (TextView)findViewById(R.id.NextStationDirection);
         NextStationDirection.setText(SettedBus.getBusInfo().getPath().get(3).getStationName().concat(" 방향"));
 
-//        String url = "http://stop-bus.tk/driver/register";
-//
-//        JSONObject sendData = new JSONObject();
-//        try {
-//            sendData.put("plateNo" , ((TextView) findViewById( R.id.Car_Number )).getText().toString());
-//            sendData.put("routeID" , ((TextView) findViewById( R.id.bus_ID )).getText().toString());
-//            Log.d("sending", sendData.getString("plateNo"));
-//            Log.d("sending", sendData.getString("routeID"));
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
+        //반복실행할 것.
+        Runnable runnable = new Runnable() {
+            public void run() {
+                // task to run goes here
+                System.out.println("Hello !!");
 
-//        DriverActivity.ConnectThread thread = new DriverActivity.ConnectThread(url, sendData);
-//        thread.start();
-//
-//        try {
-//            thread.join();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+                String url = "http://stop-bus.tk/driver/register";
+
+                JSONObject sendData = new JSONObject();
+                try {
+                    sendData.put("plateNo" , SettedBus.getBusInfo().getCarNumber());
+                    sendData.put("routeID" , SettedBus.getBusInfo().getVehicleNumber());
+                    Log.d("sending", sendData.getString("plateNo"));
+                    Log.d("sending", sendData.getString("routeID"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                DriverActivity.ConnectThread thread = new DriverActivity.ConnectThread(url, sendData);
+                thread.start();
+
+                try {
+                    thread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
+        service.scheduleAtFixedRate(runnable, 0, 30, TimeUnit.SECONDS);
     }
 
     class ConnectThread extends Thread {

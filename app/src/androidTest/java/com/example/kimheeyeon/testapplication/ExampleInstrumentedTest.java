@@ -5,6 +5,7 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.Test;
+import org.junit.Before;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.*;
@@ -16,6 +17,12 @@ import static org.junit.Assert.*;
  */
 @RunWith(AndroidJUnit4.class)
 public class ExampleInstrumentedTest {
+    private Bus tBus;
+
+    @Before
+    public void setUp(){
+        tBus = new Bus();
+    }
     @Test
     public void useAppContext() {
         // Context of the app under test.

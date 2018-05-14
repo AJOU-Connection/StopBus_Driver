@@ -24,7 +24,8 @@ import org.json.JSONObject;
 public class MainActivity extends Activity {
     Handler handler = new Handler();
     Bus settedBus = new Bus();
-    int busID = -1;
+    String busID = "";
+    String carNumber = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +39,11 @@ public class MainActivity extends Activity {
         search.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
-                        final TextView textView1 = (TextView)findViewById( R.id.bus_ID );
-                        busID =  Integer.parseInt(textView1.getText().toString());
+                        TextView bus_id = (TextView)findViewById( R.id.bus_ID );
+                        busID =  bus_id.getText().toString();
+
+                        TextView car_n = (TextView)findViewById( R.id.Car_Number );
+                        carNumber =  car_n.getText().toString();
 
                         P_Bar.setVisibility(View.VISIBLE);
 
@@ -47,8 +51,8 @@ public class MainActivity extends Activity {
 
                         JSONObject sendData = new JSONObject();
                         try {
-                            sendData.put("plateNo" , ((TextView) findViewById( R.id.Car_Number )).getText().toString());
-                            sendData.put("routeID" , ((TextView) findViewById( R.id.bus_ID )).getText().toString());
+                            sendData.put("plateNo" , carNumber);
+                            sendData.put("routeID" , busID);
                             Log.d("sending", sendData.getString("plateNo"));
                             Log.d("sending", sendData.getString("routeID"));
                         } catch (JSONException e) {
@@ -69,8 +73,8 @@ public class MainActivity extends Activity {
                             public void run() {
                                 try {
                                     Intent intent = new Intent(MainActivity.this, DriverActivity.class);
-                                    intent.putExtra("BUS_NAME", textView1.getText().toString()); //키 - 보낼 값(밸류)
-                                    intent.putExtra("CAR_NUMBER", ((TextView) findViewById(R.id.Car_Number)).getText().toString());
+                                    //intent.putExtra("BUS_ID", busID); //키 - 보낼 값(밸류)
+                                    //intent.putExtra("CAR_NUMBER", carNumber);
                                     Log.d("ack data", settedBus.getBusInfo().getBusNumber());
                                     intent.putExtra("busData", settedBus);
 
@@ -126,6 +130,7 @@ public class MainActivity extends Activity {
 
                 settedBus.setBusInfo(jBody);
                 settedBus.setVehicleNumber(busID);
+                settedBus.setCarNumber(carNumber);
 
             } catch (JSONException e) {
                 e.printStackTrace();

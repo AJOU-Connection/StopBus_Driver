@@ -14,7 +14,8 @@ public class BusInfo implements Serializable {
 
     private ArrayList<Path> paths = new ArrayList<>();
     private String BusNumber = "";
-    private int VehicleNumber = 0;
+    private String VehicleNumber = "";
+    private String CarNumber = "";
 
     public BusInfo(){
 
@@ -22,8 +23,6 @@ public class BusInfo implements Serializable {
 
     public BusInfo(String BusNum) {
         setBusNumber(BusNum);
-
-        //this.getBusPath(BusNumber);
     }
 
     public String getBusNumber() {
@@ -61,12 +60,20 @@ public class BusInfo implements Serializable {
         Log.d("tag", this.BusNumber);
     }
 
-    public int getVehicleNumber() {
+    public String getVehicleNumber() {
         return VehicleNumber;
     }
 
-    public void setVehicleNumber(int vehicleNumber) {
+    public void setVehicleNumber(String vehicleNumber) {
         this.VehicleNumber = vehicleNumber;
+    }
+
+    public String getCarNumber() {
+        return CarNumber;
+    }
+
+    public void setCarNumber(String carNumber) {
+        CarNumber = carNumber;
     }
 
 }
