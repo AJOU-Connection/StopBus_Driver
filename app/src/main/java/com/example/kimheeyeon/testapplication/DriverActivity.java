@@ -31,6 +31,25 @@ public class DriverActivity extends Activity{
         textView1.setText( SettedBus.getBusInfo().getBusNumber().concat("번"));
 
         TextView FrontBus_Text = (TextView)findViewById(R.id.FrontBus_Text);
+        FrontBus_Text.setText(SettedBus.getBusInfo().getPath().get(2).getStationName());
+
+        TextView CurrentStation = (TextView)findViewById(R.id.CurrentStation);
+        CurrentStation.setText(SettedBus.getBusInfo().getPath().get(1).getStationName());
+
+        TextView BackBus_Text = (TextView)findViewById(R.id.BackBus_Text);
+        BackBus_Text.setText(SettedBus.getBusInfo().getPath().get(0).getStationName());
+
+        TextView NextStation = (TextView)findViewById(R.id.NextStation);
+        NextStation.setText(SettedBus.getBusInfo().getPath().get(2).getStationName());
+
+        TextView NextStation_Buttom = (TextView)findViewById(R.id.NextStation_Buttom);
+        NextStation_Buttom.setText(SettedBus.getBusInfo().getPath().get(2).getStationName());
+
+        TextView NextStationDirection = (TextView)findViewById(R.id.NextStationDirection);
+        NextStationDirection.setText(SettedBus.getBusInfo().getPath().get(3).getStationName().concat(" 방향"));
+
+
+
 
 
 

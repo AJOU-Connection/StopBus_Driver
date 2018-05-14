@@ -6,13 +6,13 @@ public class Path implements Serializable {
 
 
     private String stationName;
-    private int stationNumber;
+    private String stationNumber;
     private int stationSequence;
 
     public Path(String S_Name, String S_Number, String S_Seq){
 
         setStationName(S_Name);
-        setStationNumber(Integer.parseInt(S_Number));
+        setStationNumber(S_Number);
         setStationSequence(Integer.parseInt(S_Seq));
 
     }
@@ -25,11 +25,11 @@ public class Path implements Serializable {
         this.stationName = stationName;
     }
 
-    public int getStationNumber() {
+    public String getStationNumber() {
         return stationNumber;
     }
 
-    public void setStationNumber(int stationNumber) {
+    public void setStationNumber(String stationNumber) {
         this.stationNumber = stationNumber;
     }
 
