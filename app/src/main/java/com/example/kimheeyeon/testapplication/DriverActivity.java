@@ -30,8 +30,6 @@ public class DriverActivity extends Activity{
         final Intent intent = getIntent();
 
         //intent 로부터 받은 값 정리
-//        String busID =  intent.getStringExtra("BUS_ID");
-//        String car_num =  intent.getStringExtra("CAR_NUMBER");
         SettedBus = (Bus)intent.getSerializableExtra("busData");
         Log.d("check info", SettedBus.getBusInfo().getCarNumber());
         Log.d("check info", SettedBus.getBusInfo().getVehicleNumber());
@@ -71,7 +69,7 @@ public class DriverActivity extends Activity{
                 // task to run goes here
                 System.out.println("Hello !!");
 
-                String url = "http://stop-bus.tk/driver/register";
+                String url = "http://stop-bus.tk/user/busLocationList";
 
                 JSONObject sendData = new JSONObject();
                 try {
@@ -133,10 +131,13 @@ public class DriverActivity extends Activity{
                 JSONObject jHeader = jsonObject.getJSONObject("header");  // JSONObject 추출
                 Log.d("PARSING", jHeader.getString("result"));
 
-                JSONObject jBody = jsonObject.getJSONObject("body");  // JSONObject 추출
+                JSONObject jBody = jsonObject.getJSONObject("body");
+                if(jHeader.getString("result").compareTo("true") != 0)
+                    System.out.println("errrr!!1");
+
                 //Log.d("PARSING", jBody.getString("frontBus"));
 
-                setBusInfo(jBody);
+                String CurrentStation = SettedBus.findCurrentBus(jBody);
 
 
             } catch (JSONException e) {
@@ -178,10 +179,6 @@ public class DriverActivity extends Activity{
 
             }
             return output.toString();
-        }
-
-        private void setBusInfo(JSONObject Jinfo){
-
         }
     }
 }

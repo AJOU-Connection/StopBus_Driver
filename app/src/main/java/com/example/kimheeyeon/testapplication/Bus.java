@@ -64,5 +64,24 @@ public class Bus implements Serializable {
         this.busInfo.setCarNumber(carNumber);
     }
 
-
+    public String findCurrentBus(JSONObject jInfo){
+        JSONArray BusList = null;
+        try {
+            BusList = new JSONArray(jInfo);
+            for(int i = 0; i < BusList.length(); i++){
+                JSONObject binfo = BusList.getJSONObject(i);
+                if(binfo.getString("plateNo").compareTo(this.busInfo.getCarNumber()) == 0) {
+                    String currentSeq = (binfo.getString("stationSeq"));
+                    System.out.print(currentSeq);
+                    this.setCurrent_place(this.busInfo.getPathName_by_stationSeq(Integer.parseInt(currentSeq)));
+                    //this.setCurrent_place();
+                    return currentSeq;
+                }
+            }
+            return null;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

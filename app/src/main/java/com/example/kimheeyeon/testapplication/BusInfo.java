@@ -43,6 +43,10 @@ public class BusInfo implements Serializable {
 
     }
 
+    public String getPathName_by_stationSeq(int stationSeq){
+        return this.paths.get(stationSeq-1).getStationName();
+    }
+
     public void putPath(JSONObject stationInfo){
         try {
             Path nPath = new Path(stationInfo.getString("stationName"), stationInfo.getString("stationNumber"),stationInfo.getString("stationSeq"));

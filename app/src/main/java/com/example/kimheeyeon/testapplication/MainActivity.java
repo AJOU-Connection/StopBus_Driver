@@ -126,7 +126,6 @@ public class MainActivity extends Activity {
                 Log.d("PARSING", jHeader.getString("result"));
 
                 JSONObject jBody = jsonObject.getJSONObject("body");  // JSONObject 추출
-                Log.d("PARSING", jBody.getString("busNumber"));
 
                 settedBus.setBusInfo(jBody);
                 settedBus.setVehicleNumber(busID);
