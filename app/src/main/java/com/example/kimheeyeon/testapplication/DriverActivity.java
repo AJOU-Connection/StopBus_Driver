@@ -11,10 +11,12 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -131,19 +133,22 @@ public class DriverActivity extends Activity{
                 JSONObject jHeader = jsonObject.getJSONObject("header");  // JSONObject 추출
                 Log.d("PARSING", jHeader.getString("result"));
 
-                JSONObject jBody = jsonObject.getJSONObject("body");
+                JSONArray testarray = jsonObject.getJSONArray("body");
+
                 if(jHeader.getString("result").compareTo("true") != 0)
                     System.out.println("errrr!!1");
 
-                //Log.d("PARSING", jBody.getString("frontBus"));
-
-                String CurrentStation = SettedBus.findCurrentBus(jBody);
-
-
+                String findresult = SettedBus.findCurrentBus(testarray);
+                if(findresult==null){
+                    System.out.print("null");
+                }else{
+                    System.out.print(findresult);
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
+
 
         private String request(String urlStr, JSONObject map){
             StringBuilder output = new StringBuilder();
