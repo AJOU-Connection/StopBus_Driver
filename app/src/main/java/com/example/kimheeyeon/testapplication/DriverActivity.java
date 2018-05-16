@@ -138,8 +138,8 @@ public class DriverActivity extends Activity{
                 if(jHeader.getString("result").compareTo("true") != 0)
                     System.out.println("errrr!!1");
 
-                String findresult = SettedBus.findCurrentBus(testarray);
-                if(findresult==null){
+                int findresult = SettedBus.findCurrentBus(testarray);
+                if(findresult==-1){
                     System.out.print("null");
                 }else{
                     System.out.print(findresult);

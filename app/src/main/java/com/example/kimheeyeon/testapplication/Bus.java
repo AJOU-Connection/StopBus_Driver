@@ -15,7 +15,7 @@ import java.util.Date;
 public class Bus implements Serializable {
     //Bus가 가지고 있어야 하는 것. 현재 위치, bus number, 차량 넘버
 
-    private String current_place;
+    private int current_place;
     private BusInfo busInfo;
     private ArrayList<Buslocation> locationList = new ArrayList<Buslocation>();
 
@@ -26,11 +26,11 @@ public class Bus implements Serializable {
         this.busInfo = new BusInfo(BusNum);
     }
 
-    public String getCurrent_place() {
+    public int getCurrent_place() {
         return current_place;
     }
 
-    public void setCurrent_place(String current_place) {
+    public void setCurrent_place(int current_place) {
         this.current_place = current_place;
     }
 
@@ -68,8 +68,11 @@ public class Bus implements Serializable {
         this.busInfo.setCarNumber(carNumber);
     }
 
-    public String findCurrentBus(JSONArray jInfo){
+    public int findCurrentBus(JSONArray jInfo){
         JSONArray BusList = null;
+        //강제로 null시켜서 비우기
+        locationList.clear();
+
         Log.i("isin?", "true");
         try {
             BusList = jInfo;
@@ -79,29 +82,36 @@ public class Bus implements Serializable {
                 Log.d("Compare", binfo.getString("plateNo").concat(" and ").concat(binfo.getString("stationSeq")));
                 Buslocation nLocation = new Buslocation(binfo.getString("plateNo"), Integer.parseInt(binfo.getString("stationSeq")));
                 this.locationList.add(this.locationList.size() , nLocation);
-
-                if(binfo.getString("plateNo").compareTo("경기77바1752") == 0) {
-                    String currentSeq = (binfo.getString("stationSeq"));
-                    this.setCurrent_place(this.busInfo.getPathName_by_stationSeq(Integer.parseInt(currentSeq)));
-                    //this.setCurrent_place();
-                    Log.d("check!", String.valueOf(i));
-                    //return currentSeq;
-                }
             }
 
             MiniComparator comp = new MiniComparator();
             Collections.sort(locationList, comp);
 
             System.out.println("--after--");
+            int finalResult = -1;
+
             for ( int i = 0 ; i < locationList.size(); i++){
                 Log.d("after", locationList.get(i).getPlateNo().concat(" and ").concat(String.valueOf(locationList.get(i).getStationSeq())));
 
+                if(locationList.get(i).getPlateNo().compareTo("경기77바1104") == 0) {
+
+                    int currentSeq = (locationList.get(i).getStationSeq());
+                    finalResult =currentSeq;
+                    this.setCurrent_place(currentSeq);
+                    //this.setCurrent_place();
+                    Log.d("check!", locationList.get(i).getPlateNo().concat(" and ").concat(String.valueOf(locationList.get(i).getStationSeq())));
+                    Log.d("beforebus!", locationList.get(i+1).getPlateNo().concat(" and ").concat(String.valueOf(locationList.get(i+1).getStationSeq())));
+                    Log.d("afterBus!", locationList.get(i-1).getPlateNo().concat(" and ").concat(String.valueOf(locationList.get(i-1).getStationSeq())));
+
+                    //return currentSeq;
+                }
+
             }
 
-            return null;
+            return finalResult;
         } catch (JSONException e) {
             e.printStackTrace();
-            return null;
+            return -1;
         }
     }
 
