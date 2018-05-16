@@ -12,12 +12,15 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 
+/**
+ * current_place : 지내간 버스정류장
+ */
 public class Bus implements Serializable {
     //Bus가 가지고 있어야 하는 것. 현재 위치, bus number, 차량 넘버
 
     private int current_place;
     private BusInfo busInfo;
-    private ArrayList<Buslocation> locationList = new ArrayList<Buslocation>();
+    private ArrayList<BusLocation> locationList = new ArrayList<BusLocation>();
 
     public Bus(){
     }
@@ -68,6 +71,14 @@ public class Bus implements Serializable {
         this.busInfo.setCarNumber(carNumber);
     }
 
+    public ArrayList<BusLocation> getLocationList() {
+        return locationList;
+    }
+
+    public void setLocationList(ArrayList<BusLocation> locationList) {
+        this.locationList = locationList;
+    }
+
     public int findCurrentBus(JSONArray jInfo){
         JSONArray BusList = null;
         //강제로 null시켜서 비우기
@@ -80,7 +91,7 @@ public class Bus implements Serializable {
             for(int i = 0; i < BusList.length(); i++){
                 JSONObject binfo = BusList.getJSONObject(i);
                 Log.d("Compare", binfo.getString("plateNo").concat(" and ").concat(binfo.getString("stationSeq")));
-                Buslocation nLocation = new Buslocation(binfo.getString("plateNo"), Integer.parseInt(binfo.getString("stationSeq")));
+                BusLocation nLocation = new BusLocation(binfo.getString("plateNo"), Integer.parseInt(binfo.getString("stationSeq")));
                 this.locationList.add(this.locationList.size() , nLocation);
             }
 
@@ -96,14 +107,14 @@ public class Bus implements Serializable {
                 if(locationList.get(i).getPlateNo().compareTo("경기77바1104") == 0) {
 
                     int currentSeq = (locationList.get(i).getStationSeq());
-                    finalResult =currentSeq;
+                    finalResult =i;
                     this.setCurrent_place(currentSeq);
                     //this.setCurrent_place();
                     Log.d("check!", locationList.get(i).getPlateNo().concat(" and ").concat(String.valueOf(locationList.get(i).getStationSeq())));
                     Log.d("beforebus!", locationList.get(i+1).getPlateNo().concat(" and ").concat(String.valueOf(locationList.get(i+1).getStationSeq())));
                     Log.d("afterBus!", locationList.get(i-1).getPlateNo().concat(" and ").concat(String.valueOf(locationList.get(i-1).getStationSeq())));
 
-                    //return currentSeq;
+                    //return finalResult;
                 }
 
             }
@@ -115,9 +126,9 @@ public class Bus implements Serializable {
         }
     }
 
-    class MiniComparator implements Comparator<Buslocation> {
+    class MiniComparator implements Comparator<BusLocation> {
         @Override
-        public int compare(Buslocation first, Buslocation second){
+        public int compare(BusLocation first, BusLocation second){
             int firstValue = first.getStationSeq();
             int secondValue = second.getStationSeq();
 
@@ -130,31 +141,5 @@ public class Bus implements Serializable {
             }
         }
 
-    }
-
-    private class Buslocation {
-        private String PlateNo;
-        private int stationSeq;
-
-        public String getPlateNo() {
-            return PlateNo;
-        }
-
-        public void setPlateNo(String plateNo) {
-            PlateNo = plateNo;
-        }
-
-        public int getStationSeq() {
-            return stationSeq;
-        }
-
-        public void setStationSeq(int stationSeq) {
-            this.stationSeq = stationSeq;
-        }
-
-        public Buslocation(String PlateNo, int StationSeq){
-            setPlateNo(PlateNo);
-            setStationSeq(StationSeq);
-        }
     }
 }

@@ -142,7 +142,8 @@ public class DriverActivity extends Activity{
                 if(findresult==-1){
                     System.out.print("null");
                 }else{
-                    System.out.print(findresult);
+                    System.out.print("the result is : ".concat(String.valueOf(findresult)));
+                    this.setBusState(findresult);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -185,5 +186,38 @@ public class DriverActivity extends Activity{
             }
             return output.toString();
         }
+
+        public void setBusState(int currentStation){
+            //상단에 출력할 버스 번호 (ex 720-2번)
+            TextView BusNum = (TextView)findViewById( R.id.BusNum );
+            BusNum.setText( SettedBus.getBusInfo().getBusNumber().concat("번"));
+
+            //앞 버스 위치 출력
+            TextView FrontBus_Text = (TextView)findViewById(R.id.FrontBus_Text);
+            FrontBus_Text.setText(SettedBus.getLocationList().get(currentStation+1).getPlateNo());
+
+            //현재 버스 위치 출력
+            TextView CurrentStation = (TextView)findViewById(R.id.CurrentStation);
+            CurrentStation.setText(SettedBus.getLocationList().get(currentStation).getPlateNo());
+
+            //뒷 버스 위치 출력
+            TextView BackBus_Text = (TextView)findViewById(R.id.BackBus_Text);
+            BackBus_Text.setText(SettedBus.getLocationList().get(currentStation-1).getPlateNo());
+
+            //현재 버스 다음 위치 출력
+            TextView NextStation = (TextView)findViewById(R.id.NextStation);
+            NextStation.setText(SettedBus.getBusInfo().getPath().get(currentStation+1).getStationName());
+
+            //현재 버스 다음 위치 출력(밑 부분)
+            TextView NextStation_Buttom = (TextView)findViewById(R.id.NextStation_Buttom);
+            NextStation_Buttom.setText(SettedBus.getBusInfo().getPath().get(currentStation+2).getStationName());
+
+            //현재 버스 방향 출력
+            TextView NextStationDirection = (TextView)findViewById(R.id.NextStationDirection);
+            NextStationDirection.setText(SettedBus.getBusInfo().getPath().get(currentStation+3).getStationName());
+
+        }
     }
+
+
 }
