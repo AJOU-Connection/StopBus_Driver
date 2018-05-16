@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Bus implements Serializable {
@@ -14,6 +15,7 @@ public class Bus implements Serializable {
 
     private String current_place;
     private BusInfo busInfo;
+    private ArrayList<Path> paths = new ArrayList<>();
 
     public Bus(){
     }
@@ -74,10 +76,11 @@ public class Bus implements Serializable {
                 JSONObject binfo = BusList.getJSONObject(i);
                 Log.d("Compare", binfo.getString("plateNo").concat(" and ").concat(binfo.getString("stationSeq")));
                 //if(binfo.getString("plateNo").compareTo(this.busInfo.getCarNumber()) == 0) {
-                if(binfo.getString("plateNo").compareTo("경기77바1762") == 0) {
+                if(binfo.getString("plateNo").compareTo("경기77바1752") == 0) {
                     String currentSeq = (binfo.getString("stationSeq"));
                     this.setCurrent_place(this.busInfo.getPathName_by_stationSeq(Integer.parseInt(currentSeq)));
                     //this.setCurrent_place();
+                    Log.d("check!", String.valueOf(i));
                     return currentSeq;
                 }
             }
@@ -86,5 +89,26 @@ public class Bus implements Serializable {
             e.printStackTrace();
             return null;
         }
+    }
+    private class Buslocation {
+        private String PlateNo;
+        private int stationSeq;
+
+        public String getPlateNo() {
+            return PlateNo;
+        }
+
+        public void setPlateNo(String plateNo) {
+            PlateNo = plateNo;
+        }
+
+        public int getStationSeq() {
+            return stationSeq;
+        }
+
+        public void setStationSeq(int stationSeq) {
+            this.stationSeq = stationSeq;
+        }
+
     }
 }
