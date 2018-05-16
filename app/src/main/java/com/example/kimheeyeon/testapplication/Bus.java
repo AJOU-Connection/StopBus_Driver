@@ -8,6 +8,8 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 
 public class Bus implements Serializable {
@@ -15,7 +17,7 @@ public class Bus implements Serializable {
 
     private String current_place;
     private BusInfo busInfo;
-    private ArrayList<Path> paths = new ArrayList<>();
+    private ArrayList<Buslocation> locationList = new ArrayList<Buslocation>();
 
     public Bus(){
     }
@@ -75,21 +77,51 @@ public class Bus implements Serializable {
             for(int i = 0; i < BusList.length(); i++){
                 JSONObject binfo = BusList.getJSONObject(i);
                 Log.d("Compare", binfo.getString("plateNo").concat(" and ").concat(binfo.getString("stationSeq")));
-                //if(binfo.getString("plateNo").compareTo(this.busInfo.getCarNumber()) == 0) {
+                Buslocation nLocation = new Buslocation(binfo.getString("plateNo"), Integer.parseInt(binfo.getString("stationSeq")));
+                this.locationList.add(this.locationList.size() , nLocation);
+
                 if(binfo.getString("plateNo").compareTo("경기77바1752") == 0) {
                     String currentSeq = (binfo.getString("stationSeq"));
                     this.setCurrent_place(this.busInfo.getPathName_by_stationSeq(Integer.parseInt(currentSeq)));
                     //this.setCurrent_place();
                     Log.d("check!", String.valueOf(i));
-                    return currentSeq;
+                    //return currentSeq;
                 }
             }
+
+            MiniComparator comp = new MiniComparator();
+            Collections.sort(locationList, comp);
+
+            System.out.println("--after--");
+            for ( int i = 0 ; i < locationList.size(); i++){
+                Log.d("after", locationList.get(i).getPlateNo().concat(" and ").concat(String.valueOf(locationList.get(i).getStationSeq())));
+
+            }
+
             return null;
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
         }
     }
+
+    class MiniComparator implements Comparator<Buslocation> {
+        @Override
+        public int compare(Buslocation first, Buslocation second){
+            int firstValue = first.getStationSeq();
+            int secondValue = second.getStationSeq();
+
+            if(firstValue < secondValue) {
+                return -1;
+            }else if(firstValue > secondValue){
+                return 1;
+            }else{
+                return 0;
+            }
+        }
+
+    }
+
     private class Buslocation {
         private String PlateNo;
         private int stationSeq;
@@ -110,5 +142,9 @@ public class Bus implements Serializable {
             this.stationSeq = stationSeq;
         }
 
+        public Buslocation(String PlateNo, int StationSeq){
+            setPlateNo(PlateNo);
+            setStationSeq(StationSeq);
+        }
     }
 }
