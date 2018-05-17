@@ -212,15 +212,15 @@ public class DriverActivity extends Activity{
 
             //현재 버스 다음 위치 출력
             TextView NextStation = (TextView)findViewById(R.id.NextStation);
-            NextStation.setText(SettedBus.getBusInfo().getPath().get(currentStation+1).getStationName());
+            NextStation.setText(SettedBus.getBusInfo().getPath().get(Current_Seq+1).getStationName());
 
             //현재 버스 다음 위치 출력(밑 부분)
             TextView NextStation_Buttom = (TextView)findViewById(R.id.NextStation_Buttom);
-            NextStation_Buttom.setText(SettedBus.getBusInfo().getPath().get(currentStation+2).getStationName());
+            NextStation_Buttom.setText(SettedBus.getBusInfo().getPath().get(Current_Seq+1).getStationName());
 
             //현재 버스 방향 출력
             TextView NextStationDirection = (TextView)findViewById(R.id.NextStationDirection);
-            NextStationDirection.setText(SettedBus.getBusInfo().getPath().get(currentStation+3).getStationName());
+            NextStationDirection.setText(SettedBus.getBusInfo().getPath().get(Current_Seq+2).getStationName());
 
         }
     }
