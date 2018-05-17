@@ -49,7 +49,7 @@ public class BusInfo implements Serializable {
 
     public void putPath(JSONObject stationInfo){
         try {
-            Path nPath = new Path(stationInfo.getString("stationName"), stationInfo.getString("stationNumber"),stationInfo.getString("stationSeq"));
+            Path nPath = new Path(stationInfo.getString("stationName"), stationInfo.getString("stationID"),stationInfo.getString("stationSeq"));
             this.paths.add(this.paths.size() , nPath);
 
             Log.d("path", this.paths.get(this.paths.size()-1).getStationName());

@@ -18,7 +18,9 @@ import java.util.Date;
 public class Bus implements Serializable {
     //Bus가 가지고 있어야 하는 것. 현재 위치, bus number, 차량 넘버
 
+    private int frontBus_place;
     private int current_place;
+    private int backBus_place;
     private BusInfo busInfo;
     private ArrayList<BusLocation> locationList = new ArrayList<BusLocation>();
 
@@ -79,6 +81,22 @@ public class Bus implements Serializable {
         this.locationList = locationList;
     }
 
+    public int getFrontBus_place() {
+        return frontBus_place;
+    }
+
+    public void setFrontBus_place(int frontBus_place) {
+        this.frontBus_place = frontBus_place;
+    }
+
+    public int getBackBus_place() {
+        return backBus_place;
+    }
+
+    public void setBackBus_place(int backBus_place) {
+        this.backBus_place = backBus_place;
+    }
+
     public int findCurrentBus(JSONArray jInfo){
         JSONArray BusList = null;
         //강제로 null시켜서 비우기
@@ -113,6 +131,9 @@ public class Bus implements Serializable {
                     Log.d("check!", locationList.get(i).getPlateNo().concat(" and ").concat(String.valueOf(locationList.get(i).getStationSeq())));
                     Log.d("beforebus!", locationList.get(i+1).getPlateNo().concat(" and ").concat(String.valueOf(locationList.get(i+1).getStationSeq())));
                     Log.d("afterBus!", locationList.get(i-1).getPlateNo().concat(" and ").concat(String.valueOf(locationList.get(i-1).getStationSeq())));
+
+                    setFrontBus_place(locationList.get(i+1).getStationSeq());
+                    setBackBus_place(locationList.get(i-1).getStationSeq());
 
                     //return finalResult;
                 }

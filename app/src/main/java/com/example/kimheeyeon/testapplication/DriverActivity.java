@@ -71,7 +71,10 @@ public class DriverActivity extends Activity{
                 // task to run goes here
                 System.out.println("Hello !!");
 
-                String url = "http://stop-bus.tk/user/busLocationList";
+                //해당하는 것의 모든 location data가져옴
+
+                String url_location = "http://stop-bus.tk/user/busLocationList";
+                String getPurpose = "busLocation";
 
                 JSONObject sendData = new JSONObject();
                 try {
@@ -83,14 +86,40 @@ public class DriverActivity extends Activity{
                     e.printStackTrace();
                 }
 
-                DriverActivity.ConnectThread thread = new DriverActivity.ConnectThread(url, sendData);
-                thread.start();
+                DriverActivity.ConnectThread thread_location = new DriverActivity.ConnectThread(url_location, sendData, getPurpose);
+                thread_location.start();
 
                 try {
-                    thread.join();
+                    thread_location.join();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+
+               //버스의 노선번호와 station 번호를 전달하여, 해당 정류장으로부터 남은 시간 추출
+                String url_time = "http://stop-bus.tk/driver/gap";
+                String getTime = "remainTime";
+
+                JSONObject sendStation = new JSONObject();
+                try {
+                    sendStation.put("routeID" , SettedBus.getBusInfo().getVehicleNumber());
+                    sendStation.put("stationID", SettedBus.getBusInfo().getPath().get( SettedBus.getFrontBus_place()).getStationID());
+
+                    Log.d("sending", sendStation.getString("routeID"));
+                    Log.d("sending", sendStation.getString("stationID"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                DriverActivity.ConnectThread thread_Time = new DriverActivity.ConnectThread(url_time, sendStation, getTime);
+                thread_Time.start();
+
+                try{
+                    thread_Time.join();
+                } catch (InterruptedException e){
+                    e.printStackTrace();
+                }
+
+
             }
         };
         ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
@@ -100,10 +129,12 @@ public class DriverActivity extends Activity{
     class ConnectThread extends Thread {
         String urlStr;
         JSONObject s_Data;
+        String purpose;
 
-        public ConnectThread(String inStr, JSONObject map){
+        public ConnectThread(String inStr, JSONObject map, String purpose){
             urlStr = inStr;
             this.s_Data = map;
+            this.purpose = purpose;
         }
 
         public void run(){
@@ -117,13 +148,18 @@ public class DriverActivity extends Activity{
                     }
                 });
 
-                jsonParserList(output);
+                if(purpose.equals("busLocation"))
+                    parseBusLocation(output);
+                else if(purpose.equals("remainTime"))
+                    parseTimeInformation(output);
+                else
+                    System.out.println("this is for out!! there is no version suits");
             } catch (Exception ex){
                 ex.printStackTrace();
             }
         }
 
-        private void jsonParserList(String pRecvServerPage) {
+        private void parseBusLocation(String pRecvServerPage) {
 
             Log.i("서버에서 받은 전체 내용 : ", pRecvServerPage);
 
@@ -150,6 +186,25 @@ public class DriverActivity extends Activity{
             }
         }
 
+        private void parseTimeInformation(String pRecvServerPage){
+            Log.i("서버에서 받은 내용(for time) : ", pRecvServerPage);
+
+            try {
+                JSONObject jsonObject = new JSONObject(pRecvServerPage);
+
+                JSONObject jHeader = jsonObject.getJSONObject("header");  // JSONObject 추출
+                Log.d("PARSING", jHeader.getString("result"));
+
+                JSONObject JBody = jsonObject.getJSONObject("body");
+                Log.d("FirstBus",JBody.getString("plateNo1").concat(JBody.getString("predictTime1")));
+                Log.d("SecondBus",JBody.getString("plateNo2").concat(JBody.getString("predictTime2")));
+
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
 
         private String request(String urlStr, JSONObject map){
             StringBuilder output = new StringBuilder();
@@ -196,19 +251,16 @@ public class DriverActivity extends Activity{
             TextView FrontBus_Text = (TextView)findViewById(R.id.FrontBus_Text);
             int FrontBus_Seq = SettedBus.getLocationList().get(currentStation+1).getStationSeq();
             FrontBus_Text.setText(SettedBus.getBusInfo().getPath().get(FrontBus_Seq).getStationName());
-            //FrontBus_Text.setText(SettedBus.getLocationList().get(currentStation+1).getPlateNo());
 
             //현재 버스 위치 출력
             TextView CurrentStation = (TextView)findViewById(R.id.CurrentStation);
             int Current_Seq = SettedBus.getLocationList().get(currentStation).getStationSeq();
             CurrentStation.setText(SettedBus.getBusInfo().getPath().get(Current_Seq).getStationName());
-            //CurrentStation.setText(SettedBus.getLocationList().get(currentStation).getPlateNo());
 
             //뒷 버스 위치 출력
             TextView BackBus_Text = (TextView)findViewById(R.id.BackBus_Text);
             int BackBus_Seq = SettedBus.getLocationList().get(currentStation-1).getStationSeq();
             BackBus_Text.setText(SettedBus.getBusInfo().getPath().get(BackBus_Seq).getStationName());
-            //BackBus_Text.setText(SettedBus.getLocationList().get(currentStation-1).getPlateNo());
 
             //현재 버스 다음 위치 출력
             TextView NextStation = (TextView)findViewById(R.id.NextStation);
@@ -221,9 +273,6 @@ public class DriverActivity extends Activity{
             //현재 버스 방향 출력
             TextView NextStationDirection = (TextView)findViewById(R.id.NextStationDirection);
             NextStationDirection.setText(SettedBus.getBusInfo().getPath().get(Current_Seq+2).getStationName());
-
         }
     }
-
-
 }
