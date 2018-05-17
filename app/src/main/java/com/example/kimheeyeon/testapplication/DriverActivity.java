@@ -194,15 +194,21 @@ public class DriverActivity extends Activity{
 
             //앞 버스 위치 출력
             TextView FrontBus_Text = (TextView)findViewById(R.id.FrontBus_Text);
-            FrontBus_Text.setText(SettedBus.getLocationList().get(currentStation+1).getPlateNo());
+            int FrontBus_Seq = SettedBus.getLocationList().get(currentStation+1).getStationSeq();
+            FrontBus_Text.setText(SettedBus.getBusInfo().getPath().get(FrontBus_Seq).getStationName());
+            //FrontBus_Text.setText(SettedBus.getLocationList().get(currentStation+1).getPlateNo());
 
             //현재 버스 위치 출력
             TextView CurrentStation = (TextView)findViewById(R.id.CurrentStation);
-            CurrentStation.setText(SettedBus.getLocationList().get(currentStation).getPlateNo());
+            int Current_Seq = SettedBus.getLocationList().get(currentStation).getStationSeq();
+            CurrentStation.setText(SettedBus.getBusInfo().getPath().get(Current_Seq).getStationName());
+            //CurrentStation.setText(SettedBus.getLocationList().get(currentStation).getPlateNo());
 
             //뒷 버스 위치 출력
             TextView BackBus_Text = (TextView)findViewById(R.id.BackBus_Text);
-            BackBus_Text.setText(SettedBus.getLocationList().get(currentStation-1).getPlateNo());
+            int BackBus_Seq = SettedBus.getLocationList().get(currentStation-1).getStationSeq();
+            BackBus_Text.setText(SettedBus.getBusInfo().getPath().get(BackBus_Seq).getStationName());
+            //BackBus_Text.setText(SettedBus.getLocationList().get(currentStation-1).getPlateNo());
 
             //현재 버스 다음 위치 출력
             TextView NextStation = (TextView)findViewById(R.id.NextStation);
