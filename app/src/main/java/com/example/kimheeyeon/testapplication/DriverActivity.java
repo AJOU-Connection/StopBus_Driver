@@ -199,7 +199,11 @@ public class DriverActivity extends Activity{
                 Log.d("FirstBus",JBody.getString("plateNo1").concat(JBody.getString("predictTime1")));
                 Log.d("SecondBus",JBody.getString("plateNo2").concat(JBody.getString("predictTime2")));
 
+                TextView FrontBus_Time = (TextView)findViewById(R.id.FrontBus_Time);
+                FrontBus_Time.setText(JBody.getString("predictTime1").concat(" 분"));
 
+                TextView BackBus_Time = (TextView)findViewById(R.id.BackBus_Time);
+                BackBus_Time.setText(JBody.getString("predictTime2").concat(" 분"));
 
             } catch (JSONException e) {
                 e.printStackTrace();
