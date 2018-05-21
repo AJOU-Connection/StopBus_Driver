@@ -72,7 +72,10 @@ public class MainActivity extends Activity {
                         handler2.postDelayed(new Runnable() {
                             public void run() {
                                 try {
-                                    Intent intent = new Intent(MainActivity.this, DriverActivity.class);
+                                    //Intent intent = new Intent(MainActivity.this, DriverActivity.class);
+
+                                    Intent intent = new Intent(MainActivity.this, BeaconActivity.class);
+
                                     //intent.putExtra("BUS_ID", busID); //키 - 보낼 값(밸류)
                                     //intent.putExtra("CAR_NUMBER", carNumber);
                                     Log.d("ack data", settedBus.getBusInfo().getBusNumber());
