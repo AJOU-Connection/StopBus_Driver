@@ -196,14 +196,17 @@ public class DriverActivity extends Activity{
                 Log.d("PARSING", jHeader.getString("result"));
 
                 JSONObject JBody = jsonObject.getJSONObject("body");
-                Log.d("FirstBus",JBody.getString("plateNo1").concat(JBody.getString("predictTime1")));
-                Log.d("SecondBus",JBody.getString("plateNo2").concat(JBody.getString("predictTime2")));
+                int predictTime1 = Integer.parseInt(JBody.getString("predictTime1"));
+                int predictTime2 = Integer.parseInt(JBody.getString("predictTime2"));
+
+                Log.d("FirstBus",JBody.getString("plateNo1").concat(String.valueOf(predictTime1)));
+                Log.d("SecondBus",JBody.getString("plateNo2").concat(String.valueOf(predictTime2-predictTime1)));
 
                 TextView FrontBus_Time = (TextView)findViewById(R.id.FrontBus_Time);
                 FrontBus_Time.setText(JBody.getString("predictTime1").concat(" 분"));
 
                 TextView BackBus_Time = (TextView)findViewById(R.id.BackBus_Time);
-                BackBus_Time.setText(JBody.getString("predictTime2").concat(" 분"));
+                BackBus_Time.setText(String.valueOf(predictTime2-predictTime1).concat(" 분"));
 
             } catch (JSONException e) {
                 e.printStackTrace();

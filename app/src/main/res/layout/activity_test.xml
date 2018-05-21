@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -115,9 +112,8 @@
             android:id="@+id/RidePerson"
             android:layout_width="373dp"
             android:layout_height="80dp"
-            android:layout_alignParentTop="true"
+            android:layout_alignBaseline="@+id/FrontBus_Text"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="248dp"
             android:background="#f6ebeb"
             android:textAlignment="center" />
 
@@ -125,9 +121,8 @@
             android:id="@+id/GetOffPerson"
             android:layout_width="359dp"
             android:layout_height="80dp"
-            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/FrontBus_Time"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="260dp"
             android:background="#f1eedf"
             android:textAlignment="center" />
 
@@ -166,7 +161,7 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/Fix_FrontBus"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="238dp"
+            android:layout_marginStart="236dp"
             android:text="FrontBusPosition"
             android:textAlignment="center"
             android:textColor="@android:color/background_light"
@@ -177,10 +172,10 @@
             android:id="@+id/FrontBus_Time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
+            android:layout_alignEnd="@+id/Fix_FrontBusText"
             android:layout_centerVertical="true"
-            android:layout_marginStart="231dp"
-            android:text="LeftTime"
+            android:text="Time"
+            android:textAppearance="@android:style/TextAppearance.Material.Medium"
             android:textColor="@android:color/background_dark"
             android:textSize="30sp"
             android:textStyle="bold" />
@@ -218,9 +213,9 @@
             android:id="@+id/BackBus_Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/Fix_FrontBus"
+            android:layout_alignBaseline="@+id/RidePerson"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="223dp"
+            android:layout_marginEnd="220dp"
             android:text="BackBusPosition"
             android:textAlignment="center"
             android:textColor="@android:color/background_light"
@@ -231,9 +226,9 @@
             android:id="@+id/BackBus_Time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/BackBus_Text"
+            android:layout_alignEnd="@+id/Fix_BackText"
             android:layout_centerVertical="true"
-            android:text="LeftTime"
+            android:text="Time"
             android:textColor="@android:color/background_dark"
             android:textSize="30sp"
             android:textStyle="bold" />
@@ -276,4 +271,4 @@
 
     </RelativeLayout>
 
-</android.support.design.widget.CoordinatorLayout>
+</RelativeLayout>
