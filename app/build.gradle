@@ -35,7 +35,4 @@ dependencies {
     //testing Support Library
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-
-    //beacon Library
-    implementation 'org.altbeacon:android-beacon-library:2+'
 }
