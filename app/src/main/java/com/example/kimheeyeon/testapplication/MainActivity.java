@@ -130,6 +130,10 @@ public class MainActivity extends Activity {
 
                     JSONObject jBody = jsonObject.getJSONObject("body");  // JSONObject 추출
 
+
+                    if(jBody==null){
+                        System.out.print("nul,,?");
+                    }
                     settedBus.setBusInfo(jBody);
                     settedBus.setVehicleNumber(busID);
                     settedBus.setCarNumber(carNumber);

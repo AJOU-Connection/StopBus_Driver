@@ -16,6 +16,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -172,6 +173,10 @@ public class DriverActivity extends Activity{
                 if(jHeader.getString("result").compareTo("true") == 0) {
 
                     JSONArray testarray = jsonObject.getJSONArray("body");
+                    if(testarray==null){
+                        System.out.print("nul,,?");
+                        return;
+                    }
 
                     if (jHeader.getString("result").compareTo("true") != 0)
                         System.out.println("errrr!!1");
@@ -202,18 +207,23 @@ public class DriverActivity extends Activity{
 
                 if(jHeader.getString("result").compareTo("true") == 0) {
 
-                    JSONObject JBody = jsonObject.getJSONObject("body");
-                    int predictTime1 = Integer.parseInt(JBody.getString("predictTime1"));
-                    int predictTime2 = Integer.parseInt(JBody.getString("predictTime2"));
+                    if(jsonObject.isNull("body")){
+                        Log.d("FAIL TO GET INFO", "BODY IS NULL IN TIME INFORMATION");
+                    }else {
+                        JSONObject JBody = jsonObject.getJSONObject("body");
 
-                    Log.d("FirstBus", JBody.getString("plateNo1").concat(String.valueOf(predictTime1)));
-                    Log.d("SecondBus", JBody.getString("plateNo2").concat(String.valueOf(predictTime2 - predictTime1)));
+                        int predictTime1 = Integer.parseInt(JBody.getString("predictTime1"));
+                        int predictTime2 = Integer.parseInt(JBody.getString("predictTime2"));
 
-                    TextView FrontBus_Time = (TextView) findViewById(R.id.FrontBus_Time);
-                    FrontBus_Time.setText(JBody.getString("predictTime1").concat(" 분"));
+                        Log.d("FirstBus", JBody.getString("plateNo1").concat(String.valueOf(predictTime1)));
+                        Log.d("SecondBus", JBody.getString("plateNo2").concat(String.valueOf(predictTime2 - predictTime1)));
 
-                    TextView BackBus_Time = (TextView) findViewById(R.id.BackBus_Time);
-                    BackBus_Time.setText(String.valueOf(predictTime2 - predictTime1).concat(" 분"));
+                        TextView FrontBus_Time = (TextView) findViewById(R.id.FrontBus_Time);
+                        FrontBus_Time.setText(JBody.getString("predictTime1").concat(" 분"));
+
+                        TextView BackBus_Time = (TextView) findViewById(R.id.BackBus_Time);
+                        BackBus_Time.setText(String.valueOf(predictTime2 - predictTime1).concat(" 분"));
+                    }
                 }else{
                     Log.d("FAIL TO GET INFO", "TIME INFORMATION");
                 }
