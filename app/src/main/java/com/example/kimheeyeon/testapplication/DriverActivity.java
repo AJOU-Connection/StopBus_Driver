@@ -169,17 +169,22 @@ public class DriverActivity extends Activity{
                 JSONObject jHeader = jsonObject.getJSONObject("header");  // JSONObject 추출
                 Log.d("PARSING", jHeader.getString("result"));
 
-                JSONArray testarray = jsonObject.getJSONArray("body");
+                if(jHeader.getString("result").compareTo("true") == 0) {
 
-                if(jHeader.getString("result").compareTo("true") != 0)
-                    System.out.println("errrr!!1");
+                    JSONArray testarray = jsonObject.getJSONArray("body");
 
-                int findresult = SettedBus.findCurrentBus(testarray);
-                if(findresult==-1){
-                    System.out.print("null");
+                    if (jHeader.getString("result").compareTo("true") != 0)
+                        System.out.println("errrr!!1");
+
+                    int findresult = SettedBus.findCurrentBus(testarray);
+                    if (findresult == -1) {
+                        System.out.print("null");
+                    } else {
+                        System.out.print("the result is : ".concat(String.valueOf(findresult)));
+                        this.setBusState(findresult);
+                    }
                 }else{
-                    System.out.print("the result is : ".concat(String.valueOf(findresult)));
-                    this.setBusState(findresult);
+                    Log.d("fail to find","in Driver Activity AT BUSLOCATION");
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -195,18 +200,23 @@ public class DriverActivity extends Activity{
                 JSONObject jHeader = jsonObject.getJSONObject("header");  // JSONObject 추출
                 Log.d("PARSING", jHeader.getString("result"));
 
-                JSONObject JBody = jsonObject.getJSONObject("body");
-                int predictTime1 = Integer.parseInt(JBody.getString("predictTime1"));
-                int predictTime2 = Integer.parseInt(JBody.getString("predictTime2"));
+                if(jHeader.getString("result").compareTo("true") == 0) {
 
-                Log.d("FirstBus",JBody.getString("plateNo1").concat(String.valueOf(predictTime1)));
-                Log.d("SecondBus",JBody.getString("plateNo2").concat(String.valueOf(predictTime2-predictTime1)));
+                    JSONObject JBody = jsonObject.getJSONObject("body");
+                    int predictTime1 = Integer.parseInt(JBody.getString("predictTime1"));
+                    int predictTime2 = Integer.parseInt(JBody.getString("predictTime2"));
 
-                TextView FrontBus_Time = (TextView)findViewById(R.id.FrontBus_Time);
-                FrontBus_Time.setText(JBody.getString("predictTime1").concat(" 분"));
+                    Log.d("FirstBus", JBody.getString("plateNo1").concat(String.valueOf(predictTime1)));
+                    Log.d("SecondBus", JBody.getString("plateNo2").concat(String.valueOf(predictTime2 - predictTime1)));
 
-                TextView BackBus_Time = (TextView)findViewById(R.id.BackBus_Time);
-                BackBus_Time.setText(String.valueOf(predictTime2-predictTime1).concat(" 분"));
+                    TextView FrontBus_Time = (TextView) findViewById(R.id.FrontBus_Time);
+                    FrontBus_Time.setText(JBody.getString("predictTime1").concat(" 분"));
+
+                    TextView BackBus_Time = (TextView) findViewById(R.id.BackBus_Time);
+                    BackBus_Time.setText(String.valueOf(predictTime2 - predictTime1).concat(" 분"));
+                }else{
+                    Log.d("FAIL TO GET INFO", "TIME INFORMATION");
+                }
 
             } catch (JSONException e) {
                 e.printStackTrace();

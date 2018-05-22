@@ -126,11 +126,16 @@ public class MainActivity extends Activity {
                 JSONObject jHeader = jsonObject.getJSONObject("header");  // JSONObject 추출
                 Log.d("PARSING", jHeader.getString("result"));
 
-                JSONObject jBody = jsonObject.getJSONObject("body");  // JSONObject 추출
+                if(jHeader.getString("result").compareTo("true") == 0) {
 
-                settedBus.setBusInfo(jBody);
-                settedBus.setVehicleNumber(busID);
-                settedBus.setCarNumber(carNumber);
+                    JSONObject jBody = jsonObject.getJSONObject("body");  // JSONObject 추출
+
+                    settedBus.setBusInfo(jBody);
+                    settedBus.setVehicleNumber(busID);
+                    settedBus.setCarNumber(carNumber);
+                }else{
+                    Log.d("GET DATA ERR", "FAIL TO GET BUSLIST");
+                }
 
             } catch (JSONException e) {
                 e.printStackTrace();
