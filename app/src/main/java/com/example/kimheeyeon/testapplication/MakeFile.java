@@ -148,6 +148,21 @@ public class MakeFile{
     }
 
     /**
+     * 파일 존재 여부 확인 하기 by file name
+     * @param file
+     * @return
+     */
+    public boolean IsFileExist(String file){
+        boolean result;
+        if(file!=null){
+            result=true;
+        }else{
+            result=false;
+        }
+        return result;
+    }
+
+    /**
      * 파일 이름 바꾸기
      * @param file
      */
@@ -221,5 +236,10 @@ public class MakeFile{
                 e.printStackTrace();
             }
         }
+    }
+
+    public void ReadFile(String file){
+        int readcount=0;
+
     }
 }

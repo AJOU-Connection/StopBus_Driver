@@ -47,25 +47,34 @@ public class MainActivity extends Activity {
 
                         P_Bar.setVisibility(View.VISIBLE);
 
-                        String url = "http://stop-bus.tk/driver/register";
+                        //check if there is any json file that we get previous
+                        //json파일이 있으면 가지고와서 정리(bus 데이터 만든다는 뜻)
+                        //없으면 서버로부터 받아오기 + json file로 저장
+                        MakeFile makeFile = new MakeFile();
+                        if(makeFile.IsFileExist(busID.concat(".json"))){
+                            makeFile.ReadFile(busID.concat(".json"));
+                            //읽고 이제 json parsing
+                        }else {
+                            String url = "http://stop-bus.tk/driver/register";
 
-                        JSONObject sendData = new JSONObject();
-                        try {
-                            sendData.put("plateNo" , carNumber);
-                            sendData.put("routeID" , busID);
-                            Log.d("sending", sendData.getString("plateNo"));
-                            Log.d("sending", sendData.getString("routeID"));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                            JSONObject sendData = new JSONObject();
+                            try {
+                                sendData.put("plateNo", carNumber);
+                                sendData.put("routeID", busID);
+                                Log.d("sending", sendData.getString("plateNo"));
+                                Log.d("sending", sendData.getString("routeID"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
 
-                        ConnectThread thread = new ConnectThread(url, sendData);
-                        thread.start();
+                            ConnectThread thread = new ConnectThread(url, sendData);
+                            thread.start();
 
-                        try {
-                            thread.join();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
+                            try {
+                                thread.join();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                         }
 
                         Handler handler2 = new Handler();

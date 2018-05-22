@@ -117,14 +117,15 @@ public class DriverActivity extends Activity{
 
                 //승객의 여부 확인 sendStation과 정보가 같으므로, sendStation을 이용한다.
                 //잠시 주석처리 이유 : url이 아직 준비되지 않았기 때문
-                String url_Passenger = "http://stop-bus.tk/driver/gap";
-                String getPassenger = "passengerInfo";
-
-                DriverActivity.ConnectThread thread_Passenger = new DriverActivity.ConnectThread(url_Passenger, sendStation, getPassenger);
-                thread_Passenger.start();
+//                String url_Passenger = "http://stop-bus.tk/driver/gap";
+//                String getPassenger = "passengerInfo";
+//
+//                DriverActivity.ConnectThread thread_Passenger = new DriverActivity.ConnectThread(url_Passenger, sendStation, getPassenger);
+//                thread_Passenger.start();
 
                 try{
                     thread_Time.join();
+                    //thread_Passenger.join();
                 } catch (InterruptedException e){
                     e.printStackTrace();
                 }
