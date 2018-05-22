@@ -25,6 +25,7 @@ public class Bus implements Serializable {
     private ArrayList<BusLocation> locationList = new ArrayList<BusLocation>();
 
     public Bus(){
+
     }
 
     public Bus(String BusNum) {

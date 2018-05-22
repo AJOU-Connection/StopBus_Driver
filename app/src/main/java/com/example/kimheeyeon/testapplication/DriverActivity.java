@@ -114,6 +114,15 @@ public class DriverActivity extends Activity{
                 DriverActivity.ConnectThread thread_Time = new DriverActivity.ConnectThread(url_time, sendStation, getTime);
                 thread_Time.start();
 
+
+                //승객의 여부 확인 sendStation과 정보가 같으므로, sendStation을 이용한다.
+                //잠시 주석처리 이유 : url이 아직 준비되지 않았기 때문
+                String url_Passenger = "http://stop-bus.tk/driver/gap";
+                String getPassenger = "passengerInfo";
+
+                DriverActivity.ConnectThread thread_Passenger = new DriverActivity.ConnectThread(url_Passenger, sendStation, getPassenger);
+                thread_Passenger.start();
+
                 try{
                     thread_Time.join();
                 } catch (InterruptedException e){
@@ -155,6 +164,9 @@ public class DriverActivity extends Activity{
                         break;
                     case "remainTime" :
                         parseTimeInformation(output);
+                        break;
+                    case "passengerInfo" :
+                        parsePassengerInformation(output);
                         break;
                     default :
                         System.out.println("this is for out!! there is no version suits");
@@ -227,6 +239,45 @@ public class DriverActivity extends Activity{
 
                         TextView BackBus_Time = (TextView) findViewById(R.id.BackBus_Time);
                         BackBus_Time.setText(String.valueOf(predictTime2 - predictTime1).concat(" 분"));
+                    }
+                }else{
+                    Log.d("FAIL TO GET INFO", "TIME INFORMATION");
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        private void parsePassengerInformation(String pRecvServerPage){
+            Log.i("서버에서 받은 내용(for time) : ", pRecvServerPage);
+
+            try {
+                JSONObject jsonObject = new JSONObject(pRecvServerPage);
+
+                JSONObject jHeader = jsonObject.getJSONObject("header");  // JSONObject 추출
+                Log.d("PARSING", jHeader.getString("result"));
+
+                if(jHeader.getString("result").compareTo("true") == 0) {
+
+                    if(jsonObject.isNull("body")){
+                        Log.d("FAIL TO GET INFO", "BODY IS NULL IN Passenger INFORMATION");
+                    }else {
+                        JSONObject JBody = jsonObject.getJSONObject("body");
+
+                        Boolean isGetIn = Boolean.valueOf(JBody.getString("isGetIn"));
+                        Boolean isGetOff = Boolean.valueOf(JBody.getString("isGetOff"));
+
+                        Log.d("isGetIn",JBody.getString("isGetIn"));
+                        Log.d("isGetOff", JBody.getString("isGetOff"));
+
+                        if(isGetIn){
+                            //탑승객이 있는 경우
+                        }
+                        if(isGetOff){
+                            //하차객이 있는 경우
+
+                        }
                     }
                 }else{
                     Log.d("FAIL TO GET INFO", "TIME INFORMATION");
