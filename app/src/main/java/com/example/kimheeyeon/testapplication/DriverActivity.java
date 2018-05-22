@@ -149,12 +149,16 @@ public class DriverActivity extends Activity{
                     }
                 });
 
-                if(purpose.equals("busLocation"))
-                    parseBusLocation(output);
-                else if(purpose.equals("remainTime"))
-                    parseTimeInformation(output);
-                else
-                    System.out.println("this is for out!! there is no version suits");
+                switch(purpose){
+                    case "busLocation" :
+                        parseBusLocation(output);
+                        break;
+                    case "remainTime" :
+                        parseTimeInformation(output);
+                        break;
+                    default :
+                        System.out.println("this is for out!! there is no version suits");
+                }
             } catch (Exception ex){
                 ex.printStackTrace();
             }
