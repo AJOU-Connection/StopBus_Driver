@@ -3,7 +3,6 @@ package com.example.kimheeyeon.testapplication;
 import android.app.Activity;
 import android.os.Bundle;
 
-import android.os.Environment;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Button;
@@ -16,11 +15,9 @@ import android.os.Handler;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.io.*;
-import java.nio.Buffer;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
 
 
 public class ActivitySetUp extends Activity {
@@ -34,92 +31,82 @@ public class ActivitySetUp extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.setup_page);
 
-        final ProgressBar P_Bar= (ProgressBar)findViewById(R.id.progressBar);
+        final ProgressBar P_Bar = (ProgressBar) findViewById(R.id.progressBar);
         P_Bar.setVisibility(View.INVISIBLE); //To set visible
 
         Button search = (Button) findViewById(R.id.Confirm_Button);
         search.setOnClickListener(
-                new Button.OnClickListener() {
-                    public void onClick(View v) {
-                        TextView bus_id = (TextView)findViewById( R.id.bus_ID );
-                        busID =  bus_id.getText().toString();
+            new Button.OnClickListener() {
+                public void onClick(View v) {
+                    TextView bus_id = (TextView) findViewById(R.id.bus_ID);
+                    busID = bus_id.getText().toString();
 
-                        TextView car_n = (TextView)findViewById( R.id.Car_Number );
-                        carNumber =  car_n.getText().toString();
+                    TextView car_n = (TextView) findViewById(R.id.Car_Number);
+                    carNumber = car_n.getText().toString();
 
-                        P_Bar.setVisibility(View.VISIBLE);
+                    P_Bar.setVisibility(View.VISIBLE);
 
-                        //check if there is any json file that we get previous
-                        //파일이 있으면 가지고와서 정리(bus 데이터 만든다는 뜻)
-                        //없으면 서버로부터 받아오기 + txt file로 저장
-                        File testfile = ActivitySetUp.this.getFilesDir();
-                        //File testfile = Environment.getDataDirectory();
-                        File file = new File(testfile, "makingTest.txt");
+                    //check if there is any json file that we get previous
+                    //파일이 있으면 가지고와서 정리(bus 데이터 만든다는 뜻)
+                    //없으면 서버로부터 받아오기 + txt file로 저장
+                    File testfile = ActivitySetUp.this.getFilesDir();
+                    File file = new File(testfile, "makingTest.txt");
 
-                        StringBuilder text = new StringBuilder();
+                    FileControl fc = new FileControl();
 
-                        boolean isExists = file.exists();
+                    String ReadData = "";
 
-                        if(isExists) {
+                    if (fc.ExistsFile(file)) {
+                        try {
+                            ReadData = fc.ReadFile(file);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        Log.i("read Data", ReadData);
+                        jsonParserList(ReadData);
+                    } else {
+                        String url = "http://stop-bus.tk/driver/register";
+
+                        JSONObject sendData = new JSONObject();
+                        try {
+                            sendData.put("plateNo", carNumber);
+                            sendData.put("routeID", busID);
+                            Log.d("sending", sendData.getString("plateNo"));
+                            Log.d("sending", sendData.getString("routeID"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        ConnectThread thread = new ConnectThread(url, sendData);
+                        thread.start();
+
+                        try {
+                            thread.join();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    Handler handler2 = new Handler();
+                    handler2.postDelayed(new Runnable() {
+                        public void run() {
                             try {
-                                BufferedReader br = new BufferedReader(new FileReader(file));
-                                String line;
-                                while ((line = br.readLine()) != null) {
-                                    text.append(line);
-                                    text.append('\n');
-                                }
-                                br.close();
+                                Intent intent = new Intent(ActivitySetUp.this, ActivityDriver.class);
 
+                                //intent.putExtra("BUS_ID", busID); //키 - 보낼 값(밸류)
+                                //intent.putExtra("CAR_NUMBER", carNumber);
+
+                                Log.d("ack data", settedBus.getBusInfo().getBusNumber());
+                                intent.putExtra("busData", settedBus);
+
+                                startActivity(intent);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            Log.i("read Data", text.toString());
-                            jsonParserList(text.toString());
-
-                        }else {
-
-                            String url = "http://stop-bus.tk/driver/register";
-
-                            JSONObject sendData = new JSONObject();
-                            try {
-                                sendData.put("plateNo", carNumber);
-                                sendData.put("routeID", busID);
-                                Log.d("sending", sendData.getString("plateNo"));
-                                Log.d("sending", sendData.getString("routeID"));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-
-                            ConnectThread thread = new ConnectThread(url, sendData);
-                            thread.start();
-
-                            try {
-                                thread.join();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
                         }
-
-                        Handler handler2 = new Handler();
-                        handler2.postDelayed(new Runnable() {
-                            public void run() {
-                                try {
-                                    Intent intent = new Intent(ActivitySetUp.this, DriverActivity.class);
-
-                                    //intent.putExtra("BUS_ID", busID); //키 - 보낼 값(밸류)
-                                    //intent.putExtra("CAR_NUMBER", carNumber);
-
-                                    Log.d("ack data", settedBus.getBusInfo().getBusNumber());
-                                    intent.putExtra("busData", settedBus);
-
-                                    startActivity(intent);
-                                }catch(Exception e){
-                                    e.printStackTrace();
-                                }
-                            }
-                        }, 2000);  // 2000은 2초를 의미합니다.
-                    }
+                    }, 1000);  // 2000은 2초를 의미합니다.
                 }
+            }
         );
     }
 
@@ -127,26 +114,26 @@ public class ActivitySetUp extends Activity {
         String urlStr;
         JSONObject s_Data;
 
-        public ConnectThread(String inStr, JSONObject map){
+        public ConnectThread(String inStr, JSONObject map) {
             urlStr = inStr;
             this.s_Data = map;
         }
 
-        public void run(){
+        public void run() {
 
-            try{
+            try {
                 final String output = request(urlStr, this.s_Data);
-                handler.post(new Runnable(){
+                handler.post(new Runnable() {
                     @Override
                     public void run() {
                         Log.d("gmmm", output);
                         //Cache write_json = new Cache();
                         String myText = "Testing";
-                        try{
+                        try {
                             FileOutputStream os = openFileOutput("makingTest.txt", MODE_PRIVATE);
                             os.write(output.getBytes());
                             os.close();
-                        }catch (IOException e){
+                        } catch (IOException e) {
                             e.printStackTrace();
                         }
 
@@ -154,20 +141,20 @@ public class ActivitySetUp extends Activity {
                 });
 
                 jsonParserList(output);
-            } catch (Exception ex){
+            } catch (Exception ex) {
                 ex.printStackTrace();
             }
         }
 
-        private String request(String urlStr, JSONObject map){
+        private String request(String urlStr, JSONObject map) {
             StringBuilder output = new StringBuilder();
 
-            try{
+            try {
                 URL url = new URL(urlStr);
 
-                HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-                if(conn != null){
+                if (conn != null) {
                     conn.setConnectTimeout(10000);
                     conn.setRequestMethod("POST");
                     conn.setDoInput(true);
@@ -188,8 +175,8 @@ public class ActivitySetUp extends Activity {
                             output.append(line);
                     }
                 }
-            }catch(Exception ex){
-                Log.e("SampleHttp", "Exception in processing response",ex);
+            } catch (Exception ex) {
+                Log.e("SampleHttp", "Exception in processing response", ex);
 
             }
             return output.toString();
@@ -206,17 +193,17 @@ public class ActivitySetUp extends Activity {
             JSONObject jHeader = jsonObject.getJSONObject("header");  // JSONObject 추출
             Log.d("PARSING", jHeader.getString("result"));
 
-            if(jHeader.getString("result").compareTo("true") == 0) {
+            if (jHeader.getString("result").compareTo("true") == 0) {
 
                 JSONObject jBody = jsonObject.getJSONObject("body");  // JSONObject 추출
 
-                if(jBody==null){
+                if (jBody == null) {
                     System.out.print("nul,,?");
                 }
                 settedBus.setBusInfo(jBody);
                 settedBus.setVehicleNumber(busID);
                 settedBus.setCarNumber(carNumber);
-            }else{
+            } else {
                 Log.d("GET DATA ERR", "FAIL TO GET BUSLIST");
             }
 

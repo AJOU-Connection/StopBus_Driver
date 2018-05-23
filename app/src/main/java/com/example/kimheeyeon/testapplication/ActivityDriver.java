@@ -11,7 +11,6 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -21,7 +20,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class DriverActivity extends Activity{
+public class ActivityDriver extends Activity{
     Handler handler = new Handler();
     Bus SettedBus = new Bus();
 
@@ -87,7 +86,7 @@ public class DriverActivity extends Activity{
                     e.printStackTrace();
                 }
 
-                DriverActivity.ConnectThread thread_location = new DriverActivity.ConnectThread(url_location, sendData, getPurpose);
+                ActivityDriver.ConnectThread thread_location = new ActivityDriver.ConnectThread(url_location, sendData, getPurpose);
                 thread_location.start();
 
                 try {
@@ -111,7 +110,7 @@ public class DriverActivity extends Activity{
                     e.printStackTrace();
                 }
 
-                DriverActivity.ConnectThread thread_Time = new DriverActivity.ConnectThread(url_time, sendStation, getTime);
+                ActivityDriver.ConnectThread thread_Time = new ActivityDriver.ConnectThread(url_time, sendStation, getTime);
                 thread_Time.start();
 
 
@@ -120,7 +119,7 @@ public class DriverActivity extends Activity{
 //                String url_Passenger = "http://stop-bus.tk/driver/gap";
 //                String getPassenger = "passengerInfo";
 //
-//                DriverActivity.ConnectThread thread_Passenger = new DriverActivity.ConnectThread(url_Passenger, sendStation, getPassenger);
+//                ActivityDriver.ConnectThread thread_Passenger = new ActivityDriver.ConnectThread(url_Passenger, sendStation, getPassenger);
 //                thread_Passenger.start();
 
                 try{
