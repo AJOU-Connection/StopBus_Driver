@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TestApplication</string>
+    <string name="app_name">StopBus_Driver</string>
     <string name="action_settings">Settings</string>
     <string name="press">press</string>
     <string name="hello_world">hello_world!!</string>

@@ -129,8 +129,6 @@ public class DriverActivity extends Activity{
                 } catch (InterruptedException e){
                     e.printStackTrace();
                 }
-
-
             }
         };
         ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
