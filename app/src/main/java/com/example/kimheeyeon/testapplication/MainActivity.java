@@ -86,6 +86,7 @@ public class MainActivity extends Activity {
 
                                     //intent.putExtra("BUS_ID", busID); //키 - 보낼 값(밸류)
                                     //intent.putExtra("CAR_NUMBER", carNumber);
+
                                     Log.d("ack data", settedBus.getBusInfo().getBusNumber());
                                     intent.putExtra("busData", settedBus);
 
@@ -117,6 +118,16 @@ public class MainActivity extends Activity {
                     @Override
                     public void run() {
                         Log.d("gmmm", output);
+                        //Cache write_json = new Cache();
+                        String myText = "Testing";
+                        try{
+                            FileOutputStream os = openFileOutput("makingTest.txt", MODE_PRIVATE);
+                            os.write(output.getBytes());
+                            os.close();
+                        }catch (IOException e){
+                            e.printStackTrace();
+                        }
+
                     }
                 });
 

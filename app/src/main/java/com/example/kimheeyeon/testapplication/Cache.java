@@ -29,9 +29,9 @@ public class Cache {
         return cacheDir;
     }
 
-    public void Write(String obj) throws IOException {
+    public void Write(String obj, String File_name) throws IOException {
         File cacheDir = getCacheDir(context);
-        File cacheFile = new File(cacheDir, "Cache.txt");
+        File cacheFile = new File(cacheDir, File_name.concat(".txt"));
         if(!cacheFile.exists())cacheFile.createNewFile();
         FileWriter fileWriter = new FileWriter(cacheFile);
         fileWriter.write(obj);
@@ -39,9 +39,9 @@ public class Cache {
         fileWriter.close();
     }
 
-    public String Read() throws IOException {
+    public String Read(String File_name) throws IOException {
         File cacheDir = getCacheDir(context);
-        File cacheFile = new File(cacheDir, "Cache.txt");
+        File cacheFile = new File(cacheDir, File_name.concat(".txt"));
         if(!cacheFile.exists())cacheFile.createNewFile();
         FileInputStream inputStream = new FileInputStream(cacheFile);
         Scanner s = new Scanner(inputStream);
