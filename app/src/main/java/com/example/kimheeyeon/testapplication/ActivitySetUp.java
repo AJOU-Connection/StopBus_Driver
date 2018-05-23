@@ -23,7 +23,7 @@ import org.json.JSONObject;
 
 
 
-public class MainActivity extends Activity {
+public class ActivitySetUp extends Activity {
     Handler handler = new Handler();
     Bus settedBus = new Bus();
     String busID = "";
@@ -52,56 +52,59 @@ public class MainActivity extends Activity {
                         //check if there is any json file that we get previous
                         //파일이 있으면 가지고와서 정리(bus 데이터 만든다는 뜻)
                         //없으면 서버로부터 받아오기 + txt file로 저장
-                        File testfile = MainActivity.this.getFilesDir();
+                        File testfile = ActivitySetUp.this.getFilesDir();
                         //File testfile = Environment.getDataDirectory();
                         File file = new File(testfile, "makingTest.txt");
 
                         StringBuilder text = new StringBuilder();
 
-                        int data = 0;
-                        try {
-                            //FileInputStream fis = openFileInput("makingTest.txt");
-                            BufferedReader br = new BufferedReader(new FileReader(file));
-                            String line;
-                            while((line = br.readLine()) != null){
-                                text.append(line);
-                                text.append('\n');
+                        boolean isExists = file.exists();
+
+                        if(isExists) {
+                            try {
+                                BufferedReader br = new BufferedReader(new FileReader(file));
+                                String line;
+                                while ((line = br.readLine()) != null) {
+                                    text.append(line);
+                                    text.append('\n');
+                                }
+                                br.close();
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                            br.close();
+                            Log.i("read Data", text.toString());
+                            jsonParserList(text.toString());
 
-//                            fis.close();
-                        }catch(Exception e){
-                            e.printStackTrace();
-                        }
+                        }else {
 
-                        Log.i("read Data", text.toString());
+                            String url = "http://stop-bus.tk/driver/register";
 
-                        String url = "http://stop-bus.tk/driver/register";
+                            JSONObject sendData = new JSONObject();
+                            try {
+                                sendData.put("plateNo", carNumber);
+                                sendData.put("routeID", busID);
+                                Log.d("sending", sendData.getString("plateNo"));
+                                Log.d("sending", sendData.getString("routeID"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
 
-                        JSONObject sendData = new JSONObject();
-                        try {
-                            sendData.put("plateNo", carNumber);
-                            sendData.put("routeID", busID);
-                            Log.d("sending", sendData.getString("plateNo"));
-                            Log.d("sending", sendData.getString("routeID"));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                            ConnectThread thread = new ConnectThread(url, sendData);
+                            thread.start();
 
-                        ConnectThread thread = new ConnectThread(url, sendData);
-                        thread.start();
-
-                        try {
-                            thread.join();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
+                            try {
+                                thread.join();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                         }
 
                         Handler handler2 = new Handler();
                         handler2.postDelayed(new Runnable() {
                             public void run() {
                                 try {
-                                    Intent intent = new Intent(MainActivity.this, DriverActivity.class);
+                                    Intent intent = new Intent(ActivitySetUp.this, DriverActivity.class);
 
                                     //intent.putExtra("BUS_ID", busID); //키 - 보낼 값(밸류)
                                     //intent.putExtra("CAR_NUMBER", carNumber);
@@ -156,35 +159,6 @@ public class MainActivity extends Activity {
             }
         }
 
-        private void jsonParserList(String pRecvServerPage) {
-
-            Log.i("서버에서 받은 전체 내용 : ", pRecvServerPage);
-
-            try {
-                JSONObject jsonObject = new JSONObject(pRecvServerPage);
-
-                JSONObject jHeader = jsonObject.getJSONObject("header");  // JSONObject 추출
-                Log.d("PARSING", jHeader.getString("result"));
-
-                if(jHeader.getString("result").compareTo("true") == 0) {
-
-                    JSONObject jBody = jsonObject.getJSONObject("body");  // JSONObject 추출
-
-                    if(jBody==null){
-                        System.out.print("nul,,?");
-                    }
-                    settedBus.setBusInfo(jBody);
-                    settedBus.setVehicleNumber(busID);
-                    settedBus.setCarNumber(carNumber);
-                }else{
-                    Log.d("GET DATA ERR", "FAIL TO GET BUSLIST");
-                }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
         private String request(String urlStr, JSONObject map){
             StringBuilder output = new StringBuilder();
 
@@ -219,6 +193,35 @@ public class MainActivity extends Activity {
 
             }
             return output.toString();
+        }
+    }
+
+    public void jsonParserList(String pRecvServerPage) {
+
+        Log.i("서버에서 받은 전체 내용 : ", pRecvServerPage);
+
+        try {
+            JSONObject jsonObject = new JSONObject(pRecvServerPage);
+
+            JSONObject jHeader = jsonObject.getJSONObject("header");  // JSONObject 추출
+            Log.d("PARSING", jHeader.getString("result"));
+
+            if(jHeader.getString("result").compareTo("true") == 0) {
+
+                JSONObject jBody = jsonObject.getJSONObject("body");  // JSONObject 추출
+
+                if(jBody==null){
+                    System.out.print("nul,,?");
+                }
+                settedBus.setBusInfo(jBody);
+                settedBus.setVehicleNumber(busID);
+                settedBus.setCarNumber(carNumber);
+            }else{
+                Log.d("GET DATA ERR", "FAIL TO GET BUSLIST");
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
