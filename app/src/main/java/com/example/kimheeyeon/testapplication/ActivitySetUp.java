@@ -57,13 +57,16 @@ public class ActivitySetUp extends Activity {
                     String ReadData = "";
 
                     if (fc.ExistsFile(file)) {
+
                         try {
                             ReadData = fc.ReadFile(file);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+
                         Log.i("read Data", ReadData);
                         jsonParserList(ReadData);
+
                     } else {
                         String url = "http://stop-bus.tk/driver/register";
 
@@ -127,8 +130,7 @@ public class ActivitySetUp extends Activity {
                     @Override
                     public void run() {
                         Log.d("gmmm", output);
-                        //Cache write_json = new Cache();
-                        String myText = "Testing";
+
                         try {
                             FileOutputStream os = openFileOutput("makingTest.txt", MODE_PRIVATE);
                             os.write(output.getBytes());
@@ -136,6 +138,12 @@ public class ActivitySetUp extends Activity {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+
+//                        File testfile = ActivitySetUp.this.getFilesDir();
+//                        File file = new File(testfile, "makingTest.txt");
+//                        FileControl fc = new FileControl();
+//                        fc.CreateFile(file, testfile);
+
 
                     }
                 });
@@ -211,5 +219,4 @@ public class ActivitySetUp extends Activity {
             e.printStackTrace();
         }
     }
-
 }
