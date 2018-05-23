@@ -3,6 +3,7 @@ package com.example.kimheeyeon.testapplication;
 import android.app.Activity;
 import android.os.Bundle;
 
+import android.os.Environment;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Button;
@@ -15,6 +16,7 @@ import android.os.Handler;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.io.*;
+import java.nio.Buffer;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,15 +50,32 @@ public class MainActivity extends Activity {
                         P_Bar.setVisibility(View.VISIBLE);
 
                         //check if there is any json file that we get previous
-                        //json파일이 있으면 가지고와서 정리(bus 데이터 만든다는 뜻)
-                        //없으면 서버로부터 받아오기 + json file로 저장
-//                        MakeFile makeFile = new MakeFile();
-//                        if(makeFile.IsFileExist(busID.concat(".json"))){
-//                            makeFile.ReadFile(busID.concat(".json"));
-//                            //읽고 이제 json parsing
-//                        }else {
-//
-//                        }
+                        //파일이 있으면 가지고와서 정리(bus 데이터 만든다는 뜻)
+                        //없으면 서버로부터 받아오기 + txt file로 저장
+                        File testfile = MainActivity.this.getFilesDir();
+                        //File testfile = Environment.getDataDirectory();
+                        File file = new File(testfile, "makingTest.txt");
+
+                        StringBuilder text = new StringBuilder();
+
+                        int data = 0;
+                        try {
+                            //FileInputStream fis = openFileInput("makingTest.txt");
+                            BufferedReader br = new BufferedReader(new FileReader(file));
+                            String line;
+                            while((line = br.readLine()) != null){
+                                text.append(line);
+                                text.append('\n');
+                            }
+                            br.close();
+
+//                            fis.close();
+                        }catch(Exception e){
+                            e.printStackTrace();
+                        }
+
+                        Log.i("read Data", text.toString());
+
                         String url = "http://stop-bus.tk/driver/register";
 
                         JSONObject sendData = new JSONObject();
