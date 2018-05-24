@@ -370,10 +370,8 @@ public class ActivityDriver extends Activity{
                 return result;
             }else{
                 for(int i = 0 ; i == (raw_text.length()/2) ; i++ ){
-                    raw_text = "0".concat(raw_text).concat("0");
+                    raw_text = " ".concat(raw_text).concat(" ");
                 }
-
-                String result = raw_text;
                 return raw_text;
             }
         }else if(version == 1){
@@ -385,7 +383,7 @@ public class ActivityDriver extends Activity{
             }else{
                 System.out.println(raw_text);
                 for(int i = 0 ; i == (raw_text.length()/2) ; i++ ){
-                    raw_text = "0".concat(raw_text).concat("0");
+                    raw_text = " ".concat(raw_text).concat(" ");
                     System.out.println(raw_text);
                 }
                 System.out.println(raw_text);
