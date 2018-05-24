@@ -50,13 +50,14 @@ public class ActivitySetUp extends Activity {
                     //파일이 있으면 가지고와서 정리(bus 데이터 만든다는 뜻)
                     //없으면 서버로부터 받아오기 + txt file로 저장
                     File testfile = ActivitySetUp.this.getFilesDir();
-                    File file = new File(testfile, "makingTest.txt");
+                    File file = new File(testfile, busID.concat(".txt"));
 
                     FileControl fc = new FileControl();
 
                     String ReadData = "";
 
                     if (fc.ExistsFile(file)) {
+                        Log.i("version", "get from file");
 
                         try {
                             ReadData = fc.ReadFile(file);
@@ -68,6 +69,7 @@ public class ActivitySetUp extends Activity {
                         jsonParserList(ReadData);
 
                     } else {
+                        Log.i("version", "get from server");
                         String url = "http://stop-bus.tk/driver/register";
 
                         JSONObject sendData = new JSONObject();
@@ -132,7 +134,7 @@ public class ActivitySetUp extends Activity {
                         Log.d("gmmm", output);
 
                         try {
-                            FileOutputStream os = openFileOutput("makingTest.txt", MODE_PRIVATE);
+                            FileOutputStream os = openFileOutput(busID.concat(".txt"), MODE_PRIVATE);
                             os.write(output.getBytes());
                             os.close();
                         } catch (IOException e) {
@@ -143,7 +145,6 @@ public class ActivitySetUp extends Activity {
 //                        File file = new File(testfile, "makingTest.txt");
 //                        FileControl fc = new FileControl();
 //                        fc.CreateFile(file, testfile);
-
 
                     }
                 });
