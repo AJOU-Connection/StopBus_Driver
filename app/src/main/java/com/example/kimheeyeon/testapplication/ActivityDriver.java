@@ -113,6 +113,7 @@ public class ActivityDriver extends Activity{
                     sendStation.put("routeID" , SettedBus.getBusInfo().getVehicleNumber());
                     sendStation.put("stationID", SettedBus.getBusInfo().getPath().get( SettedBus.getFrontBus_place()).getStationID());
 
+
                     Log.d("sending", sendStation.getString("routeID"));
                     Log.d("sending", sendStation.getString("stationID"));
                 } catch (JSONException e) {
@@ -131,7 +132,8 @@ public class ActivityDriver extends Activity{
                 JSONObject sendPassenger = new JSONObject();
                 try {
                     sendPassenger.put("routeID" , SettedBus.getBusInfo().getVehicleNumber());
-                    sendPassenger.put("stationID", SettedBus.getBusInfo().getPath().get( SettedBus.getCurrent_place()+1).getStationID());
+                    //sendPassenger.put("stationID", SettedBus.getBusInfo().getPath().get( SettedBus.getCurrent_place()+1).getStationID());
+                    sendPassenger.put("stationID", "203000066");
 
                     Log.d("sendingP", sendPassenger.getString("routeID"));
                     Log.d("sendingP", sendPassenger.getString("stationID"));
