@@ -115,8 +115,8 @@ public class ActivityDriver extends Activity{
 
 
                 //승객의 여부 확인 sendStation과 정보가 같으므로, sendStation을 이용한다.
-                //잠시 주석처리 이유 : url이 아직 준비되지 않았기 때문
-//                String url_Passenger = "http://stop-bus.tk/driver/gap";
+                //잠시 주석처리 이유 : server쪽 개발중
+//                String url_Passenger = "http://stop-bus.tk/driver/stop";
 //                String getPassenger = "passengerInfo";
 //
 //                ActivityDriver.ConnectThread thread_Passenger = new ActivityDriver.ConnectThread(url_Passenger, sendStation, getPassenger);
@@ -235,10 +235,10 @@ public class ActivityDriver extends Activity{
                         Log.d("SecondBus", JBody.getString("plateNo2").concat(String.valueOf(predictTime2 - predictTime1)));
 
                         TextView FrontBus_Time = (TextView) findViewById(R.id.FrontBus_Time);
-                        FrontBus_Time.setText(JBody.getString("predictTime1").concat(" 분"));
+                        FrontBus_Time.setText(ModifyString(2,JBody.getString("predictTime1")));
 
                         TextView BackBus_Time = (TextView) findViewById(R.id.BackBus_Time);
-                        BackBus_Time.setText(String.valueOf(predictTime2 - predictTime1).concat(" 분"));
+                        BackBus_Time.setText(ModifyString(2,String.valueOf(predictTime2 - predictTime1)));
                     }
                 }else{
                     Log.d("FAIL TO GET INFO", "TIME INFORMATION");
@@ -332,7 +332,8 @@ public class ActivityDriver extends Activity{
             //앞 버스 위치 출력
             TextView FrontBus_Text = (TextView)findViewById(R.id.FrontBus_Text);
             int FrontBus_Seq = SettedBus.getLocationList().get(currentStation+1).getStationSeq();
-            FrontBus_Text.setText(SettedBus.getBusInfo().getPath().get(FrontBus_Seq).getStationName());
+            String FrontBus_String = SettedBus.getBusInfo().getPath().get(FrontBus_Seq).getStationName();
+            FrontBus_Text.setText(ModifyString(1, FrontBus_String));
 
             //현재 버스 위치 출력
             TextView CurrentStation = (TextView)findViewById(R.id.CurrentStation);
@@ -342,7 +343,8 @@ public class ActivityDriver extends Activity{
             //뒷 버스 위치 출력
             TextView BackBus_Text = (TextView)findViewById(R.id.BackBus_Text);
             int BackBus_Seq = SettedBus.getLocationList().get(currentStation-1).getStationSeq();
-            BackBus_Text.setText(SettedBus.getBusInfo().getPath().get(BackBus_Seq).getStationName());
+            String BackBus_String = SettedBus.getBusInfo().getPath().get(BackBus_Seq).getStationName();
+            BackBus_Text.setText(ModifyString(1,BackBus_String));
 
             //현재 버스 다음 위치 출력
             TextView NextStation = (TextView)findViewById(R.id.NextStation);
@@ -355,6 +357,48 @@ public class ActivityDriver extends Activity{
             //현재 버스 방향 출력
             TextView NextStationDirection = (TextView)findViewById(R.id.NextStationDirection);
             NextStationDirection.setText(SettedBus.getBusInfo().getPath().get(Current_Seq+2).getStationName());
+        }
+
+
+
+    }
+
+    public String ModifyString(int version, String raw_text){
+        if(version == 0){
+            if(raw_text.length() > 24){
+                String result = raw_text.substring(0,22).concat("...");
+                return result;
+            }else{
+                for(int i = 0 ; i == (raw_text.length()/2) ; i++ ){
+                    raw_text = "0".concat(raw_text).concat("0");
+                }
+
+                String result = raw_text;
+                return raw_text;
+            }
+        }else if(version == 1){
+            if(raw_text.length() > 10){
+                System.out.println(raw_text);
+                String result = raw_text.substring(0,10);
+                System.out.println(result);
+                return result;
+            }else{
+                System.out.println(raw_text);
+                for(int i = 0 ; i == (raw_text.length()/2) ; i++ ){
+                    raw_text = "0".concat(raw_text).concat("0");
+                    System.out.println(raw_text);
+                }
+                System.out.println(raw_text);
+                return raw_text;
+            }
+        }else if(version == 2){
+            if(raw_text.length() <2 ) {
+                raw_text = "0".concat(raw_text);
+            }
+            return raw_text.concat("분");
+        }
+        else{
+            return raw_text;
         }
 
     }
