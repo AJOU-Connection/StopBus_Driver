@@ -1,6 +1,7 @@
 package com.example.kimheeyeon.testapplication;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -65,11 +66,19 @@ public class ActivityDriver extends Activity{
         TextView NextStationDirection = (TextView)findViewById(R.id.NextStationDirection);
         NextStationDirection.setText(SettedBus.getBusInfo().getPath().get(3).getStationName().concat(" 방향"));
 
+
         //반복실행할 것.
         Runnable runnable = new Runnable() {
             public void run() {
                 // task to run goes here
                 System.out.println("Hello !!");
+
+                //색상 초기화
+                TextView RidePerson = (TextView)findViewById(R.id.RidePerson);
+                RidePerson.setBackgroundColor(Color.rgb(246, 235, 235));
+
+                TextView GetOffPerson = (TextView)findViewById(R.id.GetOffPerson);
+                GetOffPerson.setBackgroundColor(Color.rgb(241, 238, 223));
 
                 //해당하는 것의 모든 location data가져옴
 
@@ -114,17 +123,28 @@ public class ActivityDriver extends Activity{
                 thread_Time.start();
 
 
-                //승객의 여부 확인 sendStation과 정보가 같으므로, sendStation을 이용한다.
+                //승객의 여부 확인
                 //잠시 주석처리 이유 : server쪽 개발중
-//                String url_Passenger = "http://stop-bus.tk/driver/stop";
-//                String getPassenger = "passengerInfo";
-//
-//                ActivityDriver.ConnectThread thread_Passenger = new ActivityDriver.ConnectThread(url_Passenger, sendStation, getPassenger);
-//                thread_Passenger.start();
+                String url_Passenger = "http://stop-bus.tk/driver/stop";
+                String getPassenger = "passengerInfo";
+
+                JSONObject sendPassenger = new JSONObject();
+                try {
+                    sendPassenger.put("routeID" , SettedBus.getBusInfo().getVehicleNumber());
+                    sendPassenger.put("stationID", SettedBus.getBusInfo().getPath().get( SettedBus.getCurrent_place()+1).getStationID());
+
+                    Log.d("sendingP", sendPassenger.getString("routeID"));
+                    Log.d("sendingP", sendPassenger.getString("stationID"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                ActivityDriver.ConnectThread thread_Passenger = new ActivityDriver.ConnectThread(url_Passenger, sendPassenger, getPassenger);
+                thread_Passenger.start();
 
                 try{
                     thread_Time.join();
-                    //thread_Passenger.join();
+                    thread_Passenger.join();
                 } catch (InterruptedException e){
                     e.printStackTrace();
                 }
@@ -250,7 +270,7 @@ public class ActivityDriver extends Activity{
         }
 
         private void parsePassengerInformation(String pRecvServerPage){
-            Log.i("서버에서 받은 내용(for time) : ", pRecvServerPage);
+            Log.i("서버에서 받은 내용(for Pass) : ", pRecvServerPage);
 
             try {
                 JSONObject jsonObject = new JSONObject(pRecvServerPage);
@@ -273,14 +293,18 @@ public class ActivityDriver extends Activity{
 
                         if(isGetIn){
                             //탑승객이 있는 경우
+                            TextView RidePerson = (TextView)findViewById(R.id.RidePerson);
+                            RidePerson.setBackgroundColor(Color.rgb(229, 78, 78));
                         }
                         if(isGetOff){
                             //하차객이 있는 경우
+                            TextView GetOffPerson = (TextView)findViewById(R.id.GetOffPerson);
+                            GetOffPerson.setBackgroundColor(Color.rgb(239, 215, 95));
 
                         }
                     }
                 }else{
-                    Log.d("FAIL TO GET INFO", "TIME INFORMATION");
+                    Log.d("FAIL TO GET INFO", "Passenger INFORMATION");
                 }
 
             } catch (JSONException e) {
@@ -305,6 +329,9 @@ public class ActivityDriver extends Activity{
                     if (map != null) { // 웹 서버로 보낼 매개변수가 있는 경우우
                         OutputStream os = conn.getOutputStream(); // 서버로 보내기 위한 출력 스트림
                         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os, "UTF-8")); // UTF-8로 전송
+
+                        Log.i("보내는 내용 : ", map.toString());
+
                         bw.write(map.toString()); // 매개변수 전송
                         bw.flush();
                         bw.close();
