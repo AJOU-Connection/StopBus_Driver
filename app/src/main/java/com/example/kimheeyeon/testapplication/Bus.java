@@ -123,7 +123,7 @@ public class Bus implements Serializable {
             for ( int i = 0 ; i < locationList.size(); i++){
                 Log.d("after", locationList.get(i).getPlateNo().concat(" and ").concat(String.valueOf(locationList.get(i).getStationSeq())));
 
-                if(locationList.get(i).getPlateNo().compareTo("경기77바1924") == 0) {
+                if(locationList.get(i).getPlateNo().compareTo("경기77바1522") == 0) {
 
                     int currentSeq = (locationList.get(i).getStationSeq());
                     finalResult =i;
@@ -135,10 +135,7 @@ public class Bus implements Serializable {
 
                     setFrontBus_place(locationList.get(i+1).getStationSeq());
                     setBackBus_place(locationList.get(i-1).getStationSeq());
-
-                    //return finalResult;
                 }
-
             }
 
             return finalResult;

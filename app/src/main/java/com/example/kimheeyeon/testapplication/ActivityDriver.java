@@ -153,22 +153,24 @@ public class ActivityDriver extends Activity{
                     @Override
                     public void run() {
                         Log.d("gmmm", output);
+
+                        switch(purpose){
+                            case "busLocation" :
+                                parseBusLocation(output);
+                                break;
+                            case "remainTime" :
+                                parseTimeInformation(output);
+                                break;
+                            case "passengerInfo" :
+                                parsePassengerInformation(output);
+                                break;
+                            default :
+                                System.out.println("this is for out!! there is no version suits");
+                        }
                     }
                 });
 
-                switch(purpose){
-                    case "busLocation" :
-                        parseBusLocation(output);
-                        break;
-                    case "remainTime" :
-                        parseTimeInformation(output);
-                        break;
-                    case "passengerInfo" :
-                        parsePassengerInformation(output);
-                        break;
-                    default :
-                        System.out.println("this is for out!! there is no version suits");
-                }
+
             } catch (Exception ex){
                 ex.printStackTrace();
             }
@@ -200,7 +202,7 @@ public class ActivityDriver extends Activity{
                         System.out.print("null");
                     } else {
                         System.out.print("the result is : ".concat(String.valueOf(findresult)));
-                        this.setBusState(findresult);
+                        setBusState(findresult);
                     }
                 }else{
                     Log.d("fail to find","in Driver Activity AT BUSLOCATION");
@@ -354,5 +356,7 @@ public class ActivityDriver extends Activity{
             TextView NextStationDirection = (TextView)findViewById(R.id.NextStationDirection);
             NextStationDirection.setText(SettedBus.getBusInfo().getPath().get(Current_Seq+2).getStationName());
         }
+
     }
+
 }

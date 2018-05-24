@@ -140,12 +140,6 @@ public class ActivitySetUp extends Activity {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-
-//                        File testfile = ActivitySetUp.this.getFilesDir();
-//                        File file = new File(testfile, "makingTest.txt");
-//                        FileControl fc = new FileControl();
-//                        fc.CreateFile(file, testfile);
-
                     }
                 });
 
