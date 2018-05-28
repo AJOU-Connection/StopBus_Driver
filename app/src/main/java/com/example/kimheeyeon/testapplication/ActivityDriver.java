@@ -122,33 +122,38 @@ public class ActivityDriver extends Activity{
 
                 ActivityDriver.ConnectThread thread_Time = new ActivityDriver.ConnectThread(url_time, sendStation, getTime);
                 thread_Time.start();
-
-
-                //승객의 여부 확인
-                //잠시 주석처리 이유 : server쪽 개발중
-                String url_Passenger = "http://stop-bus.tk/driver/stop";
-                String getPassenger = "passengerInfo";
-
-                JSONObject sendPassenger = new JSONObject();
-                try {
-                    sendPassenger.put("routeID" , SettedBus.getBusInfo().getVehicleNumber());
-                    //sendPassenger.put("stationID", SettedBus.getBusInfo().getPath().get( SettedBus.getCurrent_place()+1).getStationID());
-                    sendPassenger.put("stationID", "203000066");
-
-                    Log.d("sendingP", sendPassenger.getString("routeID"));
-                    Log.d("sendingP", sendPassenger.getString("stationID"));
-                } catch (JSONException e) {
+                try{
+                    thread_Time.join();
+                } catch (InterruptedException e){
                     e.printStackTrace();
                 }
 
-                ActivityDriver.ConnectThread thread_Passenger = new ActivityDriver.ConnectThread(url_Passenger, sendPassenger, getPassenger);
-                thread_Passenger.start();
+                if(SettedBus.getLeftTime1() < 5 ) {
+                    //승객의 여부 확인
+                    //잠시 주석처리 이유 : server쪽 개발중
+                    String url_Passenger = "http://stop-bus.tk/driver/stop";
+                    String getPassenger = "passengerInfo";
 
-                try{
-                    thread_Time.join();
-                    thread_Passenger.join();
-                } catch (InterruptedException e){
-                    e.printStackTrace();
+                    JSONObject sendPassenger = new JSONObject();
+                    try {
+                        sendPassenger.put("routeID", SettedBus.getBusInfo().getVehicleNumber());
+                        //sendPassenger.put("stationID", SettedBus.getBusInfo().getPath().get(SettedBus.getCurrent_place() + 1).getStationID());
+                        sendPassenger.put("stationID", "203000066");
+
+                        Log.d("sendingP", sendPassenger.getString("routeID"));
+                        Log.d("sendingP", sendPassenger.getString("stationID"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    ActivityDriver.ConnectThread thread_Passenger = new ActivityDriver.ConnectThread(url_Passenger, sendPassenger, getPassenger);
+                    thread_Passenger.start();
+
+                    try {
+                        thread_Passenger.join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         };
@@ -257,10 +262,12 @@ public class ActivityDriver extends Activity{
                         Log.d("SecondBus", JBody.getString("plateNo2").concat(String.valueOf(predictTime2 - predictTime1)));
 
                         TextView FrontBus_Time = (TextView) findViewById(R.id.FrontBus_Time);
-                        FrontBus_Time.setText(ModifyString(2,JBody.getString("predictTime1")));
+                        SettedBus.setLeftTime1(predictTime1);
+                        FrontBus_Time.setText(ModifyString(2,String.valueOf(SettedBus.getLeftTime1())));
 
                         TextView BackBus_Time = (TextView) findViewById(R.id.BackBus_Time);
-                        BackBus_Time.setText(ModifyString(2,String.valueOf(predictTime2 - predictTime1)));
+                        SettedBus.setLeftTime2(predictTime2 - predictTime1);
+                        BackBus_Time.setText(ModifyString(2,String.valueOf(SettedBus.getLeftTime2())));
                     }
                 }else{
                     Log.d("FAIL TO GET INFO", "TIME INFORMATION");

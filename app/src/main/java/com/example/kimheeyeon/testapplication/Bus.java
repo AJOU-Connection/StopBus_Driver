@@ -21,6 +21,10 @@ public class Bus implements Serializable {
     private int frontBus_place;
     private int current_place;
     private int backBus_place;
+
+    private int leftTime1;
+    private int leftTime2;
+
     private BusInfo busInfo;
     private ArrayList<BusLocation> locationList = new ArrayList<BusLocation>();
 
@@ -98,6 +102,22 @@ public class Bus implements Serializable {
         this.backBus_place = backBus_place;
     }
 
+    public int getLeftTime1() {
+        return leftTime1;
+    }
+
+    public void setLeftTime1(int leftTime1) {
+        this.leftTime1 = leftTime1;
+    }
+
+    public int getLeftTime2() {
+        return leftTime2;
+    }
+
+    public void setLeftTime2(int leftTime2) {
+        this.leftTime2 = leftTime2;
+    }
+
     public int findCurrentBus(JSONArray jInfo){
         JSONArray BusList = null;
         //강제로 null시켜서 비우기
@@ -123,7 +143,7 @@ public class Bus implements Serializable {
             for ( int i = 0 ; i < locationList.size(); i++){
                 Log.d("after", locationList.get(i).getPlateNo().concat(" and ").concat(String.valueOf(locationList.get(i).getStationSeq())));
 
-                if(locationList.get(i).getPlateNo().compareTo("경기77바1957") == 0) {
+                if(locationList.get(i).getPlateNo().compareTo("경기77바1856") == 0) {
 
                     int currentSeq = (locationList.get(i).getStationSeq() - 1);
                     finalResult = i;
