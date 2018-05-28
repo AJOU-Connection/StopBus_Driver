@@ -224,7 +224,7 @@ public class ActivityDriver extends Activity{
                         System.out.print("null");
                     } else {
                         System.out.print("the result is : ".concat(String.valueOf(findresult)));
-                        setBusState(findresult);
+                        setBusState();
                     }
                 }else{
                     Log.d("fail to find","in Driver Activity AT BUSLOCATION");
@@ -353,26 +353,27 @@ public class ActivityDriver extends Activity{
             return output.toString();
         }
 
-        public void setBusState(int currentStation){
+        public void setBusState(){
             //상단에 출력할 버스 번호 (ex 720-2번)
             TextView BusNum = (TextView)findViewById( R.id.BusNum );
             BusNum.setText( SettedBus.getBusInfo().getBusNumber().concat("번"));
 
             //앞 버스 위치 출력
             TextView FrontBus_Text = (TextView)findViewById(R.id.FrontBus_Text);
-            int FrontBus_Seq = SettedBus.getLocationList().get(currentStation+1).getStationSeq();
-            String FrontBus_String = SettedBus.getBusInfo().getPath().get(FrontBus_Seq).getStationName();
+            //int FrontBus_Seq = SettedBus.getLocationList().get(SettedBus.getFrontBus_place()).getStationSeq();
+            String FrontBus_String = SettedBus.getBusInfo().getPath().get(SettedBus.getFrontBus_place()).getStationName();
             FrontBus_Text.setText(ModifyString(1, FrontBus_String));
 
             //현재 버스 위치 출력
             TextView CurrentStation = (TextView)findViewById(R.id.CurrentStation);
-            int Current_Seq = SettedBus.getLocationList().get(currentStation).getStationSeq();
+            //int Current_Seq = SettedBus.getLocationList().get(currentStation).getStationSeq();
+            int Current_Seq = SettedBus.getCurrent_place();
             CurrentStation.setText(SettedBus.getBusInfo().getPath().get(Current_Seq).getStationName());
 
             //뒷 버스 위치 출력
             TextView BackBus_Text = (TextView)findViewById(R.id.BackBus_Text);
-            int BackBus_Seq = SettedBus.getLocationList().get(currentStation-1).getStationSeq();
-            String BackBus_String = SettedBus.getBusInfo().getPath().get(BackBus_Seq).getStationName();
+            //int BackBus_Seq = SettedBus.getLocationList().get(SettedBus.getBackBus_place()).getStationSeq();
+            String BackBus_String = SettedBus.getBusInfo().getPath().get(SettedBus.getBackBus_place()).getStationName();
             BackBus_Text.setText(ModifyString(1,BackBus_String));
 
             //현재 버스 다음 위치 출력

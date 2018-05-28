@@ -125,16 +125,16 @@ public class Bus implements Serializable {
 
                 if(locationList.get(i).getPlateNo().compareTo("경기77바1957") == 0) {
 
-                    int currentSeq = (locationList.get(i).getStationSeq());
-                    finalResult =i;
+                    int currentSeq = (locationList.get(i).getStationSeq() - 1);
+                    finalResult = i;
                     this.setCurrent_place(currentSeq);
                     //this.setCurrent_place();
                     Log.d("check!", locationList.get(i).getPlateNo().concat(" and ").concat(String.valueOf(locationList.get(i).getStationSeq())));
                     Log.d("beforebus!", locationList.get(i+1).getPlateNo().concat(" and ").concat(String.valueOf(locationList.get(i+1).getStationSeq())));
                     Log.d("afterBus!", locationList.get(i-1).getPlateNo().concat(" and ").concat(String.valueOf(locationList.get(i-1).getStationSeq())));
 
-                    setFrontBus_place(locationList.get(i+1).getStationSeq());
-                    setBackBus_place(locationList.get(i-1).getStationSeq());
+                    this.setFrontBus_place(locationList.get(i+1).getStationSeq() - 1);
+                    this.setBackBus_place(locationList.get(i-1).getStationSeq() - 1);
                 }
             }
 

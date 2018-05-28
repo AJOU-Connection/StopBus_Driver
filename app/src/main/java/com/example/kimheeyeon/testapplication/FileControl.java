@@ -19,11 +19,23 @@ public class FileControl {
 
     }
 
+    /**
+     * ExistsFile
+     * 파일의 존재여부 파악
+     * @param file
+     * @return boolean
+     */
     public boolean ExistsFile(File file) {
 
         return file.exists();
     }
 
+    /**
+     * 파일의 내용 읽어오기
+     * @param file
+     * @return FileText
+     * @throws Exception
+     */
     public String ReadFile(File file) throws Exception{
         StringBuilder text = new StringBuilder();
 
@@ -37,6 +49,11 @@ public class FileControl {
         return text.toString();
     }
 
+    /**
+     * 파일 삭제
+     * @param file
+     * @return boolean
+     */
     public boolean DeleteFile(File file){
         boolean result;
         if(file!=null&&file.exists()){
@@ -98,5 +115,3 @@ public class FileControl {
         return file;
     }
 }
-
-
