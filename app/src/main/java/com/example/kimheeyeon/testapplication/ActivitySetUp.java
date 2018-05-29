@@ -50,9 +50,6 @@ public class ActivitySetUp extends Activity {
                     TextView bus_id = (TextView) findViewById(R.id.bus_ID);
                     busID = bus_id.getText().toString();
 
-//                    TextView car_n = (TextView) findViewById(R.id.Car_Number);
-//                    carNumber = car_n.getText().toString();
-
                     P_Bar.setVisibility(View.VISIBLE);
 
                     //check if there is any json file that we get previous
@@ -108,9 +105,6 @@ public class ActivitySetUp extends Activity {
                             try {
                                 Intent intent = new Intent(ActivitySetUp.this, ActivityDriver.class);
 
-                                //intent.putExtra("BUS_ID", busID); //키 - 보낼 값(밸류)
-                                //intent.putExtra("CAR_NUMBER", carNumber);
-
                                 Log.d("ack data", settedBus.getBusInfo().getBusNumber());
                                 intent.putExtra("busData", settedBus);
 
@@ -137,9 +131,7 @@ public class ActivitySetUp extends Activity {
 
                     JSONObject sendData = new JSONObject();
                     try {
-                        //sendData.put("plateNo", carNumber);
                         sendData.put("routeID", busID);
-                        //Log.d("sending", sendData.getString("plateNo"));
                         Log.d("sending", sendData.getString("routeID"));
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -154,7 +146,6 @@ public class ActivitySetUp extends Activity {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-
 
                     Spinner spinner = (Spinner) findViewById(R.id.Car_Number);
 
