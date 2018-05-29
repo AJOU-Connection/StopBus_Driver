@@ -15,7 +15,9 @@ import android.os.Handler;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.io.*;
+import java.util.ArrayList;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,7 +26,8 @@ public class ActivitySetUp extends Activity {
     Handler handler = new Handler();
     Bus settedBus = new Bus();
     String busID = "";
-    String carNumber = "";
+//    String carNumber = "";
+    private ArrayList<String> locationList = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,15 +37,17 @@ public class ActivitySetUp extends Activity {
         final ProgressBar P_Bar = (ProgressBar) findViewById(R.id.progressBar);
         P_Bar.setVisibility(View.INVISIBLE); //To set visible
 
-        Button search = (Button) findViewById(R.id.Confirm_Button);
-        search.setOnClickListener(
+        Button Confirm_Button = (Button) findViewById(R.id.Confirm_Button);
+        Button search = (Button) findViewById(R.id.Search);
+
+        Confirm_Button.setOnClickListener(
             new Button.OnClickListener() {
                 public void onClick(View v) {
                     TextView bus_id = (TextView) findViewById(R.id.bus_ID);
                     busID = bus_id.getText().toString();
 
-                    TextView car_n = (TextView) findViewById(R.id.Car_Number);
-                    carNumber = car_n.getText().toString();
+//                    TextView car_n = (TextView) findViewById(R.id.Car_Number);
+//                    carNumber = car_n.getText().toString();
 
                     P_Bar.setVisibility(View.VISIBLE);
 
@@ -70,19 +75,20 @@ public class ActivitySetUp extends Activity {
 
                     } else {
                         Log.i("version", "get from server");
-                        String url = "http://stop-bus.tk/driver/register";
+                        String url = "http://stop-bus.tk/user/busStationList";
+                        String version = "stationList";
 
                         JSONObject sendData = new JSONObject();
                         try {
-                            sendData.put("plateNo", carNumber);
+                            //sendData.put("plateNo", carNumber);
                             sendData.put("routeID", busID);
-                            Log.d("sending", sendData.getString("plateNo"));
+                            //Log.d("sending", sendData.getString("plateNo"));
                             Log.d("sending", sendData.getString("routeID"));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                        ConnectThread thread = new ConnectThread(url, sendData);
+                        ConnectThread thread = new ConnectThread(url, sendData, version);
                         thread.start();
 
                         try {
@@ -109,7 +115,52 @@ public class ActivitySetUp extends Activity {
                                 e.printStackTrace();
                             }
                         }
-                    }, 1000);  // 2000은 2초를 의미합니다.
+                    }, 500);  // 2000은 2초를 의미합니다.
+                }
+            }
+        );
+
+        search.setOnClickListener(
+            new Button.OnClickListener() {
+                public void onClick(View v) {
+                    TextView bus_id = (TextView) findViewById(R.id.bus_ID);
+                    busID = bus_id.getText().toString();
+
+                    P_Bar.setVisibility(View.VISIBLE);
+
+                    String url = "http://stop-bus.tk/user/busLocationList";
+                    String version = "busList";
+
+                    JSONObject sendData = new JSONObject();
+                    try {
+                        //sendData.put("plateNo", carNumber);
+                        sendData.put("routeID", busID);
+                        //Log.d("sending", sendData.getString("plateNo"));
+                        Log.d("sending", sendData.getString("routeID"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    ConnectThread Location_thread = new ConnectThread(url, sendData, version);
+                    Location_thread.start();
+
+                    try {
+                        Location_thread.join();
+                        P_Bar.setVisibility(View.INVISIBLE);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    Handler handler2 = new Handler();
+                    handler2.postDelayed(new Runnable() {
+                        public void run() {
+                            try {
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }, 0);  // 2000은 2초를 의미합니다.
                 }
             }
         );
@@ -118,10 +169,12 @@ public class ActivitySetUp extends Activity {
     class ConnectThread extends Thread {
         String urlStr;
         JSONObject s_Data;
+        String version;
 
-        public ConnectThread(String inStr, JSONObject map) {
+        public ConnectThread(String inStr, JSONObject map, String version) {
             urlStr = inStr;
             this.s_Data = map;
+            this.version = version;
         }
 
         public void run() {
@@ -143,7 +196,16 @@ public class ActivitySetUp extends Activity {
                     }
                 });
 
-                jsonParserList(output);
+                switch(this.version) {
+                    case "stationList" :
+                        jsonParserList(output);
+                        break;
+                    case "busList" :
+                        parseBusLocation(output);
+                        break;
+                    default:
+                        System.out.println("setup is fail");
+                }
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -205,11 +267,50 @@ public class ActivitySetUp extends Activity {
                 }
                 settedBus.setBusInfo(jBody);
                 settedBus.setVehicleNumber(busID);
-                settedBus.setCarNumber(carNumber);
+                //settedBus.setCarNumber(carNumber);
             } else {
                 Log.d("GET DATA ERR", "FAIL TO GET BUSLIST");
             }
 
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void parseBusLocation(String pRecvServerPage) {
+
+        Log.i("서버에서 받은 전체 내용 : ", pRecvServerPage);
+
+        try {
+            JSONObject jsonObject = new JSONObject(pRecvServerPage);
+
+            JSONObject jHeader = jsonObject.getJSONObject("header");  // JSONObject 추출
+            Log.d("PARSING", jHeader.getString("result"));
+
+            if(jHeader.getString("result").compareTo("true") == 0) {
+
+                JSONArray testarray = jsonObject.getJSONArray("body");
+                if(testarray==null){
+                    System.out.print("json is null when get buslocation");
+                    return;
+                }
+
+                if (jHeader.getString("result").compareTo("true") != 0)
+                    System.out.println("errrr!!1");
+                else{
+                    JSONArray BusList = jsonObject.getJSONArray("body");
+                    //강제로 null시켜서 비우기
+                    locationList.clear();
+                    for(int i = 0; i < BusList.length(); i++){
+                        JSONObject binfo = BusList.getJSONObject(i);
+                        Log.d("Compare", binfo.getString("plateNo").concat(" and ").concat(binfo.getString("stationSeq")));
+                        //BusLocation nLocation = new BusLocation(binfo.getString("plateNo"), Integer.parseInt(binfo.getString("stationSeq")));
+                        this.locationList.add(this.locationList.size() , binfo.getString("plateNo"));
+                    }
+                }
+            }else{
+                Log.d("fail to find","in Driver Activity AT BUSLOCATION");
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
