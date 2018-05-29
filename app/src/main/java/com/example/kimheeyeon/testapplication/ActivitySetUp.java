@@ -14,7 +14,6 @@ import android.widget.ProgressBar;
 
 import android.content.Intent;
 import android.os.Handler;
-import android.widget.Toast;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
