@@ -153,7 +153,7 @@ public class Bus implements Serializable {
             for ( int i = 0 ; i < locationList.size(); i++){
                 Log.d("after", locationList.get(i).getPlateNo().concat(" and ").concat(String.valueOf(locationList.get(i).getStationSeq())));
 
-                if(locationList.get(i).getPlateNo().compareTo("경기77바1637") == 0) {
+                if(locationList.get(i).getPlateNo().compareTo(this.busInfo.getCarNumber()) == 0) {
 
                     int currentSeq = (locationList.get(i).getStationSeq() - 1);
                     finalResult = i;

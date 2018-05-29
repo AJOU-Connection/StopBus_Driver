@@ -13,8 +13,11 @@ public class BusInfo implements Serializable {
     //for the information that not changed
 
     private ArrayList<Path> paths = new ArrayList<>();
+    // ex 720-2
     private String BusNumber = "";
+    // ex  234000026
     private String VehicleNumber = "";
+    // ex 경기 00가...
     private String CarNumber = "";
 
     public BusInfo(){

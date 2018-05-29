@@ -30,7 +30,7 @@ public class ActivitySetUp extends Activity {
     Handler handler = new Handler();
     Bus settedBus = new Bus();
     String busID = "";
-//    String carNumber = "";
+    String carNumber = "";
     //private ArrayList<String> locationList = new ArrayList<String>();
     String locationList[];
 
@@ -42,7 +42,7 @@ public class ActivitySetUp extends Activity {
         final ProgressBar P_Bar = (ProgressBar) findViewById(R.id.progressBar);
         P_Bar.setVisibility(View.INVISIBLE); //To set visible
 
-        Button Confirm_Button = (Button) findViewById(R.id.Confirm_Button);
+        final Button Confirm_Button = (Button) findViewById(R.id.Confirm_Button);
         Button search = (Button) findViewById(R.id.Search);
 
         Confirm_Button.setOnClickListener(
@@ -80,14 +80,14 @@ public class ActivitySetUp extends Activity {
 
                     } else {
                         Log.i("version", "get from server");
-                        String url = "http://stop-bus.tk/user/busStationList";
+                        String url = "http://stop-bus.tk/driver/register";
                         String version = "stationList";
 
                         JSONObject sendData = new JSONObject();
                         try {
-                            //sendData.put("plateNo", carNumber);
+                            sendData.put("plateNo", "경기00가1234");
                             sendData.put("routeID", busID);
-                            //Log.d("sending", sendData.getString("plateNo"));
+                            Log.d("sending", sendData.getString("plateNo"));
                             Log.d("sending", sendData.getString("routeID"));
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -160,6 +160,7 @@ public class ActivitySetUp extends Activity {
                     Spinner spinner = (Spinner) findViewById(R.id.Car_Number);
 
                     spinner.setVisibility(View.VISIBLE);
+                    Confirm_Button.setVisibility(View.VISIBLE);
 
                     ArrayAdapter<String> spinnerArray = new ArrayAdapter<String>(ActivitySetUp.this, android.R.layout.simple_spinner_item, locationList);
                     spinner.setAdapter(spinnerArray);
@@ -169,8 +170,7 @@ public class ActivitySetUp extends Activity {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                             String item = (String)parent.getSelectedItem();
-
-                            Toast.makeText(getApplicationContext(), item, Toast.LENGTH_SHORT);
+                            carNumber = item;
                         }
 
                         @Override
@@ -214,14 +214,6 @@ public class ActivitySetUp extends Activity {
                     @Override
                     public void run() {
                         Log.d("gmmm", output);
-
-                        try {
-                            FileOutputStream os = openFileOutput(busID.concat(".txt"), MODE_PRIVATE);
-                            os.write(output.getBytes());
-                            os.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
                     }
                 });
 
@@ -278,6 +270,13 @@ public class ActivitySetUp extends Activity {
     }
 
     public void jsonParserList(String pRecvServerPage) {
+        try {
+            FileOutputStream os = openFileOutput(busID.concat(".txt"), MODE_PRIVATE);
+            os.write(pRecvServerPage.getBytes());
+            os.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         Log.i("서버에서 받은 전체 내용 : ", pRecvServerPage);
 
@@ -296,7 +295,7 @@ public class ActivitySetUp extends Activity {
                 }
                 settedBus.setBusInfo(jBody);
                 settedBus.setVehicleNumber(busID);
-                //settedBus.setCarNumber(carNumber);
+                settedBus.setCarNumber(carNumber);
             } else {
                 Log.d("GET DATA ERR", "FAIL TO GET BUSLIST");
             }
