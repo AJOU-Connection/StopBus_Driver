@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.os.Bundle;
 
 import android.util.Log;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Button;
 import android.view.View;
@@ -11,6 +14,7 @@ import android.widget.ProgressBar;
 
 import android.content.Intent;
 import android.os.Handler;
+import android.widget.Toast;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -27,7 +31,8 @@ public class ActivitySetUp extends Activity {
     Bus settedBus = new Bus();
     String busID = "";
 //    String carNumber = "";
-    private ArrayList<String> locationList = new ArrayList<String>();
+    //private ArrayList<String> locationList = new ArrayList<String>();
+    String locationList[];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,16 +156,40 @@ public class ActivitySetUp extends Activity {
                         e.printStackTrace();
                     }
 
-                    Handler handler2 = new Handler();
-                    handler2.postDelayed(new Runnable() {
-                        public void run() {
-                            try {
 
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                    Spinner spinner = (Spinner) findViewById(R.id.Car_Number);
+
+                    spinner.setVisibility(View.VISIBLE);
+
+                    ArrayAdapter<String> spinnerArray = new ArrayAdapter<String>(ActivitySetUp.this, android.R.layout.simple_spinner_item, locationList);
+                    spinner.setAdapter(spinnerArray);
+
+                    spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            String item = (String)parent.getSelectedItem();
+
+                            Toast.makeText(getApplicationContext(), item, Toast.LENGTH_SHORT);
                         }
-                    }, 0);  // 2000은 2초를 의미합니다.
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+
+                        }
+                    });
+
+
+//                    Handler handler2 = new Handler();
+//                    handler2.postDelayed(new Runnable() {
+//                        public void run() {
+//                            try {
+//
+//                            } catch (Exception e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    }, 0);  // 2000은 2초를 의미합니다.
                 }
             }
         );
@@ -300,13 +329,17 @@ public class ActivitySetUp extends Activity {
                 else{
                     JSONArray BusList = jsonObject.getJSONArray("body");
                     //강제로 null시켜서 비우기
-                    locationList.clear();
+                    //locationList.clear();
+                    this.locationList = new String[BusList.length()];
                     for(int i = 0; i < BusList.length(); i++){
                         JSONObject binfo = BusList.getJSONObject(i);
                         Log.d("Compare", binfo.getString("plateNo").concat(" and ").concat(binfo.getString("stationSeq")));
                         //BusLocation nLocation = new BusLocation(binfo.getString("plateNo"), Integer.parseInt(binfo.getString("stationSeq")));
-                        this.locationList.add(this.locationList.size() , binfo.getString("plateNo"));
+                        //this.locationList.add(this.locationList.size() , binfo.getString("plateNo"));
+                        this.locationList[i] = binfo.getString("plateNo");
                     }
+
+                    System.out.println("shit");
                 }
             }else{
                 Log.d("fail to find","in Driver Activity AT BUSLOCATION");
