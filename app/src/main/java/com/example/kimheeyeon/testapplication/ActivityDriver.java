@@ -122,13 +122,33 @@ public class ActivityDriver extends Activity{
 
                 ActivityDriver.ConnectThread thread_Time = new ActivityDriver.ConnectThread(url_time, sendStation, getTime);
                 thread_Time.start();
+
+                //버스의 노선번호와 station 번호를 전달하여, 도착할 정류장으로부터 남은 시간 추출
+                String getGap = "remainGap";
+
+                JSONObject sendStationCurrent = new JSONObject();
+                try {
+                    sendStationCurrent.put("routeID" , SettedBus.getBusInfo().getVehicleNumber());
+                    sendStationCurrent.put("stationID", SettedBus.getBusInfo().getPath().get( SettedBus.getCurrent_place() + 1).getStationID());
+
+
+                    Log.d("sending", sendStationCurrent.getString("routeID"));
+                    Log.d("sending", sendStationCurrent.getString("stationID"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                ActivityDriver.ConnectThread thread_Gap = new ActivityDriver.ConnectThread(url_time, sendStationCurrent, getGap);
+                thread_Gap.start();
+
                 try{
                     thread_Time.join();
+                    thread_Gap.join();
                 } catch (InterruptedException e){
                     e.printStackTrace();
                 }
 
-                if(SettedBus.getLeftTime1() < 5 ) {
+                if(SettedBus.getLeftTime_Current() < 6) {
                     //승객의 여부 확인
                     //잠시 주석처리 이유 : server쪽 개발중
                     String url_Passenger = "http://stop-bus.tk/driver/stop";
@@ -137,8 +157,8 @@ public class ActivityDriver extends Activity{
                     JSONObject sendPassenger = new JSONObject();
                     try {
                         sendPassenger.put("routeID", SettedBus.getBusInfo().getVehicleNumber());
-                        //sendPassenger.put("stationID", SettedBus.getBusInfo().getPath().get(SettedBus.getCurrent_place() + 1).getStationID());
-                        sendPassenger.put("stationID", "203000066");
+                        sendPassenger.put("stationID", SettedBus.getBusInfo().getPath().get(SettedBus.getCurrent_place() + 1).getStationID());
+                        //sendPassenger.put("stationID", "203000066");
 
                         Log.d("sendingP", sendPassenger.getString("routeID"));
                         Log.d("sendingP", sendPassenger.getString("stationID"));
@@ -186,10 +206,15 @@ public class ActivityDriver extends Activity{
                                 parseBusLocation(output);
                                 break;
                             case "remainTime" :
-                                parseTimeInformation(output);
+                                Log.d("remainTimeVersion", "hey");
+                                parseTimeInformation(output, "time");
                                 break;
                             case "passengerInfo" :
                                 parsePassengerInformation(output);
+                                break;
+                            case "remainGap" :
+                                Log.d("remainGapVersion", "hey");
+                                parseTimeInformation(output, "gap");
                                 break;
                             default :
                                 System.out.println("this is for out!! there is no version suits");
@@ -239,8 +264,8 @@ public class ActivityDriver extends Activity{
             }
         }
 
-        private void parseTimeInformation(String pRecvServerPage){
-            Log.i("서버에서 받은 내용(for time) : ", pRecvServerPage);
+        private void parseTimeInformation(String pRecvServerPage, String version){
+            Log.i("서버에서 받은 내용(for ".concat(version).concat(" ) : "), pRecvServerPage);
 
             try {
                 JSONObject jsonObject = new JSONObject(pRecvServerPage);
@@ -261,13 +286,21 @@ public class ActivityDriver extends Activity{
                         Log.d("FirstBus", JBody.getString("plateNo1").concat(String.valueOf(predictTime1)));
                         Log.d("SecondBus", JBody.getString("plateNo2").concat(String.valueOf(predictTime2 - predictTime1)));
 
-                        TextView FrontBus_Time = (TextView) findViewById(R.id.FrontBus_Time);
-                        SettedBus.setLeftTime1(predictTime1);
-                        FrontBus_Time.setText(ModifyString(2,String.valueOf(SettedBus.getLeftTime1())));
+                        if(version.compareTo("time") == 0) {
 
-                        TextView BackBus_Time = (TextView) findViewById(R.id.BackBus_Time);
-                        SettedBus.setLeftTime2(predictTime2 - predictTime1);
-                        BackBus_Time.setText(ModifyString(2,String.valueOf(SettedBus.getLeftTime2())));
+                            TextView FrontBus_Time = (TextView) findViewById(R.id.FrontBus_Time);
+                            SettedBus.setLeftTime1(predictTime1);
+                            FrontBus_Time.setText(ModifyString(2, String.valueOf(SettedBus.getLeftTime1())));
+
+                            TextView BackBus_Time = (TextView) findViewById(R.id.BackBus_Time);
+                            SettedBus.setLeftTime2(predictTime2 - predictTime1);
+                            BackBus_Time.setText(ModifyString(2, String.valueOf(SettedBus.getLeftTime2())));
+                        }else if(version.compareTo("gap") == 0){
+                            SettedBus.setLeftTime_Current(predictTime1);
+                            Log.d("CURRENTLEFT", String.valueOf(SettedBus.getLeftTime_Current()));
+                        }else{
+                            System.out.println("err!!!!!!!!!!!!!!!!");
+                        }
                     }
                 }else{
                     Log.d("FAIL TO GET INFO", "TIME INFORMATION");
