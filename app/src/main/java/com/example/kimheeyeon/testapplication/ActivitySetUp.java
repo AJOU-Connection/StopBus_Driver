@@ -178,18 +178,6 @@ public class ActivitySetUp extends Activity {
 
                         }
                     });
-
-
-//                    Handler handler2 = new Handler();
-//                    handler2.postDelayed(new Runnable() {
-//                        public void run() {
-//                            try {
-//
-//                            } catch (Exception e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    }, 0);  // 2000은 2초를 의미합니다.
                 }
             }
         );
