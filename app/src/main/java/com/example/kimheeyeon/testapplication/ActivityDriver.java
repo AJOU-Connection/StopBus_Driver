@@ -341,11 +341,11 @@ public class ActivityDriver extends Activity implements OnInitListener{
 
                             TextView FrontBus_Time = (TextView) findViewById(R.id.FrontBus_Time);
                             SettedBus.setLeftTime1(predictTime1);
-                            FrontBus_Time.setText(ModifyString(2, String.valueOf(SettedBus.getLeftTime1())));
+                            FrontBus_Time.setText(ModifyString(3, String.valueOf(SettedBus.getLeftTime1())));
 
                             TextView BackBus_Time = (TextView) findViewById(R.id.BackBus_Time);
                             SettedBus.setLeftTime2(predictTime2 - predictTime1);
-                            BackBus_Time.setText(ModifyString(2, String.valueOf(SettedBus.getLeftTime2())));
+                            BackBus_Time.setText(ModifyString(3, String.valueOf(SettedBus.getLeftTime2())));
                         }else if(version.compareTo("gap") == 0){
                             SettedBus.setLeftTime_Current(predictTime1);
                             Log.d("CURRENTLEFT", String.valueOf(SettedBus.getLeftTime_Current()));
@@ -478,7 +478,7 @@ public class ActivityDriver extends Activity implements OnInitListener{
             //뒷 버스 위치 출력
             TextView BackBus_Text = (TextView)findViewById(R.id.BackBus_Text);
             String BackBus_String = SettedBus.getBusInfo().getPath().get(SettedBus.getBackBus_place()).getStationName();
-            BackBus_Text.setText(ModifyString(1,BackBus_String));
+            BackBus_Text.setText(ModifyString(2,BackBus_String));
 
             //현재 버스 다음 위치 출력
             TextView NextStation = (TextView)findViewById(R.id.NextStation);
@@ -501,27 +501,57 @@ public class ActivityDriver extends Activity implements OnInitListener{
                 String result = raw_text.substring(0,22).concat("...");
                 return result;
             }else{
-                for(int i = 0 ; i == (raw_text.length()/2) ; i++ ){
+                for(int i = 0 ; i < (raw_text.length()/2) ; i++ ){
                     raw_text = " ".concat(raw_text).concat(" ");
                 }
                 return raw_text;
             }
-        }else if(version == 1){
-            if(raw_text.length() > 10){
+        }else if(version == 1 || version == 2) {
+            //for backbus
+            if (raw_text.length() > 14) {
                 System.out.println(raw_text);
-                String result = raw_text.substring(0,10);
+                String result = raw_text.substring(0, 10);
+
+                System.out.println("raw_text" + result);
                 System.out.println(result);
                 return result;
-            }else{
+            } else {
                 System.out.println(raw_text);
-                for(int i = 0 ; i == (raw_text.length()/2) ; i++ ){
-                    raw_text = " ".concat(raw_text).concat(" ");
-                    System.out.println(raw_text);
+//                String result = raw_text;
+//                for(int i = 0 ; i < (raw_text.length()/2) ; i++ ){
+//                    result = " "+(result);
+//                }
+
+                if (version == 1) {
+                    //for front bus
+//                    String result = String.format("%14s", raw_text);
+//                    System.out.println("raw_text" + result);
+//                    return result;
+                    StringBuilder str1 = new StringBuilder();
+
+                    for (int j = 0; j < ((14 - raw_text.length()) / 2); j++) {
+                        str1.append(" ");
+                    }
+                    str1.append(raw_text);
+
+                    String result = str1.toString();
+
+                    System.out.println("raw_text" + result + ",");
+                    return result;
+                } else {
+                    StringBuilder str1 = new StringBuilder();
+                    str1.append(raw_text);
+                    for (int j = 0; j < ((14 - raw_text.length()) / 2); j++) {
+                        str1.append(" ");
+                    }
+
+                    String result = str1.toString();
+
+                    System.out.println("raw_text" + result + ",");
+                    return result;
                 }
-                System.out.println(raw_text);
-                return raw_text;
             }
-        }else if(version == 2){
+        }else if(version == 3){
             if(raw_text.length() <2 ) {
                 raw_text = "0".concat(raw_text);
             }

@@ -4,9 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ActivityDriver">
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
 
         <TextView
             android:id="@+id/Bottom"
@@ -215,8 +218,8 @@
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/RidePerson"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="220dp"
-            android:text="BackBusPosition"
+            android:layout_marginEnd="215dp"
+            android:text="BackBusPositions"
             android:textAlignment="center"
             android:textColor="@android:color/background_light"
             android:textSize="18sp"
