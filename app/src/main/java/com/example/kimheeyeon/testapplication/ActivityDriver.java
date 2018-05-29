@@ -1,7 +1,9 @@
 package com.example.kimheeyeon.testapplication;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -12,18 +14,26 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import java.util.HashMap;
+import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ActivityDriver extends Activity{
+//speach
+import android.speech.tts.TextToSpeech;
+import android.speech.tts.TextToSpeech.OnInitListener;
+
+
+public class ActivityDriver extends Activity implements OnInitListener{
     Handler handler = new Handler();
     Bus SettedBus = new Bus();
+    private TextToSpeech tts;
+    String tts_text = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +47,8 @@ public class ActivityDriver extends Activity{
         Log.d("check info", SettedBus.getBusInfo().getCarNumber());
         Log.d("check info", SettedBus.getBusInfo().getVehicleNumber());
 
+        //init tts
+        tts = new TextToSpeech(this, this);
 
         //상단에 출력할 버스 번호 (ex 720-2번)
         TextView BusNum = (TextView)findViewById( R.id.BusNum );
@@ -155,9 +167,10 @@ public class ActivityDriver extends Activity{
 
                     JSONObject sendPassenger = new JSONObject();
                     try {
-                        sendPassenger.put("routeID", SettedBus.getBusInfo().getVehicleNumber());
-                        sendPassenger.put("stationID", SettedBus.getBusInfo().getPath().get(SettedBus.getCurrent_place() + 1).getStationID());
-                        //sendPassenger.put("stationID", "203000066");
+                        //sendPassenger.put("routeID", SettedBus.getBusInfo().getVehicleNumber());
+                        //sendPassenger.put("stationID", SettedBus.getBusInfo().getPath().get(SettedBus.getCurrent_place() + 1).getStationID());
+                        sendPassenger.put("routeID", "test");
+                        sendPassenger.put("stationID", "test");
 
                         Log.d("sendingP", sendPassenger.getString("routeID"));
                         Log.d("sendingP", sendPassenger.getString("stationID"));
@@ -170,6 +183,18 @@ public class ActivityDriver extends Activity{
 
                     try {
                         thread_Passenger.join();
+
+                        //http://stackoverflow.com/a/29777304
+                        if(tts_text!= null) {
+                            Log.i("tts_text", tts_text);
+
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                ttsGreater21(tts_text);
+                            } else {
+                                ttsUnder20(tts_text);
+                            }
+                        }
+                        //speakOut(tts_text);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -178,6 +203,37 @@ public class ActivityDriver extends Activity{
         };
         ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
         service.scheduleAtFixedRate(runnable, 0, 30, TimeUnit.SECONDS);
+    }
+
+    //tts function
+    @Override
+    public void onInit(int status) {
+        if(status != TextToSpeech.ERROR) {
+            tts.setLanguage(Locale.KOREAN);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        // Don't forget to shutdown tts!
+        if (tts != null) {
+            tts.stop();
+            tts.shutdown();
+        }
+        super.onDestroy();
+    }
+
+    @SuppressWarnings("deprecation")
+    private void ttsUnder20(String text) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "MessageId");
+        tts.speak(text, TextToSpeech.QUEUE_FLUSH, map);
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void ttsGreater21(String text) {
+        String utteranceId=this.hashCode() + "";
+        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, utteranceId);
     }
 
     class ConnectThread extends Thread {
@@ -205,14 +261,12 @@ public class ActivityDriver extends Activity{
                                 parseBusLocation(output);
                                 break;
                             case "remainTime" :
-                                Log.d("remainTimeVersion", "hey");
                                 parseTimeInformation(output, "time");
                                 break;
                             case "passengerInfo" :
                                 parsePassengerInformation(output);
                                 break;
                             case "remainGap" :
-                                Log.d("remainGapVersion", "hey");
                                 parseTimeInformation(output, "gap");
                                 break;
                             default :
@@ -220,8 +274,6 @@ public class ActivityDriver extends Activity{
                         }
                     }
                 });
-
-
             } catch (Exception ex){
                 ex.printStackTrace();
             }
@@ -332,20 +384,36 @@ public class ActivityDriver extends Activity{
                         Log.d("isGetIn",JBody.getString("isGetIn"));
                         Log.d("isGetOff", JBody.getString("isGetOff"));
 
+                        if(tts_text != null){
+                            tts_text = null;
+                        }
+
                         if(isGetIn){
                             //탑승객이 있는 경우
                             TextView RidePerson = (TextView)findViewById(R.id.RidePerson);
                             RidePerson.setBackgroundColor(Color.rgb(229, 78, 78));
+
+                            tts_text = "다음 정류장에 탑승객이 있습니다" ;
                         }
                         if(isGetOff){
                             //하차객이 있는 경우
                             TextView GetOffPerson = (TextView)findViewById(R.id.GetOffPerson);
                             GetOffPerson.setBackgroundColor(Color.rgb(239, 215, 95));
 
+                            if(tts_text != null) {
+                                tts_text = "다음 정류장에 하차객이 있습니다" ;
+                            }else {
+                                tts_text = "다음 정류장에 탑승객과 하차객이 있습니다";
+                            }
+                        }
+
+                        if(!isGetIn && !isGetOff){
+                            tts_text = "다음 정류장에는 승하차객이 없습니다";
                         }
                     }
                 }else{
                     Log.d("FAIL TO GET INFO", "Passenger INFORMATION");
+                    tts_text = "가져오기 에러";
                 }
 
             } catch (JSONException e) {

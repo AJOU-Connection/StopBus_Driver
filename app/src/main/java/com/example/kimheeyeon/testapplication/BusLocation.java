@@ -1,5 +1,7 @@
 package com.example.kimheeyeon.testapplication;
 
+import android.text.style.BulletSpan;
+
 public class BusLocation {
     private String PlateNo;
     private int stationSeq;

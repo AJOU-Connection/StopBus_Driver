@@ -31,7 +31,6 @@ public class Bus implements Serializable {
     private ArrayList<BusLocation> locationList = new ArrayList<BusLocation>();
 
     public Bus(){
-
     }
 
     public Bus(String BusNum) {
@@ -160,8 +159,8 @@ public class Bus implements Serializable {
                     this.setCurrent_place(currentSeq);
                     //this.setCurrent_place();
                     Log.d("check!", locationList.get(i).getPlateNo().concat(" and ").concat(String.valueOf(locationList.get(i).getStationSeq())));
-                    Log.d("beforebus!", locationList.get(i+1).getPlateNo().concat(" and ").concat(String.valueOf(locationList.get(i+1).getStationSeq())));
-                    Log.d("afterBus!", locationList.get(i-1).getPlateNo().concat(" and ").concat(String.valueOf(locationList.get(i-1).getStationSeq())));
+                    Log.d("Frontbus!", locationList.get(i+1).getPlateNo().concat(" and ").concat(String.valueOf(locationList.get(i+1).getStationSeq())));
+                    Log.d("BackBus!", locationList.get(i-1).getPlateNo().concat(" and ").concat(String.valueOf(locationList.get(i-1).getStationSeq())));
 
                     this.setFrontBus_place(locationList.get(i+1).getStationSeq() - 1);
                     this.setBackBus_place(locationList.get(i-1).getStationSeq() - 1);
