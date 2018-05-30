@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_alignEnd="@+id/Car_Number"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="219dp"
+            android:layout_marginBottom="177dp"
             android:text="확인"
             android:visibility="invisible" />
 
@@ -75,7 +75,7 @@
             android:layout_height="59dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="277dp"
+            android:layout_marginBottom="256dp"
             android:background="@android:color/background_light"
             android:ems="10"
             android:inputType="text"
@@ -92,7 +92,7 @@
             android:layout_marginTop="319dp"
             android:background="@android:color/background_light"
             android:ems="10"
-            android:text="200000110"
+            android:text="234000026"
             android:textAlignment="center" />
 
         <TextView

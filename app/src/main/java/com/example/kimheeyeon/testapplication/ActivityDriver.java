@@ -38,7 +38,7 @@ public class ActivityDriver extends Activity implements OnInitListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test);
+        setContentView(R.layout.activity_test2);
 
         final Intent intent = getIntent();
 
@@ -467,7 +467,12 @@ public class ActivityDriver extends Activity implements OnInitListener{
 
             //앞 버스 위치 출력
             TextView FrontBus_Text = (TextView)findViewById(R.id.FrontBus_Text);
-            String FrontBus_String = SettedBus.getBusInfo().getPath().get(SettedBus.getFrontBus_place()).getStationName();
+            String FrontBus_String = "";
+            try {
+                FrontBus_String = SettedBus.getBusInfo().getPath().get(SettedBus.getFrontBus_place()).getStationName();
+            }catch(Exception e){
+                FrontBus_String = "정보없음";
+            }
             FrontBus_Text.setText(ModifyString(1, FrontBus_String));
 
             //현재 버스 위치 출력
@@ -477,20 +482,38 @@ public class ActivityDriver extends Activity implements OnInitListener{
 
             //뒷 버스 위치 출력
             TextView BackBus_Text = (TextView)findViewById(R.id.BackBus_Text);
-            String BackBus_String = SettedBus.getBusInfo().getPath().get(SettedBus.getBackBus_place()).getStationName();
+            String BackBus_String = "";
+            try {
+                BackBus_String = SettedBus.getBusInfo().getPath().get(SettedBus.getBackBus_place()).getStationName();
+            }catch(Exception e){
+                BackBus_String = "정보없음";
+            }
             BackBus_Text.setText(ModifyString(2,BackBus_String));
 
             //현재 버스 다음 위치 출력
             TextView NextStation = (TextView)findViewById(R.id.NextStation);
-            NextStation.setText(SettedBus.getBusInfo().getPath().get(Current_Seq+1).getStationName());
+            try {
+                NextStation.setText(SettedBus.getBusInfo().getPath().get(Current_Seq+1).getStationName());
+            }catch(Exception e){
+                NextStation.setText("종점");
+            }
 
             //현재 버스 다음 위치 출력(밑 부분)
             TextView NextStation_Buttom = (TextView)findViewById(R.id.NextStation_Buttom);
-            NextStation_Buttom.setText(SettedBus.getBusInfo().getPath().get(Current_Seq+1).getStationName());
+            try {
+                NextStation_Buttom.setText(SettedBus.getBusInfo().getPath().get(Current_Seq+1).getStationName());
+            }catch(Exception e){
+                NextStation_Buttom.setText("종점");
+            }
 
             //현재 버스 방향 출력
             TextView NextStationDirection = (TextView)findViewById(R.id.NextStationDirection);
-            NextStationDirection.setText(SettedBus.getBusInfo().getPath().get(Current_Seq+2).getStationName());
+            try {
+                NextStationDirection.setText(SettedBus.getBusInfo().getPath().get(Current_Seq+2).getStationName());
+            }catch(Exception e){
+                NextStationDirection.setText("정보없음");
+            }
+
         }
 
     }
