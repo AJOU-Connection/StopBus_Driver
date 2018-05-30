@@ -146,7 +146,7 @@ public class Bus implements Serializable {
             MiniComparator comp = new MiniComparator();
             Collections.sort(locationList, comp);
 
-            System.out.println("--after--");
+            System.out.println("---after---");
             int finalResult = -1;
 
             for ( int i = 0 ; i < locationList.size(); i++){
