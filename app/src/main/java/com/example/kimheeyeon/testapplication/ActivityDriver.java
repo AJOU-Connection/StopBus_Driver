@@ -116,6 +116,8 @@ public class ActivityDriver extends Activity implements OnInitListener{
                     e.printStackTrace();
                 }
 
+
+
                //버스의 노선번호와 station 번호를 전달하여, 해당 정류장으로부터 남은 시간 추출
                 String url_time = "http://stop-bus.tk/driver/gap";
                 String getTime = "remainTime";
@@ -123,11 +125,14 @@ public class ActivityDriver extends Activity implements OnInitListener{
                 JSONObject sendStation = new JSONObject();
                 try {
                     sendStation.put("routeID" , SettedBus.getBusInfo().getVehicleNumber());
+                    Thread.sleep(200);
                     sendStation.put("stationID", SettedBus.getBusInfo().getPath().get( SettedBus.getFrontBus_place()).getStationID());
 
                     Log.d("sending", sendStation.getString("routeID"));
                     Log.d("sending", sendStation.getString("stationID"));
                 } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
 
@@ -142,8 +147,8 @@ public class ActivityDriver extends Activity implements OnInitListener{
                     sendStationCurrent.put("routeID" , SettedBus.getBusInfo().getVehicleNumber());
                     sendStationCurrent.put("stationID", SettedBus.getBusInfo().getPath().get( SettedBus.getCurrent_place() + 1).getStationID());
 
-
                     Log.d("sending", sendStationCurrent.getString("routeID"));
+                    Log.d("what is ",  String.valueOf(SettedBus.getBusInfo().getPath().get( SettedBus.getCurrent_place() + 1)));
                     Log.d("sending", sendStationCurrent.getString("stationID"));
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -250,7 +255,11 @@ public class ActivityDriver extends Activity implements OnInitListener{
         public void run(){
 
             try{
-                final String output = request(urlStr, this.s_Data);
+                final String output ;
+                if(purpose == "remainTime")
+                    output= request(urlStr, this.s_Data);
+                else
+                    output = request(urlStr, this.s_Data);
                 handler.post(new Runnable(){
                     @Override
                     public void run() {
@@ -344,7 +353,10 @@ public class ActivityDriver extends Activity implements OnInitListener{
                             FrontBus_Time.setText(ModifyString(3, String.valueOf(SettedBus.getLeftTime1())));
 
                             TextView BackBus_Time = (TextView) findViewById(R.id.BackBus_Time);
-                            SettedBus.setLeftTime2(predictTime2 - predictTime1);
+                            if(predictTime2 - predictTime1 <= 0)
+                                SettedBus.setLeftTime2(0);
+                            else
+                                SettedBus.setLeftTime2(predictTime2 - predictTime1);
                             BackBus_Time.setText(ModifyString(3, String.valueOf(SettedBus.getLeftTime2())));
                         }else if(version.compareTo("gap") == 0){
                             SettedBus.setLeftTime_Current(predictTime1);
@@ -531,9 +543,9 @@ public class ActivityDriver extends Activity implements OnInitListener{
             }
         }else if(version == 1 || version == 2) {
             //for backbus
-            if (raw_text.length() > 14) {
+            if (raw_text.length() > 16) {
                 System.out.println(raw_text);
-                String result = raw_text.substring(0, 10);
+                String result = raw_text.substring(0, 13).concat("...");
 
                 System.out.println("raw_text" + result);
                 System.out.println(result);
@@ -552,7 +564,7 @@ public class ActivityDriver extends Activity implements OnInitListener{
 //                    return result;
                     StringBuilder str1 = new StringBuilder();
 
-                    for (int j = 0; j < ((14 - raw_text.length()) / 2); j++) {
+                    for (int j = 0; j < ((16 - raw_text.length()) / 2); j++) {
                         str1.append(" ");
                     }
                     str1.append(raw_text);

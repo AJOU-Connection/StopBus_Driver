@@ -92,7 +92,7 @@
             android:layout_marginTop="319dp"
             android:background="@android:color/background_light"
             android:ems="10"
-            android:text="200000110"
+            android:text="234000026"
             android:textAlignment="center" />
 
         <TextView
