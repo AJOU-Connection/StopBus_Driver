@@ -24,6 +24,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+//bluetooth
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
+
 //speach
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
@@ -34,6 +39,7 @@ public class ActivityDriver extends Activity implements OnInitListener{
     Bus SettedBus = new Bus();
     private TextToSpeech tts;
     String tts_text = null;
+    private static String address = "30:14:09:30:15:33";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,6 +166,20 @@ public class ActivityDriver extends Activity implements OnInitListener{
                 try{
                     thread_Time.join();
                     thread_Gap.join();
+
+
+                    if(tts_text!= null) {
+                        Log.i("tts_text", tts_text);
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            System.out.printf("for ttss : v21");
+                            ttsGreater21(SettedBus.getBusInfo().getPath().get( SettedBus.getCurrent_place() + 1).getStationName());
+                        } else {
+                            System.out.printf("for ttss : v22");
+                            ttsUnder20(SettedBus.getBusInfo().getPath().get( SettedBus.getCurrent_place() + 1).getStationName());
+
+                        }
+                    }
                 } catch (InterruptedException e){
                     e.printStackTrace();
                 }
@@ -172,8 +192,8 @@ public class ActivityDriver extends Activity implements OnInitListener{
 
                     JSONObject sendPassenger = new JSONObject();
                     try {
-                        //sendPassenger.put("routeID", SettedBus.getBusInfo().getVehicleNumber());
-                        //sendPassenger.put("stationID", SettedBus.getBusInfo().getPath().get(SettedBus.getCurrent_place() + 1).getStationID());
+                        sendPassenger.put("routeID", SettedBus.getBusInfo().getVehicleNumber());
+                        sendPassenger.put("stationID", SettedBus.getBusInfo().getPath().get(SettedBus.getCurrent_place() + 1).getStationID());
                         sendPassenger.put("routeID", "test");
                         sendPassenger.put("stationID", "test");
 
@@ -189,16 +209,6 @@ public class ActivityDriver extends Activity implements OnInitListener{
                     try {
                         thread_Passenger.join();
 
-                        //http://stackoverflow.com/a/29777304
-                        if(tts_text!= null) {
-                            Log.i("tts_text", tts_text);
-
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                ttsGreater21(tts_text);
-                            } else {
-                                ttsUnder20(tts_text);
-                            }
-                        }
                         //speakOut(tts_text);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -207,7 +217,7 @@ public class ActivityDriver extends Activity implements OnInitListener{
             }
         };
         ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
-        service.scheduleAtFixedRate(runnable, 0, 30, TimeUnit.SECONDS);
+        service.scheduleAtFixedRate(runnable, 0, 20, TimeUnit.SECONDS);
     }
 
     //tts function
@@ -230,6 +240,7 @@ public class ActivityDriver extends Activity implements OnInitListener{
 
     @SuppressWarnings("deprecation")
     private void ttsUnder20(String text) {
+        System.out.printf("for ttss : v21 : ".concat(text));
         HashMap<String, String> map = new HashMap<>();
         map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "MessageId");
         tts.speak(text, TextToSpeech.QUEUE_FLUSH, map);
@@ -237,6 +248,7 @@ public class ActivityDriver extends Activity implements OnInitListener{
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void ttsGreater21(String text) {
+        System.out.printf("for ttss : v 20 :".concat(text));
         String utteranceId=this.hashCode() + "";
         tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, utteranceId);
     }

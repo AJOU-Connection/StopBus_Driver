@@ -92,7 +92,6 @@
             android:background="@android:color/background_light"
             android:ems="10"
             android:inputType="number"
-            android:text="200000110"
             android:textAlignment="center" />
 
         <TextView
