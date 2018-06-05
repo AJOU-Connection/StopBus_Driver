@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ActivitySetUp">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <TextView
+            android:id="@+id/BackGround_black"
+            android:layout_width="739dp"
+            android:layout_height="505dp"
+            android:layout_centerInParent="true"
+            android:background="#484848" />
+
+        <TextView
+            android:id="@+id/BackGround_green"
+            android:layout_width="710dp"
+            android:layout_height="480dp"
+            android:layout_centerInParent="true"
+            android:background="#1a9174" />
+
+        <Button
+            android:id="@+id/Confirm_Button"
+            android:layout_width="105dp"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/Car_Number"
+            android:layout_below="@+id/Car_Number"
+            android:layout_marginTop="-186dp"
+            android:text="확인"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/Text_Stopbus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/Text_BusDriver"
+            android:layout_alignStart="@+id/Text_BusDriver"
+            android:layout_marginBottom="-190dp"
+            android:text=" STOP BUS"
+            android:textColor="#e0ffff"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/Text_for"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/Text_BusDriver"
+            android:layout_alignTop="@+id/Text_Stopbus"
+            android:text="for"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/Text_BusDriver"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="190dp"
+            android:text="BUS DRIVER"
+            android:textColor="@android:color/background_light"
+            android:textSize="26sp"
+            android:textStyle="bold" />
+
+        <Spinner
+            android:id="@+id/Car_Number"
+            android:layout_width="518dp"
+            android:layout_height="59dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="186dp"
+            android:background="@android:color/background_light"
+            android:ems="10"
+            android:inputType="text"
+            android:text="경기00가1234"
+            android:textAlignment="center"
+            android:visibility="invisible" />
+
+        <Spinner
+            android:id="@+id/Car_Area"
+            android:layout_width="413dp"
+            android:layout_height="59dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignStart="@+id/Car_Number"
+            android:layout_marginBottom="261dp"
+            android:background="@android:color/background_light"
+            android:ems="10"
+            android:inputType="text"
+            android:text="운영구역"
+            android:textAlignment="center"
+            android:visibility="invisible" />
+
+        <EditText
+            android:id="@+id/bus_ID"
+            android:layout_width="413dp"
+            android:layout_height="59dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignStart="@+id/Car_Number"
+            android:layout_marginTop="319dp"
+            android:background="@android:color/background_light"
+            android:ems="10"
+            android:text="20"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/Text_Notification"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="239dp"
+            android:text="버스 정보를 입력해주세요"
+            android:textColor="@android:color/background_light"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="206dp"
+            android:layout_height="148dp"
+            android:layout_centerInParent="true"
+            tools:visibility="invisible" />
+
+        <Button
+            android:id="@+id/Area_Search"
+            android:layout_width="101dp"
+            android:layout_height="71dp"
+            android:layout_alignBottom="@+id/bus_ID"
+            android:layout_marginBottom="-6dp"
+            android:layout_marginStart="4dp"
+            android:layout_toEndOf="@+id/bus_ID"
+            android:text="버스찾기" />
+
+        <Button
+            android:id="@+id/bus_search"
+            android:layout_width="101dp"
+            android:layout_height="71dp"
+            android:layout_alignEnd="@+id/Confirm_Button"
+            android:layout_alignTop="@+id/Car_Area"
+            android:text="버스 목록"
+            android:visibility="invisible" />
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/progressBar"
+            android:layout_alignParentStart="true" />
+
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>
