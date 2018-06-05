@@ -145,7 +145,7 @@
             android:layout_height="71dp"
             android:layout_alignEnd="@+id/Confirm_Button"
             android:layout_alignTop="@+id/Car_Area"
-            android:text="버스 목록"
+            android:text="버스 조회"
             android:visibility="invisible" />
 
         <Spinner
