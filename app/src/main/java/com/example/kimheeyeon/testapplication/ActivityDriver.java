@@ -89,7 +89,7 @@ public class ActivityDriver extends Activity implements OnInitListener{
         Runnable runnable = new Runnable() {
             public void run() {
                 // task to run goes here
-                System.out.println("Hello !!");
+                //System.out.println("Hello !!");
 
                 //색상 초기화
                 TextView RidePerson = (TextView)findViewById(R.id.RidePerson);
@@ -153,9 +153,9 @@ public class ActivityDriver extends Activity implements OnInitListener{
                     sendStationCurrent.put("routeID" , SettedBus.getBusInfo().getVehicleNumber());
                     sendStationCurrent.put("stationID", SettedBus.getBusInfo().getPath().get( SettedBus.getCurrent_place() + 1).getStationID());
 
-                    Log.d("sending", sendStationCurrent.getString("routeID"));
-                    Log.d("what is ",  String.valueOf(SettedBus.getBusInfo().getPath().get( SettedBus.getCurrent_place() + 1)));
-                    Log.d("sending", sendStationCurrent.getString("stationID"));
+                    Log.d("sending roudID", sendStationCurrent.getString("routeID"));
+                    Log.d("remain currentbus gap",  String.valueOf(SettedBus.getBusInfo().getPath().get( SettedBus.getCurrent_place() + 1).getStationName()));
+                    Log.d("sending stationID", sendStationCurrent.getString("stationID"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -166,24 +166,11 @@ public class ActivityDriver extends Activity implements OnInitListener{
                 try{
                     thread_Time.join();
                     thread_Gap.join();
-
-
-                    if(tts_text!= null) {
-                        Log.i("tts_text", tts_text);
-
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            System.out.printf("for ttss : v21");
-                            ttsGreater21(SettedBus.getBusInfo().getPath().get( SettedBus.getCurrent_place() + 1).getStationName());
-                        } else {
-                            System.out.printf("for ttss : v22");
-                            ttsUnder20(SettedBus.getBusInfo().getPath().get( SettedBus.getCurrent_place() + 1).getStationName());
-
-                        }
-                    }
                 } catch (InterruptedException e){
                     e.printStackTrace();
                 }
 
+                System.out.println("left time is ".concat(String.valueOf(SettedBus.getLeftTime_Current())));
                 if(SettedBus.getLeftTime_Current() < 6) {
                     //승객의 여부 확인
                     //잠시 주석처리 이유 : server쪽 개발중
@@ -194,8 +181,7 @@ public class ActivityDriver extends Activity implements OnInitListener{
                     try {
                         sendPassenger.put("routeID", SettedBus.getBusInfo().getVehicleNumber());
                         sendPassenger.put("stationID", SettedBus.getBusInfo().getPath().get(SettedBus.getCurrent_place() + 1).getStationID());
-                        sendPassenger.put("routeID", "test");
-                        sendPassenger.put("stationID", "test");
+//
 
                         Log.d("sendingP", sendPassenger.getString("routeID"));
                         Log.d("sendingP", sendPassenger.getString("stationID"));
@@ -208,7 +194,20 @@ public class ActivityDriver extends Activity implements OnInitListener{
 
                     try {
                         thread_Passenger.join();
+                        if(tts_text!= null) {
+                            Log.i("tts_text", tts_text);
 
+                            if(tts_text.compareTo("가져오기 에러") != 0) {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                    ttsGreater21(tts_text);
+                                    //ttsGreater21(SettedBus.getBusInfo().getPath().get( SettedBus.getCurrent_place() + 1).getStationName());
+                                } else {
+                                    ttsUnder20(tts_text);
+                                    //ttsUnder20(SettedBus.getBusInfo().getPath().get( SettedBus.getCurrent_place() + 1).getStationName());
+
+                                }
+                            }
+                        }
                         //speakOut(tts_text);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -217,7 +216,7 @@ public class ActivityDriver extends Activity implements OnInitListener{
             }
         };
         ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
-        service.scheduleAtFixedRate(runnable, 0, 20, TimeUnit.SECONDS);
+        service.scheduleAtFixedRate(runnable, 0,    10, TimeUnit.SECONDS);
     }
 
     //tts function
@@ -275,7 +274,7 @@ public class ActivityDriver extends Activity implements OnInitListener{
                 handler.post(new Runnable(){
                     @Override
                     public void run() {
-                        Log.d("gmmm", output);
+                        //Log.d("gmmm", output);
 
                         switch(purpose){
                             case "busLocation" :
@@ -387,7 +386,7 @@ public class ActivityDriver extends Activity implements OnInitListener{
         }
 
         private void parsePassengerInformation(String pRecvServerPage){
-            Log.i("서버에서 받은 내용(for Pass) : ", pRecvServerPage);
+            Log.i("parsePassenger: ", pRecvServerPage);
 
             try {
                 JSONObject jsonObject = new JSONObject(pRecvServerPage);
@@ -559,8 +558,8 @@ public class ActivityDriver extends Activity implements OnInitListener{
                 System.out.println(raw_text);
                 String result = raw_text.substring(0, 13).concat("...");
 
-                System.out.println("raw_text" + result);
-                System.out.println(result);
+//                System.out.println("raw_text" + result);
+//                System.out.println(result);
                 return result;
             } else {
                 System.out.println(raw_text);
@@ -607,7 +606,5 @@ public class ActivityDriver extends Activity implements OnInitListener{
         else{
             return raw_text;
         }
-
     }
-
 }
