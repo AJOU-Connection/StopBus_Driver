@@ -50,8 +50,6 @@ public class ActivityDriver extends Activity implements OnInitListener{
 
         //intent 로부터 받은 값 정리
         SettedBus = (Bus)intent.getSerializableExtra("busData");
-        Log.d("check info", SettedBus.getBusInfo().getCarNumber());
-        Log.d("check info", SettedBus.getBusInfo().getVehicleNumber());
 
         //init tts
         tts = new TextToSpeech(this, this);

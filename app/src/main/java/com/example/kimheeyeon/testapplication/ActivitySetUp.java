@@ -155,7 +155,10 @@ public class ActivitySetUp extends Activity {
                     Spinner spinner = (Spinner) findViewById(R.id.Car_Number);
 
                     spinner.setVisibility(View.VISIBLE);
-                    Confirm_Button.setVisibility(View.VISIBLE);
+
+                    if(locationList[0].compareTo("NO BUS") != 0) {
+                        Confirm_Button.setVisibility(View.VISIBLE);
+                    }
 
                     ArrayAdapter<String> spinnerArray = new ArrayAdapter<String>(ActivitySetUp.this, android.R.layout.simple_spinner_item, locationList);
                     spinner.setAdapter(spinnerArray);
@@ -368,13 +371,19 @@ public class ActivitySetUp extends Activity {
                 else{
                     JSONArray BusList = jsonObject.getJSONArray("body");
                     //강제로 null시켜서 비우기
-                    //locationList.clear();
+                    locationList = null;
                     this.locationList = new String[BusList.length()];
                     for(int i = 0; i < BusList.length(); i++){
                         JSONObject binfo = BusList.getJSONObject(i);
                         Log.d("Compare", binfo.getString("plateNo").concat(" and ").concat(binfo.getString("stationSeq")));
                         this.locationList[i] = binfo.getString("plateNo");
                     }
+
+                    if(locationList == null){
+                        this.locationList = new String[1];
+                        this.locationList[0] = "NO BUS";
+                    }
+
                 }
             }else{
                 Log.d("fail to find","in Driver Activity AT BUSLOCATION");
