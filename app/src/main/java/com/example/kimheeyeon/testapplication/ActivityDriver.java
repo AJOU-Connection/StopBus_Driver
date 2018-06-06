@@ -62,6 +62,23 @@ public class ActivityDriver extends Activity implements OnInitListener{
         return pref.getString("isgetoff", "");
     }
 
+    public void initData_send(){
+        getoff_share = getSharedPreferences("getoff_share", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = getoff_share.edit();
+        editor.putString("getoff_s", "");
+        editor.apply();
+    }
+    public void saveData_send(String Data){
+        getoff_share = getSharedPreferences("getoff_share", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = getoff_share.edit();
+        editor.putString("getoff_s", Data);
+        editor.apply();
+    }
+    private String loadScore_send() {
+        SharedPreferences pref = getSharedPreferences("getoff_share", Activity.MODE_PRIVATE);
+        return pref.getString("getoff_s", null);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +90,7 @@ public class ActivityDriver extends Activity implements OnInitListener{
         SettedBus = (Bus)intent.getSerializableExtra("busData");
 
         initData();
+        initData_send();
 
         //service
         Intent sb_intent = new Intent(
@@ -306,6 +324,10 @@ public class ActivityDriver extends Activity implements OnInitListener{
                 } else {
                     tts_text = "다음 정류장에 탑승객과 하차객이 있습니다";
                 }
+            }else{
+                //하차객이 아에 없는 경우
+                saveData("x");
+                saveData_send("x");
             }
 
             if (!isGetIn && !isGetOff) {
@@ -317,7 +339,7 @@ public class ActivityDriver extends Activity implements OnInitListener{
                 TextView GetOffPerson = (TextView) findViewById(R.id.GetOffPerson);
                 GetOffPerson.setBackgroundColor(Color.rgb(239, 215, 95));
 
-                    tts_text = "다음 정류장에 하차객이 있습니다";
+                tts_text = "다음 정류장에 하차객이 있습니다";
             }
 
         }

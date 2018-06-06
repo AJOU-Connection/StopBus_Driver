@@ -35,12 +35,6 @@ public class BluetoothCommunication extends Service {
     private StringBuilder recDataString = new StringBuilder();
     private SharedPreferences getoff_share;
 
-    public void initData(){
-        getoff_share = getSharedPreferences("getoff_share", Activity.MODE_PRIVATE);
-        SharedPreferences.Editor editor = getoff_share.edit();
-        editor.putString("isgetoff", "");
-        editor.apply();
-    }
     public void saveData(String Data){
         getoff_share = getSharedPreferences("getoff_share", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = getoff_share.edit();
@@ -51,6 +45,20 @@ public class BluetoothCommunication extends Service {
         SharedPreferences pref = getSharedPreferences("getoff_share", Activity.MODE_PRIVATE);
         return pref.getString("isgetoff", null);
     }
+
+    public void saveData_send(String Data){
+        getoff_share = getSharedPreferences("getoff_share", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = getoff_share.edit();
+        editor.putString("getoff_s", Data);
+        editor.apply();
+    }
+    private String loadScore_send() {
+        SharedPreferences pref = getSharedPreferences("getoff_share", Activity.MODE_PRIVATE);
+        return pref.getString("getoff_s", null);
+    }
+
+
+
 
     @Override
     public void onCreate() {
@@ -74,6 +82,8 @@ public class BluetoothCommunication extends Service {
 //                        saveData(recDataString.toString());
 //                    }
                     saveData("o");
+                    mConnectedThread.write(loadScore_send());
+
                     // Do stuff here with your data, like adding it to the database
                     recDataString.delete(0, recDataString.length());                    //clear all string data
                 }
@@ -259,6 +269,17 @@ public class BluetoothCommunication extends Service {
                 Log.d("DEBUG BT", "UNABLE TO READ/WRITE " + e.toString());
                 Log.d("BT SERVICE", "UNABLE TO READ/WRITE, STOPPING SERVICE");
                 stopSelf();
+            }
+        }
+
+        // 문자열 전송하는 함수(쓰레드 사용 x)
+        void sendData(String input) {
+            input += "\n";  // 문자열 종료표시 (\n)
+            try{
+                // getBytes() : String을 byte로 변환
+                // OutputStream.write : 데이터를 쓸때는 write(byte[]) 메소드를 사용함. byte[] 안에 있는 데이터를 한번에 기록해 준다.
+                mmOutStream.write(input.getBytes());  // 문자열 전송.
+            }catch(Exception e) {  // 문자열 전송 도중 오류가 발생한 경우
             }
         }
 
