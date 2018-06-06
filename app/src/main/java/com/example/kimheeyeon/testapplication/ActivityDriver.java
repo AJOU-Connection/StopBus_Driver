@@ -42,7 +42,25 @@ public class ActivityDriver extends Activity implements OnInitListener{
     String tts_text = null;
     private static String address = "30:14:09:30:15:33";
 
-    private SharedPreferences sp;
+    private SharedPreferences getoff_share;
+
+
+    public void initData(){
+        getoff_share = getSharedPreferences("getoff_share", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = getoff_share.edit();
+        editor.putString("isgetoff", "");
+        editor.apply();
+    }
+    public void saveData(String Data){
+        getoff_share = getSharedPreferences("getoff_share", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = getoff_share.edit();
+        editor.putString("isgetoff", Data);
+        editor.apply();
+    }
+    private String loadScore() {
+        SharedPreferences pref = getSharedPreferences("getoff_share", Activity.MODE_PRIVATE);
+        return pref.getString("isgetoff", "");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +71,8 @@ public class ActivityDriver extends Activity implements OnInitListener{
 
         //intent 로부터 받은 값 정리
         SettedBus = (Bus)intent.getSerializableExtra("busData");
+
+        initData();
 
         //service
         Intent sb_intent = new Intent(
@@ -173,6 +193,7 @@ public class ActivityDriver extends Activity implements OnInitListener{
                 try{
                     thread_Time.join();
                     thread_Gap.join();
+
                 } catch (InterruptedException e){
                     e.printStackTrace();
                 }
@@ -180,7 +201,6 @@ public class ActivityDriver extends Activity implements OnInitListener{
                 System.out.println("left time is ".concat(String.valueOf(SettedBus.getLeftTime_Current())));
                 if(SettedBus.getLeftTime_Current() < 6) {
                     //승객의 여부 확인
-                    //잠시 주석처리 이유 : server쪽 개발중
                     String url_Passenger = "http://stop-bus.tk/driver/stop";
                     String getPassenger = "passengerInfo";
 
@@ -188,7 +208,6 @@ public class ActivityDriver extends Activity implements OnInitListener{
                     try {
                         sendPassenger.put("routeID", SettedBus.getBusInfo().getVehicleNumber());
                         sendPassenger.put("stationID", SettedBus.getBusInfo().getPath().get(SettedBus.getCurrent_place() + 1).getStationID());
-//
 
                         Log.d("sendingP", sendPassenger.getString("routeID"));
                         Log.d("sendingP", sendPassenger.getString("stationID"));
@@ -206,11 +225,11 @@ public class ActivityDriver extends Activity implements OnInitListener{
 
                             if(tts_text.compareTo("가져오기 에러") != 0) {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                    ttsGreater21(tts_text);
-                                    //ttsGreater21(SettedBus.getBusInfo().getPath().get( SettedBus.getCurrent_place() + 1).getStationName());
+                                    //ttsGreater21(tts_text);
+                                    ttsGreater21(SettedBus.getBusInfo().getPath().get( SettedBus.getCurrent_place() + 1).getStationName());
                                 } else {
-                                    ttsUnder20(tts_text);
-                                    //ttsUnder20(SettedBus.getBusInfo().getPath().get( SettedBus.getCurrent_place() + 1).getStationName());
+                                    //ttsUnder20(tts_text);
+                                    ttsUnder20(SettedBus.getBusInfo().getPath().get( SettedBus.getCurrent_place() + 1).getStationName());
 
                                 }
                             }
@@ -257,6 +276,51 @@ public class ActivityDriver extends Activity implements OnInitListener{
         System.out.printf("for ttss : v 20 :".concat(text));
         String utteranceId=this.hashCode() + "";
         tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, utteranceId);
+    }
+
+    private void setTTS(boolean isGetIn, boolean isGetOff, int version){
+        if(tts_text != null){
+            tts_text = null;
+        }
+
+        String b_getOff = loadScore();
+        Log.d("FROMBL", b_getOff);
+
+        if(version == 0 )//true
+        {
+
+            if (isGetIn) {
+                //탑승객이 있는 경우
+                TextView RidePerson = (TextView) findViewById(R.id.RidePerson);
+                RidePerson.setBackgroundColor(Color.rgb(229, 78, 78));
+
+                tts_text = "다음 정류장에 탑승객이 있습니다";
+            }
+            if (isGetOff || b_getOff.compareTo("o")==0 ) {
+                //하차객이 있는 경우
+                TextView GetOffPerson = (TextView) findViewById(R.id.GetOffPerson);
+                GetOffPerson.setBackgroundColor(Color.rgb(239, 215, 95));
+
+                if (tts_text != null) {
+                    tts_text = "다음 정류장에 하차객이 있습니다";
+                } else {
+                    tts_text = "다음 정류장에 탑승객과 하차객이 있습니다";
+                }
+            }
+
+            if (!isGetIn && !isGetOff) {
+                tts_text = "다음 정류장에는 승하차객이 없습니다";
+            }
+        }else if(version == 1){
+            if (b_getOff.compareTo("o")==0 ) {
+                //하차객이 있는 경우
+                TextView GetOffPerson = (TextView) findViewById(R.id.GetOffPerson);
+                GetOffPerson.setBackgroundColor(Color.rgb(239, 215, 95));
+
+                    tts_text = "다음 정류장에 하차객이 있습니다";
+            }
+
+        }
     }
 
     class ConnectThread extends Thread {
@@ -414,36 +478,13 @@ public class ActivityDriver extends Activity implements OnInitListener{
                         Log.d("isGetIn",JBody.getString("isGetIn"));
                         Log.d("isGetOff", JBody.getString("isGetOff"));
 
-                        if(tts_text != null){
-                            tts_text = null;
-                        }
-
-                        if(isGetIn){
-                            //탑승객이 있는 경우
-                            TextView RidePerson = (TextView)findViewById(R.id.RidePerson);
-                            RidePerson.setBackgroundColor(Color.rgb(229, 78, 78));
-
-                            tts_text = "다음 정류장에 탑승객이 있습니다" ;
-                        }
-                        if(isGetOff){
-                            //하차객이 있는 경우
-                            TextView GetOffPerson = (TextView)findViewById(R.id.GetOffPerson);
-                            GetOffPerson.setBackgroundColor(Color.rgb(239, 215, 95));
-
-                            if(tts_text != null) {
-                                tts_text = "다음 정류장에 하차객이 있습니다" ;
-                            }else {
-                                tts_text = "다음 정류장에 탑승객과 하차객이 있습니다";
-                            }
-                        }
-
-                        if(!isGetIn && !isGetOff){
-                            tts_text = "다음 정류장에는 승하차객이 없습니다";
-                        }
+                        setTTS(isGetIn, isGetOff, 0);
                     }
                 }else{
                     Log.d("FAIL TO GET INFO", "Passenger INFORMATION");
                     tts_text = "가져오기 에러";
+
+                    setTTS(false, false, 1);
                 }
 
             } catch (JSONException e) {
@@ -543,9 +584,7 @@ public class ActivityDriver extends Activity implements OnInitListener{
             }catch(Exception e){
                 NextStationDirection.setText("정보없음");
             }
-
         }
-
     }
 
     public String ModifyString(int version, String raw_text){
@@ -564,22 +603,12 @@ public class ActivityDriver extends Activity implements OnInitListener{
             if (raw_text.length() > 16) {
                 System.out.println(raw_text);
                 String result = raw_text.substring(0, 13).concat("...");
-
-//                System.out.println("raw_text" + result);
-//                System.out.println(result);
                 return result;
             } else {
                 System.out.println(raw_text);
-//                String result = raw_text;
-//                for(int i = 0 ; i < (raw_text.length()/2) ; i++ ){
-//                    result = " "+(result);
-//                }
 
                 if (version == 1) {
                     //for front bus
-//                    String result = String.format("%14s", raw_text);
-//                    System.out.println("raw_text" + result);
-//                    return result;
                     StringBuilder str1 = new StringBuilder();
 
                     for (int j = 0; j < ((16 - raw_text.length()) / 2); j++) {

@@ -1,10 +1,12 @@
 package com.example.kimheeyeon.testapplication;
 
+import android.app.Activity;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -31,6 +33,24 @@ public class BluetoothCommunication extends Service {
     private static final String MAC_ADDRESS = "30:14:09:30:15:33";
 
     private StringBuilder recDataString = new StringBuilder();
+    private SharedPreferences getoff_share;
+
+    public void initData(){
+        getoff_share = getSharedPreferences("getoff_share", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = getoff_share.edit();
+        editor.putString("isgetoff", "");
+        editor.apply();
+    }
+    public void saveData(String Data){
+        getoff_share = getSharedPreferences("getoff_share", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = getoff_share.edit();
+        editor.putString("isgetoff", Data);
+        editor.apply();
+    }
+    private String loadScore() {
+        SharedPreferences pref = getSharedPreferences("getoff_share", Activity.MODE_PRIVATE);
+        return pref.getString("isgetoff", null);
+    }
 
     @Override
     public void onCreate() {
@@ -50,6 +70,10 @@ public class BluetoothCommunication extends Service {
                     String readMessage = (String) msg.obj;                                                                // msg.arg1 = bytes from connect thread
                     recDataString.append(readMessage); //`enter code here`
                     Log.d("RECORDED", recDataString.toString());
+//                    if(recDataString.toString() == "o"){
+//                        saveData(recDataString.toString());
+//                    }
+                    saveData("o");
                     // Do stuff here with your data, like adding it to the database
                     recDataString.delete(0, recDataString.length());                    //clear all string data
                 }
