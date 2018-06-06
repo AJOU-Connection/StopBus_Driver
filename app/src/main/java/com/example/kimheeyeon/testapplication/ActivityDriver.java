@@ -2,6 +2,7 @@ package com.example.kimheeyeon.testapplication;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -41,6 +42,8 @@ public class ActivityDriver extends Activity implements OnInitListener{
     String tts_text = null;
     private static String address = "30:14:09:30:15:33";
 
+    private SharedPreferences sp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +58,7 @@ public class ActivityDriver extends Activity implements OnInitListener{
         Intent sb_intent = new Intent(
                 getApplicationContext(),//현재제어권자
                 BluetoothCommunication.class); // 이동할 컴포넌트
-        startService(intent); // 서비스 시작
+        startService(sb_intent); // 서비스 시작
 
         //init tts
         tts = new TextToSpeech(this, this);
