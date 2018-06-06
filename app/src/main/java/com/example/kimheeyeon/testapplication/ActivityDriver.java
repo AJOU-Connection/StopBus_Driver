@@ -51,6 +51,12 @@ public class ActivityDriver extends Activity implements OnInitListener{
         //intent 로부터 받은 값 정리
         SettedBus = (Bus)intent.getSerializableExtra("busData");
 
+        //service
+        Intent sb_intent = new Intent(
+                getApplicationContext(),//현재제어권자
+                BluetoothCommunication.class); // 이동할 컴포넌트
+        startService(intent); // 서비스 시작
+
         //init tts
         tts = new TextToSpeech(this, this);
 
