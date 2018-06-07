@@ -30,11 +30,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 
-//speach
-import android.speech.tts.TextToSpeech;
-import android.speech.tts.TextToSpeech.OnInitListener;
-
-
 public class ActivityDriver extends Activity{
     Handler handler = new Handler();
     Bus SettedBus = new Bus();
@@ -278,25 +273,6 @@ public class ActivityDriver extends Activity{
         ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
         service.scheduleAtFixedRate(runnable, 0,    20, TimeUnit.SECONDS);
     }
-//
-//    //tts function
-//    @Override
-//    public void onInit(int status) {
-//        if(status != TextToSpeech.ERROR) {
-//            tts.setLanguage(Locale.KOREAN);
-//        }
-//    }
-//
-//    @Override
-//    public void onDestroy() {
-//        // Don't forget to shutdown tts!
-//        if (tts != null) {
-//            tts.stop();
-//            tts.shutdown();
-//        }
-//        super.onDestroy();
-//    }
-
 
     private void setTTS(boolean isGetIn, boolean isGetOff, int version){
         if(tts_text != null){
