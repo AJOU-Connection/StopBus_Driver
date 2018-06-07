@@ -1,8 +1,13 @@
 package com.example.kimheeyeon.testapplication;
 
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.speech.tts.TextToSpeech;
+
+import java.util.HashMap;
+import java.util.Locale;
 
 public class TextToSound implements TextToSpeech.OnInitListener {
 
@@ -23,6 +28,10 @@ public class TextToSound implements TextToSpeech.OnInitListener {
         else {
             ttsOk = false;
         }
+
+        if(status != TextToSpeech.ERROR) {
+            tts.setLanguage(Locale.KOREAN);
+        }
     }
 
     // A method to speak something
@@ -37,4 +46,20 @@ public class TextToSound implements TextToSpeech.OnInitListener {
             }
         }
     }
+
+    @SuppressWarnings("deprecation")
+    public void ttsUnder20(String text) {
+        System.out.printf("for ttss : v21 : ".concat(text));
+        HashMap<String, String> map = new HashMap<>();
+        map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "MessageId");
+        tts.speak(text, TextToSpeech.QUEUE_FLUSH, map);
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public void ttsGreater21(String text) {
+        System.out.printf("for ttss : v 20 :".concat(text));
+        String utteranceId=this.hashCode() + "";
+        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, utteranceId);
+    }
+
 }

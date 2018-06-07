@@ -35,12 +35,16 @@ import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 
 
-public class ActivityDriver extends Activity implements OnInitListener{
+public class ActivityDriver extends Activity{
     Handler handler = new Handler();
     Bus SettedBus = new Bus();
-    private TextToSpeech tts;
-    String tts_text = null;
+//    private TextToSpeech tts;
+////    String tts_text = null;
     private static String address = "30:14:09:30:15:33";
+
+    //for tts class
+    private TextToSound ts;
+    String tts_text = null;
 
     private SharedPreferences getoff_share;
 
@@ -99,7 +103,7 @@ public class ActivityDriver extends Activity implements OnInitListener{
         startService(sb_intent); // 서비스 시작
 
         //init tts
-        tts = new TextToSpeech(this, this);
+        ts = new TextToSound(this);
 
         //상단에 출력할 버스 번호 (ex 720-2번)
         TextView BusNum = (TextView)findViewById( R.id.BusNum );
@@ -209,6 +213,8 @@ public class ActivityDriver extends Activity implements OnInitListener{
                     Log.d("sending roudID", sendStationCurrent.getString("routeID"));
                     Log.d("remain currentbus gap",  String.valueOf(SettedBus.getBusInfo().getPath().get( SettedBus.getCurrent_place() + 1).getStationName()));
                     Log.d("sending stationID", sendStationCurrent.getString("stationID"));
+
+                    ts.speak(String.valueOf(SettedBus.getBusInfo().getPath().get( SettedBus.getCurrent_place()).getStationName()), true);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -253,10 +259,10 @@ public class ActivityDriver extends Activity implements OnInitListener{
 
                             if(tts_text.compareTo("가져오기 에러") != 0) {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                    ttsGreater21(tts_text);
+                                    ts.ttsGreater21(tts_text);
                                     //ttsGreater21(SettedBus.getBusInfo().getPath().get( SettedBus.getCurrent_place() + 1).getStationName());
                                 } else {
-                                    ttsUnder20(tts_text);
+                                    ts.ttsUnder20(tts_text);
                                     //ttsUnder20(SettedBus.getBusInfo().getPath().get( SettedBus.getCurrent_place() + 1).getStationName());
 
                                 }
@@ -272,39 +278,25 @@ public class ActivityDriver extends Activity implements OnInitListener{
         ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
         service.scheduleAtFixedRate(runnable, 0,    20, TimeUnit.SECONDS);
     }
+//
+//    //tts function
+//    @Override
+//    public void onInit(int status) {
+//        if(status != TextToSpeech.ERROR) {
+//            tts.setLanguage(Locale.KOREAN);
+//        }
+//    }
+//
+//    @Override
+//    public void onDestroy() {
+//        // Don't forget to shutdown tts!
+//        if (tts != null) {
+//            tts.stop();
+//            tts.shutdown();
+//        }
+//        super.onDestroy();
+//    }
 
-    //tts function
-    @Override
-    public void onInit(int status) {
-        if(status != TextToSpeech.ERROR) {
-            tts.setLanguage(Locale.KOREAN);
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        // Don't forget to shutdown tts!
-        if (tts != null) {
-            tts.stop();
-            tts.shutdown();
-        }
-        super.onDestroy();
-    }
-
-    @SuppressWarnings("deprecation")
-    private void ttsUnder20(String text) {
-        System.out.printf("for ttss : v21 : ".concat(text));
-        HashMap<String, String> map = new HashMap<>();
-        map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "MessageId");
-        tts.speak(text, TextToSpeech.QUEUE_FLUSH, map);
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void ttsGreater21(String text) {
-        System.out.printf("for ttss : v 20 :".concat(text));
-        String utteranceId=this.hashCode() + "";
-        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, utteranceId);
-    }
 
     private void setTTS(boolean isGetIn, boolean isGetOff, int version){
         if(tts_text != null){
