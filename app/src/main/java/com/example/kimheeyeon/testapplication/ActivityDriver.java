@@ -187,8 +187,16 @@ public class ActivityDriver extends Activity implements OnInitListener{
                     e.printStackTrace();
                 }
 
+
                 ActivityDriver.ConnectThread thread_Time = new ActivityDriver.ConnectThread(url_time, sendStation, getTime);
                 thread_Time.start();
+
+                try{
+                    thread_Time.join();
+
+                } catch (InterruptedException e){
+                    e.printStackTrace();
+                }
 
                 //버스의 노선번호와 station 번호를 전달하여, 도착할 정류장으로부터 남은 시간 추출
                 String getGap = "remainGap";
@@ -209,7 +217,6 @@ public class ActivityDriver extends Activity implements OnInitListener{
                 thread_Gap.start();
 
                 try{
-                    thread_Time.join();
                     thread_Gap.join();
 
                 } catch (InterruptedException e){
@@ -224,12 +231,15 @@ public class ActivityDriver extends Activity implements OnInitListener{
 
                     JSONObject sendPassenger = new JSONObject();
                     try {
+                        Thread.sleep(100);
                         sendPassenger.put("routeID", SettedBus.getBusInfo().getVehicleNumber());
                         sendPassenger.put("stationID", SettedBus.getBusInfo().getPath().get(SettedBus.getCurrent_place() + 1).getStationID());
 
                         Log.d("sendingP", sendPassenger.getString("routeID"));
                         Log.d("sendingP", sendPassenger.getString("stationID"));
                     } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
 
@@ -243,11 +253,11 @@ public class ActivityDriver extends Activity implements OnInitListener{
 
                             if(tts_text.compareTo("가져오기 에러") != 0) {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                    //ttsGreater21(tts_text);
-                                    ttsGreater21(SettedBus.getBusInfo().getPath().get( SettedBus.getCurrent_place() + 1).getStationName());
+                                    ttsGreater21(tts_text);
+                                    //ttsGreater21(SettedBus.getBusInfo().getPath().get( SettedBus.getCurrent_place() + 1).getStationName());
                                 } else {
-                                    //ttsUnder20(tts_text);
-                                    ttsUnder20(SettedBus.getBusInfo().getPath().get( SettedBus.getCurrent_place() + 1).getStationName());
+                                    ttsUnder20(tts_text);
+                                    //ttsUnder20(SettedBus.getBusInfo().getPath().get( SettedBus.getCurrent_place() + 1).getStationName());
 
                                 }
                             }
@@ -260,7 +270,7 @@ public class ActivityDriver extends Activity implements OnInitListener{
             }
         };
         ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
-        service.scheduleAtFixedRate(runnable, 0,    10, TimeUnit.SECONDS);
+        service.scheduleAtFixedRate(runnable, 0,    20, TimeUnit.SECONDS);
     }
 
     //tts function
@@ -328,6 +338,7 @@ public class ActivityDriver extends Activity implements OnInitListener{
                 //하차객이 아에 없는 경우
                 saveData("x");
                 saveData_send("x");
+                tts_text = "다음 정류장에는 승하차객이 없습니다";
             }
 
             if (!isGetIn && !isGetOff) {
@@ -341,8 +352,11 @@ public class ActivityDriver extends Activity implements OnInitListener{
 
                 tts_text = "다음 정류장에 하차객이 있습니다";
             }
-
+            else{
+                tts_text = "다음 정류장에는 승하차객이 없습니다";
+            }
         }
+        Log.d("so_text", tts_text);
     }
 
     class ConnectThread extends Thread {
