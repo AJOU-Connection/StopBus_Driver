@@ -80,13 +80,15 @@ public class BluetoothCommunication extends Service {
 //                        saveData(recDataString.toString());
 //                    }
                     saveData("o");
-                    mConnectedThread.write(loadScore_send());
+
 
                     // Do stuff here with your data, like adding it to the database
                     recDataString.delete(0, recDataString.length());                    //clear all string data
                 }
             }
         };
+
+
 
         btAdapter = BluetoothAdapter.getDefaultAdapter();       // get Bluetooth adapter
         checkBTState();
@@ -177,7 +179,7 @@ public class BluetoothCommunication extends Service {
                 Log.d("DEBUG BT", "CONNECTED THREAD STARTED");
                 //I send a character when resuming.beginning transmission to check device is connected
                 //If it is not an exception will be thrown in the write method and finish() will be called
-                mConnectedThread.write("x");
+                //mConnectedThread.write("x");
             } catch (IOException e) {
                 try {
                     Log.d("DEBUG BT", "SOCKET CONNECTION FAILED : " + e.toString());
@@ -248,6 +250,10 @@ public class BluetoothCommunication extends Service {
                     Log.d("DEBUG BT PART", "CONNECTED THREAD " + readMessage);
                     // Send the obtained bytes to the UI Activity via handler
                     bluetoothIn.obtainMessage(handlerState, bytes, -1, readMessage).sendToTarget();
+
+                    if(loadScore_send() != null){
+                        write(loadScore_send());
+                    }
                 } catch (IOException e) {
                     Log.d("DEBUG BT", e.toString());
                     Log.d("BT SERVICE", "UNABLE TO READ/WRITE, STOPPING SERVICE");

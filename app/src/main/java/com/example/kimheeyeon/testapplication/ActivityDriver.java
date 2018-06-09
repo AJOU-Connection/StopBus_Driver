@@ -30,7 +30,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 
-public class ActivityDriver extends Activity{
+public class ActivityDriver extends Activity {
     Handler handler = new Handler();
     Bus SettedBus = new Bus();
 
@@ -48,6 +48,7 @@ public class ActivityDriver extends Activity{
     private SharedPreferences getoff_share;
 
 
+    //받은데이터
     public void initData(){
         getoff_share = getSharedPreferences("getoff_share", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = getoff_share.edit();
@@ -65,10 +66,11 @@ public class ActivityDriver extends Activity{
         return pref.getString("isgetoff", "");
     }
 
+    //보낸 데이터
     public void initData_send(){
         getoff_share = getSharedPreferences("getoff_share", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = getoff_share.edit();
-        editor.putString("getoff_s", "");
+        editor.putString("getoff_s", "o");
         editor.apply();
     }
     public void saveData_send(String Data){
@@ -144,6 +146,8 @@ public class ActivityDriver extends Activity{
             public void run() {
                 // task to run goes here
 
+                //ts초기화
+                ts.setText(noGetInOff);
 
                 //해당하는 것의 모든 location data가져옴
 
@@ -194,9 +198,13 @@ public class ActivityDriver extends Activity{
 
                 try{
                     thread_Time.join();
+                    System.out.println("time_thread_is_joined");
                 } catch (InterruptedException e){
                     e.printStackTrace();
+                    System.out.println("time_thread_is_not_joined");
                 }
+
+
 
                 //버스의 노선번호와 station 번호를 전달하여, 도착할 정류장으로부터 남은 시간 추출
                 String getGap = "remainGap";
@@ -215,10 +223,12 @@ public class ActivityDriver extends Activity{
                     e.printStackTrace();
                 }
 
+
                 ActivityDriver.ConnectThread thread_Gap = new ActivityDriver.ConnectThread(url_time, sendStationCurrent, getGap);
                 thread_Gap.start();
 
                 try{
+                    System.out.println("GAP_is_joined1");
                     thread_Gap.join();
                     //색상 초기화
                     TextView RidePerson = (TextView)findViewById(R.id.RidePerson);
@@ -226,6 +236,8 @@ public class ActivityDriver extends Activity{
 
                     TextView GetOffPerson = (TextView)findViewById(R.id.GetOffPerson);
                     GetOffPerson.setBackgroundColor(Color.rgb(241, 238, 223));
+
+                    System.out.println("GAP_is_joined");
 
                 } catch (InterruptedException e){
                     e.printStackTrace();
@@ -293,55 +305,63 @@ public class ActivityDriver extends Activity{
             if (isGetIn) {
                 //탑승객이 있는 경우
                 TextView RidePerson = (TextView) findViewById(R.id.RidePerson);
-                RidePerson.setBackgroundColor(Color.rgb(229, 78, 78));
+                //RidePerson.setBackgroundColor(Color.rgb(229, 78, 78));
 
                 ts.setText(isRidingPerson);
 
+                System.out.print("tttttttttthe1");
+
                 //tts_text = "다음 정류장에 탑승객이 있습니다";
-            }
-            if (isGetOff || b_getOff.compareTo("o")==0 ) {
+            } else if (isGetOff || b_getOff.compareTo("o")==0 ) {
                 //하차객이 있는 경우
                 TextView GetOffPerson = (TextView) findViewById(R.id.GetOffPerson);
-                GetOffPerson.setBackgroundColor(Color.rgb(239, 215, 95));
+                //GetOffPerson.setBackgroundColor(Color.rgb(239, 215, 95));
 
                 if (ts.getText() != null) {
-                    ts.setText(isGetOffPerson);
-                } else {
+                    System.out.print("tttttttttthe2");
                     ts.setText(isBothOnOffPerson);
+                } else {
+                    ts.setText(isGetOffPerson);
+                    System.out.print("tttttttttthe3");
                 }
+                saveData_send("o");
             }else{
                 //하차객이 아에 없는 경우
-                saveData("x");
-                saveData_send("x");
                 //tts_text = "다음 정류장에는 승하차객이 없습니다";
 
                 if (ts.getText() == null) {
+                    System.out.print("tttttttttthe4");
                     ts.setText(noGetInOff);
                 }
+                //ts.setText(noGetInOff);
             }
 
-            if (!isGetIn && !isGetOff) {
-                //tts_text = "다음 정류장에는 승하차객이 없습니다";
-            }
         }else if(version == 1){
-            if (b_getOff.compareTo("o")==0 ) {
+            if (b_getOff.compareTo("o") ==0 ) {
                 //하차객이 있는 경우
                 TextView GetOffPerson = (TextView) findViewById(R.id.GetOffPerson);
-                GetOffPerson.setBackgroundColor(Color.rgb(239, 215, 95));
+//                GetOffPerson.setBackgroundColor(Color.rgb(241, 238, 223));
+//                GetOffPerson.setBackgroundColor(Color.rgb(239, 215, 95));
+
+                Log.d("iminoooooo", "oooooooo");
 
                 if (ts.getText() != null) {
                     ts.setText(isGetOffPerson);
+                    System.out.print("tttttttttthe5");
                     //tts_text = "다음 정류장에 하차객이 있습니다";
                 } else {
                     ts.setText(isBothOnOffPerson);
+                    System.out.print("tttttttttthe6");
                     //tts_text = "다음 정류장에 탑승객과 하차객이 있습니다";
                 }
 
+                saveData_send("o");
 
                 //tts_text = "다음 정류장에 하차객이 있습니다";
             }
             else{
                 ts.setText(noGetInOff);
+                System.out.print("tttttttttthe7");
                 //tts_text = "다음 정류장에는 승하차객이 없습니다";
             }
         }
@@ -421,6 +441,11 @@ public class ActivityDriver extends Activity{
                         System.out.print("null");
                     } else {
                         System.out.print("the result is : ".concat(String.valueOf(findresult)));
+                        if(SettedBus.getisChanged()){
+                            saveData("x");
+                            saveData_send("x");
+                        }
+
                         setBusState();
                     }
 
@@ -451,8 +476,8 @@ public class ActivityDriver extends Activity{
                         int predictTime1 = Integer.parseInt(JBody.getString("predictTime1"));
                         int predictTime2 = Integer.parseInt(JBody.getString("predictTime2"));
 
-                        Log.d("FirstBus", JBody.getString("plateNo1").concat(String.valueOf(predictTime1)));
-                        Log.d("SecondBus", JBody.getString("plateNo2").concat(String.valueOf(predictTime2 - predictTime1)));
+                        Log.d("FirstBus", JBody.getString("plateNo1").concat(" " + String.valueOf(predictTime1)));
+                        Log.d("SecondBus", JBody.getString("plateNo2").concat(" " + String.valueOf(predictTime2 - predictTime1)));
 
                         if(version.compareTo("time") == 0) {
 
@@ -466,7 +491,11 @@ public class ActivityDriver extends Activity{
                             else
                                 SettedBus.setLeftTime2(predictTime2 - predictTime1);
                             BackBus_Time.setText(ModifyString(3, String.valueOf(SettedBus.getLeftTime2())));
+
                         }else if(version.compareTo("gap") == 0){
+                            String b_getOff = loadScore();
+                            Log.d("FROMBL??", b_getOff);
+
                             SettedBus.setLeftTime_Current(predictTime1);
                             Log.d("CURRENTLEFT", String.valueOf(SettedBus.getLeftTime_Current()));
                         }else{
@@ -508,9 +537,8 @@ public class ActivityDriver extends Activity{
                     }
                 }else{
                     Log.d("FAIL TO GET INFO", "Passenger INFORMATION");
-                    //tts_text = "가져오기 에러";
 
-                    ts.setText("가져오기 에러");
+                    //ts.setText("가져오기 에러");
 
                     setTTS(false, false, 1);
                 }

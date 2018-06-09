@@ -23,7 +23,7 @@ public class Bus implements Serializable {
     private int backBus_place;
 
     //private int old_current;
-    //private boolean isChanged; // check if current_place is changed
+    private boolean isChanged; // check if current_place is changed
 
     private int leftTime1;
     private int leftTime2;
@@ -34,6 +34,7 @@ public class Bus implements Serializable {
     private ArrayList<BusLocation> locationList = new ArrayList<BusLocation>();
 
     public Bus(){
+        isChanged = true;
     }
 
     public Bus(String BusNum) {
@@ -130,13 +131,13 @@ public class Bus implements Serializable {
         this.leftTime_Current = leftTime_Current;
     }
 
-//    public boolean getisChanged() {
-//        return isChanged;
-//    }
-//
-//    public void setChanged(boolean changed) {
-//        isChanged = changed;
-//    }
+    public boolean getisChanged() {
+        return isChanged;
+    }
+
+    public void setChanged(boolean changed) {
+        isChanged = changed;
+    }
 
     public int findCurrentBus(JSONArray jInfo){
         JSONArray BusList = null;
@@ -166,11 +167,11 @@ public class Bus implements Serializable {
 
                     int currentSeq = (locationList.get(i).getStationSeq() - 1);
                     finalResult = i;
-//                    if(getCurrent_place()!= currentSeq) {
-//                        isChanged = true;
-//                    }else{
-//                        isChanged = false;
-//                    }
+                    if(getCurrent_place()!= currentSeq) {
+                        isChanged = true;
+                    }else{
+                        isChanged = false;
+                    }
                     this.setCurrent_place(currentSeq);
 
                     Log.d("check!", locationList.get(i).getPlateNo().concat(" and ").concat(String.valueOf(locationList.get(i).getStationSeq())));
