@@ -41,7 +41,7 @@ public class ActivitySetUp extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.setup_page_v3);
+        setContentView(R.layout.setup_page_local);
 
         final ProgressBar P_Bar = (ProgressBar) findViewById(R.id.progressBar);
         P_Bar.setVisibility(View.INVISIBLE); //To set visible

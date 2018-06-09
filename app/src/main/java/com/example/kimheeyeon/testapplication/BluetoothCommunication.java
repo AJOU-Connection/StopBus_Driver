@@ -58,8 +58,6 @@ public class BluetoothCommunication extends Service {
     }
 
 
-
-
     @Override
     public void onCreate() {
         super.onCreate();

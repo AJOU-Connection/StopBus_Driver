@@ -14,6 +14,8 @@ public class TextToSound implements TextToSpeech.OnInitListener {
     private TextToSpeech tts;
     private boolean ttsOk;
 
+    private String text;
+
     // The constructor will create a TextToSpeech instance.
     TextToSound(Context context) {
         tts = new TextToSpeech(context, this);
@@ -36,7 +38,7 @@ public class TextToSound implements TextToSpeech.OnInitListener {
 
     // A method to speak something
     @SuppressWarnings("deprecation") // Support older API levels too.
-    public void speak(String text, Boolean override) {
+    public void speak(Boolean override) {
         if (ttsOk) {
             if (override) {
                 tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
@@ -48,7 +50,7 @@ public class TextToSound implements TextToSpeech.OnInitListener {
     }
 
     @SuppressWarnings("deprecation")
-    public void ttsUnder20(String text) {
+    public void ttsUnder20() {
         System.out.printf("for ttss : v21 : ".concat(text));
         HashMap<String, String> map = new HashMap<>();
         map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "MessageId");
@@ -56,10 +58,17 @@ public class TextToSound implements TextToSpeech.OnInitListener {
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public void ttsGreater21(String text) {
+    public void ttsGreater21() {
         System.out.printf("for ttss : v 20 :".concat(text));
         String utteranceId=this.hashCode() + "";
         tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, utteranceId);
     }
 
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
 }

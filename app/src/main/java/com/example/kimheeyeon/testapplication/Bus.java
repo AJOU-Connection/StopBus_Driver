@@ -22,6 +22,9 @@ public class Bus implements Serializable {
     private int current_place;
     private int backBus_place;
 
+    //private int old_current;
+    private int isChanged; // check if current_place is changed
+
     private int leftTime1;
     private int leftTime2;
 
@@ -132,7 +135,6 @@ public class Bus implements Serializable {
         //강제로 null시켜서 비우기
         locationList.clear();
 
-        Log.i("isin?", "true");
         try {
             BusList = jInfo;
             Log.d("jinfo", String.valueOf(BusList.length()));
@@ -157,7 +159,7 @@ public class Bus implements Serializable {
                     int currentSeq = (locationList.get(i).getStationSeq() - 1);
                     finalResult = i;
                     this.setCurrent_place(currentSeq);
-                    //this.setCurrent_place();
+
                     Log.d("check!", locationList.get(i).getPlateNo().concat(" and ").concat(String.valueOf(locationList.get(i).getStationSeq())));
 
                     try{
