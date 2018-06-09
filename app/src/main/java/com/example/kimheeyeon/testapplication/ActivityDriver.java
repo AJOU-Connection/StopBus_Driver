@@ -37,7 +37,7 @@ public class ActivityDriver extends Activity{
     String isRidingPerson = "다음 정류장에 탑승객이 있습니다";
     String isGetOffPerson = "다음 정류장에 하차객이 있습니다";
     String isBothOnOffPerson = "다음 정류장에 승하차객이 있습니다";
-    String noGetInOff     = "다음 정류장에 승하차객이 없습니다";
+    String noGetInOff     = "없음";
 
     private static String address = "30:14:09:30:15:33";
 
@@ -132,18 +132,18 @@ public class ActivityDriver extends Activity{
         TextView NextStationDirection = (TextView)findViewById(R.id.NextStationDirection);
         NextStationDirection.setText(SettedBus.getBusInfo().getPath().get(3).getStationName().concat(" 방향"));
 
+        //색상 초기화
+        TextView RidePerson = (TextView)findViewById(R.id.RidePerson);
+        RidePerson.setBackgroundColor(Color.rgb(246, 235, 235));
+
+        TextView GetOffPerson = (TextView)findViewById(R.id.GetOffPerson);
+        GetOffPerson.setBackgroundColor(Color.rgb(241, 238, 223));
 
         //반복실행할 것.
         Runnable runnable = new Runnable() {
             public void run() {
                 // task to run goes here
 
-                //색상 초기화
-                TextView RidePerson = (TextView)findViewById(R.id.RidePerson);
-                RidePerson.setBackgroundColor(Color.rgb(246, 235, 235));
-
-                TextView GetOffPerson = (TextView)findViewById(R.id.GetOffPerson);
-                GetOffPerson.setBackgroundColor(Color.rgb(241, 238, 223));
 
                 //해당하는 것의 모든 location data가져옴
 
@@ -177,7 +177,7 @@ public class ActivityDriver extends Activity{
                 JSONObject sendStation = new JSONObject();
                 try {
                     sendStation.put("routeID" , SettedBus.getBusInfo().getVehicleNumber());
-                    Thread.sleep(200);
+                    Thread.sleep(300);
                     sendStation.put("stationID", SettedBus.getBusInfo().getPath().get( SettedBus.getFrontBus_place()).getStationID());
 
                     Log.d("sending", sendStation.getString("routeID"));
@@ -220,6 +220,12 @@ public class ActivityDriver extends Activity{
 
                 try{
                     thread_Gap.join();
+                    //색상 초기화
+                    TextView RidePerson = (TextView)findViewById(R.id.RidePerson);
+                    RidePerson.setBackgroundColor(Color.rgb(246, 235, 235));
+
+                    TextView GetOffPerson = (TextView)findViewById(R.id.GetOffPerson);
+                    GetOffPerson.setBackgroundColor(Color.rgb(241, 238, 223));
 
                 } catch (InterruptedException e){
                     e.printStackTrace();
@@ -233,7 +239,7 @@ public class ActivityDriver extends Activity{
 
                     JSONObject sendPassenger = new JSONObject();
                     try {
-                        Thread.sleep(100);
+                        //Thread.sleep(100);
                         sendPassenger.put("routeID", SettedBus.getBusInfo().getVehicleNumber());
                         sendPassenger.put("stationID", SettedBus.getBusInfo().getPath().get(SettedBus.getCurrent_place() + 1).getStationID());
 
@@ -241,9 +247,10 @@ public class ActivityDriver extends Activity{
                         Log.d("sendingP", sendPassenger.getString("stationID"));
                     } catch (JSONException e) {
                         e.printStackTrace();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
                     }
+//                    catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
 
                     ActivityDriver.ConnectThread thread_Passenger = new ActivityDriver.ConnectThread(url_Passenger, sendPassenger, getPassenger);
                     thread_Passenger.start();
@@ -253,7 +260,7 @@ public class ActivityDriver extends Activity{
                         if(ts.getText()!= null) {
                             Log.i("tts_text", ts.getText());
 
-                            if(ts.getText().compareTo("가져오기 에러") != 0) {
+                            if(ts.getText().compareTo("가져오기 에러") != 0 && ts.getText().compareTo(noGetInOff) != 0) {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                                     ts.ttsGreater21();
                                 } else {
@@ -299,10 +306,8 @@ public class ActivityDriver extends Activity{
 
                 if (ts.getText() != null) {
                     ts.setText(isGetOffPerson);
-                    //tts_text = "다음 정류장에 하차객이 있습니다";
                 } else {
                     ts.setText(isBothOnOffPerson);
-                    //tts_text = "다음 정류장에 탑승객과 하차객이 있습니다";
                 }
             }else{
                 //하차객이 아에 없는 경우
@@ -418,6 +423,7 @@ public class ActivityDriver extends Activity{
                         System.out.print("the result is : ".concat(String.valueOf(findresult)));
                         setBusState();
                     }
+
                 }else{
                     Log.d("fail to find","in Driver Activity AT BUSLOCATION");
                 }
