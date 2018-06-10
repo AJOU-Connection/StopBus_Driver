@@ -168,7 +168,10 @@ public class Bus implements Serializable {
 
                     int currentSeq = (locationList.get(i).getStationSeq() - 1);
                     finalResult = i;
-                    if(getCurrent_place()!= currentSeq && getCurrent_place()==-1) {
+
+                    Log.d("current!!!!!!!", "1 : "+ getCurrent_place() + " " + "2: " +  currentSeq);
+
+                    if(getCurrent_place()!= currentSeq || getCurrent_place()==-1) {
                         isChanged = true;
                     }else {
                         isChanged = false;

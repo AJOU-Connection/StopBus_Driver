@@ -16,8 +16,6 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import java.util.HashMap;
-import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -26,10 +24,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-//bluetooth
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 
 public class ActivityDriver extends Activity {
     Handler handler = new Handler();
@@ -317,8 +311,6 @@ public class ActivityDriver extends Activity {
                 Log.d("isGetIn", loadScore());
 
                 System.out.print("tttttttttthe1");
-
-                //tts_text = "다음 정류장에 탑승객이 있습니다";
             }
 
             if (isGetOff || b_getOff.compareTo("o")==0 ) {
@@ -339,8 +331,6 @@ public class ActivityDriver extends Activity {
 
             }else{
                 //하차객이 아에 없는 경우
-                //tts_text = "다음 정류장에는 승하차객이 없습니다";
-
                 if (ts.getText() == null) {
                     System.out.print("tttttttttthe4");
                     ts.setText(noGetInOff);
@@ -349,11 +339,10 @@ public class ActivityDriver extends Activity {
                 }else{
                     return 1;
                 }
-                //ts.setText(noGetInOff);
             }
 
         }else if(version == 1){
-            if (b_getOff.compareTo("o") ==0 ) {
+            if (b_getOff.compareTo("o") ==0 && !SettedBus.getisChanged()) {
                 //하차객이 있는 경우
 
                 Log.d("iminoooooo", "oooooooo");
@@ -364,30 +353,27 @@ public class ActivityDriver extends Activity {
                 if (ts.getText() != null) {
                     ts.setText(isGetOffPerson);
                     System.out.print("tttttttttthe5");
-                    //tts_text = "다음 정류장에 하차객이 있습니다";
                     Log.d("isGetOFF in v1", loadScore());
                     return 2;
                 } else {
                     ts.setText(isGetOffPerson);
                     System.out.print("tttttttttthe6");
-                    //tts_text = "다음 정류장에 탑승객과 하차객이 있습니다";
 
                     Log.d("isboth in v1", loadScore());
                     return 2;
                 }
 
-                //tts_text = "다음 정류장에 하차객이 있습니다";
             }
             else{
                 ts.setText(noGetInOff);
                 System.out.print("tttttttttthe7");
 
                 saveData_send("x");
+                saveData("x");
 
                 Log.d("nogetinoff in v1", loadScore());
 
                 return 4;
-                //tts_text = "다음 정류장에는 승하차객이 없습니다";
             }
         }
         Log.d("so_text", ts.getText());
@@ -474,7 +460,7 @@ public class ActivityDriver extends Activity {
                     if (findresult == -1) {
                         System.out.print("null");
                     } else {
-                        System.out.print("the result is : ".concat(String.valueOf(findresult)));
+                        System.out.print("the result is : ".concat(String.valueOf(findresult)) + " changed? : " +SettedBus.getisChanged());
                         if(SettedBus.getisChanged()){
                             saveData("x");
                             saveData_send("x");
@@ -555,8 +541,11 @@ public class ActivityDriver extends Activity {
 
                 JSONObject jHeader = jsonObject.getJSONObject("header");  // JSONObject 추출
                 Log.d("PARSING", jHeader.getString("result"));
+                TextView RidePerson = (TextView)findViewById(R.id.RidePerson);
+                TextView GetOffPerson = (TextView)findViewById(R.id.GetOffPerson);
 
                 if(jHeader.getString("result").compareTo("true") == 0) {
+
 
                     if(jsonObject.isNull("body")){
                         Log.d("FAIL TO GET INFO", "BODY IS NULL IN Passenger INFORMATION");
@@ -573,8 +562,7 @@ public class ActivityDriver extends Activity {
 
                         Log.d("tts_text_tts", ts.getText());
 
-                        TextView RidePerson = (TextView)findViewById(R.id.RidePerson);
-                        TextView GetOffPerson = (TextView)findViewById(R.id.GetOffPerson);
+
 
                         if(TextProperty == -1){
                             System.out.println("errrrrrrrrrrrrr!");
@@ -607,6 +595,29 @@ public class ActivityDriver extends Activity {
                     //ts.setText("가져오기 에러");
 
                     TextProperty = setTTS(false, false, 1);
+
+                    if(TextProperty == -1){
+                        System.out.println("errrrrrrrrrrrrr!");
+                    }
+                    else if(TextProperty == 1){
+                        System.out.println("errrrrrrrrrrrrr!1");
+                        //getin
+                        RidePerson.setBackgroundColor(Color.rgb(229, 78, 78));
+                    }else if(TextProperty == 2){
+                        System.out.println("errrrrrrrrrrrrr!2");
+                        //getoff
+                        GetOffPerson.setBackgroundColor(Color.rgb(239, 215, 95));
+                    }else if(TextProperty == 3){
+                        System.out.println("errrrrrrrrrrrrr!3");
+                        //both
+                        GetOffPerson.setBackgroundColor(Color.rgb(239, 215, 95));
+                        RidePerson.setBackgroundColor(Color.rgb(229, 78, 78));
+                    }else if(TextProperty == 4){
+                        System.out.println("errrrrrrrrrrrrr!4");
+                        //no
+                        RidePerson.setBackgroundColor(Color.rgb(246, 235, 235));
+                        GetOffPerson.setBackgroundColor(Color.rgb(241, 238, 223));
+                    }
 
                     Log.d("tts_text_tts", ts.getText());
 

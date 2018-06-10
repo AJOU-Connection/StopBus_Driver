@@ -57,12 +57,14 @@ public class BluetoothCommunication extends Service {
         return pref.getString("getoff_s", null);
     }
 
+    private String old_sending;
 
     @Override
     public void onCreate() {
         super.onCreate();
         Log.d("BT SERVICE", "SERVICE CREATED");
         stopThread = false;
+        old_sending = "";
     }
 
     @Override
@@ -75,13 +77,17 @@ public class BluetoothCommunication extends Service {
                 if (msg.what == handlerState) {                                     //if message is what we want
                     String readMessage = (String) msg.obj;                                                                // msg.arg1 = bytes from connect thread
                     recDataString.append(readMessage); //`enter code here`
-                    //Log.d("RECORDED", recDataString.toString());
-                    if(recDataString.toString() == "o"){
+                    String testing = recDataString.toString();
+                    Log.d("RECORDED", testing);
+                    if(testing.compareTo("o") == 0){
                         saveData("o");
                         System.out.println("huuuuuuuuuuuuuuu");
                     }
+//                    else{
+//                        saveData("n");
+//                        System.out.println("huuuuuuuuuuuuuuu2");
+//                    }
 
-//                               saveData_send("i");
 
 
                     // Do stuff here with your data, like adding it to the database
@@ -248,9 +254,11 @@ public class BluetoothCommunication extends Service {
             while (true && !stopThread) {
                 try {
                     //Log.d("yeslooppp", "lloooo");
-                    if(loadScore_send() != null){
-                        //Log.d("writing!!!", loadScore_send());
+                    if(loadScore_send() != null && old_sending != loadScore_send()){
+                        Log.d("writing!!!", loadScore_send());
                         write(loadScore_send());
+
+                        old_sending = loadScore_send();
                     }
 
                     bytes = mmInStream.read(buffer);            //read bytes from input buffer
@@ -266,6 +274,7 @@ public class BluetoothCommunication extends Service {
                     stopSelf();
                     break;
                 }
+
             }
         }
 
