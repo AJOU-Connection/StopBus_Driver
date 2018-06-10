@@ -75,7 +75,7 @@ public class BluetoothCommunication extends Service {
                 if (msg.what == handlerState) {                                     //if message is what we want
                     String readMessage = (String) msg.obj;                                                                // msg.arg1 = bytes from connect thread
                     recDataString.append(readMessage); //`enter code here`
-                    Log.d("RECORDED", recDataString.toString());
+                    //Log.d("RECORDED", recDataString.toString());
                     if(recDataString.toString() == "o"){
                         saveData("o");
                         System.out.println("huuuuuuuuuuuuuuu");
@@ -247,9 +247,9 @@ public class BluetoothCommunication extends Service {
             // Keep looping to listen for received messages
             while (true && !stopThread) {
                 try {
-                    Log.d("yeslooppp", "lloooo");
+                    //Log.d("yeslooppp", "lloooo");
                     if(loadScore_send() != null){
-                        Log.d("writing!!!", loadScore_send());
+                        //Log.d("writing!!!", loadScore_send());
                         write(loadScore_send());
                     }
 

@@ -253,7 +253,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="279dp"
+            android:layout_marginBottom="294dp"
             android:text="내릴 사람이 있습니다"
             android:textSize="30sp"
             android:visibility="visible" />

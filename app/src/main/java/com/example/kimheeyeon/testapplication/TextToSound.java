@@ -41,10 +41,10 @@ public class TextToSound implements TextToSpeech.OnInitListener {
     public void speak(Boolean override) {
         if (ttsOk) {
             if (override) {
-                tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+                tts.speak("wowwwwwww", TextToSpeech.QUEUE_FLUSH, null);
             }
             else {
-                tts.speak(text, TextToSpeech.QUEUE_ADD, null);
+                tts.speak("wowwwwwww", TextToSpeech.QUEUE_ADD, null);
             }
         }
     }

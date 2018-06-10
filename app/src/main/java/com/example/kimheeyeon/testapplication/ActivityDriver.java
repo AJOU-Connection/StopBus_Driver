@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.content.Intent;
 
@@ -46,6 +47,8 @@ public class ActivityDriver extends Activity {
     //String tts_text = null;
 
     private SharedPreferences getoff_share;
+
+    private int TextProperty = -1;
 
 
     //받은데이터
@@ -87,7 +90,7 @@ public class ActivityDriver extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test2);
+        setContentView(R.layout.activity_test);
 
         final Intent intent = getIntent();
 
@@ -148,6 +151,7 @@ public class ActivityDriver extends Activity {
 
                 //ts초기화
                 ts.setText(noGetInOff);
+
 
                 //해당하는 것의 모든 location data가져옴
 
@@ -230,12 +234,6 @@ public class ActivityDriver extends Activity {
                 try{
                     System.out.println("GAP_is_joined1");
                     thread_Gap.join();
-                    //색상 초기화
-                    TextView RidePerson = (TextView)findViewById(R.id.RidePerson);
-                    RidePerson.setBackgroundColor(Color.rgb(246, 235, 235));
-
-                    TextView GetOffPerson = (TextView)findViewById(R.id.GetOffPerson);
-                    GetOffPerson.setBackgroundColor(Color.rgb(241, 238, 223));
 
                     System.out.println("GAP_is_joined");
 
@@ -251,7 +249,7 @@ public class ActivityDriver extends Activity {
 
                     JSONObject sendPassenger = new JSONObject();
                     try {
-                        //Thread.sleep(100);
+                        Thread.sleep(100);
                         sendPassenger.put("routeID", SettedBus.getBusInfo().getVehicleNumber());
                         sendPassenger.put("stationID", SettedBus.getBusInfo().getPath().get(SettedBus.getCurrent_place() + 1).getStationID());
 
@@ -260,15 +258,18 @@ public class ActivityDriver extends Activity {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-//                    catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
+                    catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
 
                     ActivityDriver.ConnectThread thread_Passenger = new ActivityDriver.ConnectThread(url_Passenger, sendPassenger, getPassenger);
                     thread_Passenger.start();
 
                     try {
                         thread_Passenger.join();
+
+                        Thread.sleep(100);
+
                         if(ts.getText()!= null) {
                             Log.i("tts_text", ts.getText());
 
@@ -279,7 +280,12 @@ public class ActivityDriver extends Activity {
                                     ts.ttsUnder20();
                                 }
                             }
+
                         }
+
+
+                        System.out.println("I think stoppppppppp!" + ts.getText());
+
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -304,8 +310,6 @@ public class ActivityDriver extends Activity {
             Log.d("checkGetIn", String.valueOf(isGetIn));
             if (isGetIn) {
                 //탑승객이 있는 경우
-                TextView RidePerson = (TextView) findViewById(R.id.RidePerson);
-                //RidePerson.setBackgroundColor(Color.rgb(229, 78, 78));
 
                 ts.setText(isRidingPerson);
 
@@ -319,8 +323,6 @@ public class ActivityDriver extends Activity {
 
             if (isGetOff || b_getOff.compareTo("o")==0 ) {
                 //하차객이 있는 경우
-                TextView GetOffPerson = (TextView) findViewById(R.id.GetOffPerson);
-                //GetOffPerson.setBackgroundColor(Color.rgb(239, 215, 95));
 
                 saveData_send("o");
                 Log.d("isGetOFF|\"o\"", loadScore());
@@ -353,9 +355,6 @@ public class ActivityDriver extends Activity {
         }else if(version == 1){
             if (b_getOff.compareTo("o") ==0 ) {
                 //하차객이 있는 경우
-                TextView GetOffPerson = (TextView) findViewById(R.id.GetOffPerson);
-//                GetOffPerson.setBackgroundColor(Color.rgb(241, 238, 223));
-//                GetOffPerson.setBackgroundColor(Color.rgb(239, 215, 95));
 
                 Log.d("iminoooooo", "oooooooo");
 
@@ -387,7 +386,7 @@ public class ActivityDriver extends Activity {
 
                 Log.d("nogetinoff in v1", loadScore());
 
-                return 1;
+                return 4;
                 //tts_text = "다음 정류장에는 승하차객이 없습니다";
             }
         }
@@ -420,22 +419,29 @@ public class ActivityDriver extends Activity {
                     public void run() {
                         //Log.d("gmmm", output);
 
-                        switch(purpose){
-                            case "busLocation" :
-                                parseBusLocation(output);
-                                break;
-                            case "remainTime" :
-                                parseTimeInformation(output, "time");
-                                break;
-                            case "passengerInfo" :
-                                parsePassengerInformation(output);
-                                break;
-                            case "remainGap" :
-                                parseTimeInformation(output, "gap");
-                                break;
-                            default :
-                                System.out.println("this is for out!! there is no version suits");
-                        }
+                        runOnUiThread(new Runnable() {
+                            @Override public void run() {
+                                switch(purpose){
+                                    case "busLocation" :
+                                        parseBusLocation(output);
+                                        break;
+                                    case "remainTime" :
+                                        parseTimeInformation(output, "time");
+                                        break;
+                                    case "passengerInfo" :
+                                        parsePassengerInformation(output);
+                                        break;
+                                    case "remainGap" :
+                                        parseTimeInformation(output, "gap");
+                                        break;
+                                    default :
+                                        System.out.println("this is for out!! there is no version suits");
+                                }
+
+                            }
+                        });
+
+                        Log.d(purpose, "is end!!!!!!!!!!");
                     }
                 });
             } catch (Exception ex){
@@ -563,32 +569,35 @@ public class ActivityDriver extends Activity {
                         Log.d("isGetIn",JBody.getString("isGetIn"));
                         Log.d("isGetOff", JBody.getString("isGetOff"));
 
-                        int decide = setTTS(isGetIn, isGetOff, 0);
+                        TextProperty = setTTS(isGetIn, isGetOff, 0);
 
                         Log.d("tts_text_tts", ts.getText());
 
-//                        TextView RidePerson = (TextView)findViewById(R.id.RidePerson);
-//                        RidePerson.setBackgroundColor(Color.rgb(246, 235, 235));
-//
-//                        TextView GetOffPerson = (TextView)findViewById(R.id.GetOffPerson);
-//                        GetOffPerson.setBackgroundColor(Color.rgb(241, 238, 223));
-//
-//                        if(decide == -1){
-//                            System.out.println("errrrrrrrrrrrrr!");
-//                        }
-//                        else if(decide == 1){
-//                            //getin
-//                            RidePerson.setBackgroundColor(Color.rgb(229, 78, 78));
-//                        }else if(decide == 2){
-//                            //getoff
-//                            GetOffPerson.setBackgroundColor(Color.rgb(239, 215, 95));
-//                        }else if(decide == 3){
-//                            //both
-//                            GetOffPerson.setBackgroundColor(Color.rgb(239, 215, 95));
-//                            RidePerson.setBackgroundColor(Color.rgb(229, 78, 78));
-//                        }else if(decide == 4){
-//                            //no
-//                        }
+                        TextView RidePerson = (TextView)findViewById(R.id.RidePerson);
+                        TextView GetOffPerson = (TextView)findViewById(R.id.GetOffPerson);
+
+                        if(TextProperty == -1){
+                            System.out.println("errrrrrrrrrrrrr!");
+                        }
+                        else if(TextProperty == 1){
+                            System.out.println("errrrrrrrrrrrrr!1");
+                            //getin
+                            RidePerson.setBackgroundColor(Color.rgb(229, 78, 78));
+                        }else if(TextProperty == 2){
+                            System.out.println("errrrrrrrrrrrrr!2");
+                            //getoff
+                            GetOffPerson.setBackgroundColor(Color.rgb(239, 215, 95));
+                        }else if(TextProperty == 3){
+                            System.out.println("errrrrrrrrrrrrr!3");
+                            //both
+                            GetOffPerson.setBackgroundColor(Color.rgb(239, 215, 95));
+                            RidePerson.setBackgroundColor(Color.rgb(229, 78, 78));
+                        }else if(TextProperty == 4){
+                            System.out.println("errrrrrrrrrrrrr!4");
+                            //no
+                            RidePerson.setBackgroundColor(Color.rgb(246, 235, 235));
+                            GetOffPerson.setBackgroundColor(Color.rgb(241, 238, 223));
+                        }
 
 
                     }
@@ -597,33 +606,12 @@ public class ActivityDriver extends Activity {
 
                     //ts.setText("가져오기 에러");
 
-                    int decide = setTTS(false, false, 1);
+                    TextProperty = setTTS(false, false, 1);
 
                     Log.d("tts_text_tts", ts.getText());
 
 
-//                    TextView RidePerson = (TextView)findViewById(R.id.RidePerson);
-//                    RidePerson.setBackgroundColor(Color.rgb(246, 235, 235));
-//
-//                    TextView GetOffPerson = (TextView)findViewById(R.id.GetOffPerson);
-//                    GetOffPerson.setBackgroundColor(Color.rgb(241, 238, 223));
-//
-//                    if(decide == -1){
-//                        System.out.println("errrrrrrrrrrrrr!");
-//                    }
-//                    else if(decide == 1){
-//                        //getin
-//                        RidePerson.setBackgroundColor(Color.rgb(229, 78, 78));
-//                    }else if(decide == 2){
-//                        //getoff
-//                        GetOffPerson.setBackgroundColor(Color.rgb(239, 215, 95));
-//                    }else if(decide == 3){
-//                        //both
-//                        GetOffPerson.setBackgroundColor(Color.rgb(239, 215, 95));
-//                        RidePerson.setBackgroundColor(Color.rgb(229, 78, 78));
-//                    }else if(decide == 4){
-//                        //no
-//                    }
+
                 }
 
             } catch (JSONException e) {
@@ -723,6 +711,11 @@ public class ActivityDriver extends Activity {
             }catch(Exception e){
                 NextStationDirection.setText("정보없음");
             }
+
+            TextView RidePerson = (TextView)findViewById(R.id.RidePerson);
+            TextView GetOffPerson = (TextView)findViewById(R.id.GetOffPerson);
+            RidePerson.setBackgroundColor(Color.rgb(246, 235, 235));
+            GetOffPerson.setBackgroundColor(Color.rgb(241, 238, 223));
         }
     }
 
