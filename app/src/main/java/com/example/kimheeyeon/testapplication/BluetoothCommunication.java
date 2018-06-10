@@ -76,10 +76,12 @@ public class BluetoothCommunication extends Service {
                     String readMessage = (String) msg.obj;                                                                // msg.arg1 = bytes from connect thread
                     recDataString.append(readMessage); //`enter code here`
                     Log.d("RECORDED", recDataString.toString());
-//                    if(recDataString.toString() == "o"){
-//                        saveData(recDataString.toString());
-//                    }
-                    saveData("o");
+                    if(recDataString.toString() == "o"){
+                        saveData("o");
+                        System.out.println("huuuuuuuuuuuuuuu");
+                    }
+
+//                               saveData_send("i");
 
 
                     // Do stuff here with your data, like adding it to the database
@@ -245,15 +247,19 @@ public class BluetoothCommunication extends Service {
             // Keep looping to listen for received messages
             while (true && !stopThread) {
                 try {
+                    Log.d("yeslooppp", "lloooo");
+                    if(loadScore_send() != null){
+                        Log.d("writing!!!", loadScore_send());
+                        write(loadScore_send());
+                    }
+
                     bytes = mmInStream.read(buffer);            //read bytes from input buffer
                     String readMessage = new String(buffer, 0, bytes);
                     Log.d("DEBUG BT PART", "CONNECTED THREAD " + readMessage);
                     // Send the obtained bytes to the UI Activity via handler
                     bluetoothIn.obtainMessage(handlerState, bytes, -1, readMessage).sendToTarget();
 
-                    if(loadScore_send() != null){
-                        write(loadScore_send());
-                    }
+
                 } catch (IOException e) {
                     Log.d("DEBUG BT", e.toString());
                     Log.d("BT SERVICE", "UNABLE TO READ/WRITE, STOPPING SERVICE");

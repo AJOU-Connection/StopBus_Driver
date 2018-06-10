@@ -70,7 +70,7 @@ public class ActivityDriver extends Activity {
     public void initData_send(){
         getoff_share = getSharedPreferences("getoff_share", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = getoff_share.edit();
-        editor.putString("getoff_s", "o");
+        editor.putString("getoff_s", "i");
         editor.apply();
     }
     public void saveData_send(String Data){
@@ -290,7 +290,7 @@ public class ActivityDriver extends Activity {
         service.scheduleAtFixedRate(runnable, 0,    20, TimeUnit.SECONDS);
     }
 
-    private void setTTS(boolean isGetIn, boolean isGetOff, int version){
+    private int setTTS(boolean isGetIn, boolean isGetOff, int version){
         if(ts.getText() != null){
             ts.setText(null);
         }
@@ -309,22 +309,32 @@ public class ActivityDriver extends Activity {
 
                 ts.setText(isRidingPerson);
 
+                //saveData_send("o");
+                Log.d("isGetIn", loadScore());
+
                 System.out.print("tttttttttthe1");
 
                 //tts_text = "다음 정류장에 탑승객이 있습니다";
-            } else if (isGetOff || b_getOff.compareTo("o")==0 ) {
+            }
+
+            if (isGetOff || b_getOff.compareTo("o")==0 ) {
                 //하차객이 있는 경우
                 TextView GetOffPerson = (TextView) findViewById(R.id.GetOffPerson);
                 //GetOffPerson.setBackgroundColor(Color.rgb(239, 215, 95));
 
+                saveData_send("o");
+                Log.d("isGetOFF|\"o\"", loadScore());
+
                 if (ts.getText() != null) {
                     System.out.print("tttttttttthe2");
                     ts.setText(isBothOnOffPerson);
+                    return 3;
                 } else {
                     ts.setText(isGetOffPerson);
                     System.out.print("tttttttttthe3");
+                    return 2;
                 }
-                saveData_send("o");
+
             }else{
                 //하차객이 아에 없는 경우
                 //tts_text = "다음 정류장에는 승하차객이 없습니다";
@@ -332,6 +342,10 @@ public class ActivityDriver extends Activity {
                 if (ts.getText() == null) {
                     System.out.print("tttttttttthe4");
                     ts.setText(noGetInOff);
+                    Log.d("noGet when v0", loadScore());
+                    return 4;
+                }else{
+                    return 1;
                 }
                 //ts.setText(noGetInOff);
             }
@@ -345,27 +359,41 @@ public class ActivityDriver extends Activity {
 
                 Log.d("iminoooooo", "oooooooo");
 
+                saveData_send("o");
+
+
                 if (ts.getText() != null) {
                     ts.setText(isGetOffPerson);
                     System.out.print("tttttttttthe5");
                     //tts_text = "다음 정류장에 하차객이 있습니다";
+                    Log.d("isGetOFF in v1", loadScore());
+                    return 2;
                 } else {
-                    ts.setText(isBothOnOffPerson);
+                    ts.setText(isGetOffPerson);
                     System.out.print("tttttttttthe6");
                     //tts_text = "다음 정류장에 탑승객과 하차객이 있습니다";
-                }
 
-                saveData_send("o");
+                    Log.d("isboth in v1", loadScore());
+                    return 2;
+                }
 
                 //tts_text = "다음 정류장에 하차객이 있습니다";
             }
             else{
                 ts.setText(noGetInOff);
                 System.out.print("tttttttttthe7");
+
+                saveData_send("x");
+
+                Log.d("nogetinoff in v1", loadScore());
+
+                return 1;
                 //tts_text = "다음 정류장에는 승하차객이 없습니다";
             }
         }
         Log.d("so_text", ts.getText());
+
+        return -1;
     }
 
     class ConnectThread extends Thread {
@@ -444,6 +472,8 @@ public class ActivityDriver extends Activity {
                         if(SettedBus.getisChanged()){
                             saveData("x");
                             saveData_send("x");
+
+                            Log.d("the resullTT in v1", loadScore_send());
                         }
 
                         setBusState();
@@ -533,14 +563,67 @@ public class ActivityDriver extends Activity {
                         Log.d("isGetIn",JBody.getString("isGetIn"));
                         Log.d("isGetOff", JBody.getString("isGetOff"));
 
-                        setTTS(isGetIn, isGetOff, 0);
+                        int decide = setTTS(isGetIn, isGetOff, 0);
+
+                        Log.d("tts_text_tts", ts.getText());
+
+//                        TextView RidePerson = (TextView)findViewById(R.id.RidePerson);
+//                        RidePerson.setBackgroundColor(Color.rgb(246, 235, 235));
+//
+//                        TextView GetOffPerson = (TextView)findViewById(R.id.GetOffPerson);
+//                        GetOffPerson.setBackgroundColor(Color.rgb(241, 238, 223));
+//
+//                        if(decide == -1){
+//                            System.out.println("errrrrrrrrrrrrr!");
+//                        }
+//                        else if(decide == 1){
+//                            //getin
+//                            RidePerson.setBackgroundColor(Color.rgb(229, 78, 78));
+//                        }else if(decide == 2){
+//                            //getoff
+//                            GetOffPerson.setBackgroundColor(Color.rgb(239, 215, 95));
+//                        }else if(decide == 3){
+//                            //both
+//                            GetOffPerson.setBackgroundColor(Color.rgb(239, 215, 95));
+//                            RidePerson.setBackgroundColor(Color.rgb(229, 78, 78));
+//                        }else if(decide == 4){
+//                            //no
+//                        }
+
+
                     }
                 }else{
                     Log.d("FAIL TO GET INFO", "Passenger INFORMATION");
 
                     //ts.setText("가져오기 에러");
 
-                    setTTS(false, false, 1);
+                    int decide = setTTS(false, false, 1);
+
+                    Log.d("tts_text_tts", ts.getText());
+
+
+//                    TextView RidePerson = (TextView)findViewById(R.id.RidePerson);
+//                    RidePerson.setBackgroundColor(Color.rgb(246, 235, 235));
+//
+//                    TextView GetOffPerson = (TextView)findViewById(R.id.GetOffPerson);
+//                    GetOffPerson.setBackgroundColor(Color.rgb(241, 238, 223));
+//
+//                    if(decide == -1){
+//                        System.out.println("errrrrrrrrrrrrr!");
+//                    }
+//                    else if(decide == 1){
+//                        //getin
+//                        RidePerson.setBackgroundColor(Color.rgb(229, 78, 78));
+//                    }else if(decide == 2){
+//                        //getoff
+//                        GetOffPerson.setBackgroundColor(Color.rgb(239, 215, 95));
+//                    }else if(decide == 3){
+//                        //both
+//                        GetOffPerson.setBackgroundColor(Color.rgb(239, 215, 95));
+//                        RidePerson.setBackgroundColor(Color.rgb(229, 78, 78));
+//                    }else if(decide == 4){
+//                        //no
+//                    }
                 }
 
             } catch (JSONException e) {

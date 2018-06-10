@@ -39,6 +39,7 @@ public class Bus implements Serializable {
 
     public Bus(String BusNum) {
         this.busInfo = new BusInfo(BusNum);
+        current_place = -1;
     }
 
     public int getCurrent_place() {
@@ -167,9 +168,9 @@ public class Bus implements Serializable {
 
                     int currentSeq = (locationList.get(i).getStationSeq() - 1);
                     finalResult = i;
-                    if(getCurrent_place()!= currentSeq) {
+                    if(getCurrent_place()!= currentSeq && getCurrent_place()==-1) {
                         isChanged = true;
-                    }else{
+                    }else {
                         isChanged = false;
                     }
                     this.setCurrent_place(currentSeq);
