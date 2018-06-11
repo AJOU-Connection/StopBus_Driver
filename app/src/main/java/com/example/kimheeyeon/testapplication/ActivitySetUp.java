@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 
 import android.content.Intent;
 import android.os.Handler;
+import android.widget.Toast;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -36,6 +37,8 @@ public class ActivitySetUp extends Activity {
 
     String busAreaList[];
     String busRouteIdList[];
+
+    boolean isParsedWell = true;
 
 
     @Override
@@ -106,21 +109,27 @@ public class ActivitySetUp extends Activity {
                         }
                     }
 
-                    Handler handler2 = new Handler();
-                    handler2.postDelayed(new Runnable() {
-                        public void run() {
-                            try {
-                                Intent intent = new Intent(ActivitySetUp.this, ActivityDriver.class);
 
-                                //Log.d("ack data", settedBus.getBusInfo().getBusNumber());
-                                intent.putExtra("busData", settedBus);
+                    if(isParsedWell) {
+                        Handler handler2 = new Handler();
+                        handler2.postDelayed(new Runnable() {
+                            public void run() {
+                                try {
+                                    Intent intent = new Intent(ActivitySetUp.this, ActivityDriver.class);
 
-                                startActivity(intent);
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                                    //Log.d("ack data", settedBus.getBusInfo().getBusNumber());
+                                    intent.putExtra("busData", settedBus);
+
+                                    startActivity(intent);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
-                        }
-                    }, 500);  // 2000은 2초를 의미합니다.
+                        }, 500);  // 2000은 2초를 의미합니다.
+                    }else{
+                        Toast.makeText(getApplicationContext(), "해당하는 버스는 운행중이지 않습니다", Toast.LENGTH_LONG).show();
+
+                    }
                 }
             }
         );
@@ -152,30 +161,35 @@ public class ActivitySetUp extends Activity {
                         e.printStackTrace();
                     }
 
-                    Spinner spinner = (Spinner) findViewById(R.id.Car_Number);
+                    if(isParsedWell) {
+                        Spinner spinner = (Spinner) findViewById(R.id.Car_Number);
 
-                    spinner.setVisibility(View.VISIBLE);
+                        spinner.setVisibility(View.VISIBLE);
 
-                    if(locationList[0].compareTo("NO BUS") != 0) {
-                        Confirm_Button.setVisibility(View.VISIBLE);
+                        if (locationList[0].compareTo("NO BUS") != 0) {
+                            Confirm_Button.setVisibility(View.VISIBLE);
+                        }
+
+                        ArrayAdapter<String> spinnerArray = new ArrayAdapter<String>(ActivitySetUp.this, android.R.layout.simple_spinner_item, locationList);
+                        spinner.setAdapter(spinnerArray);
+
+                        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                String item = (String) parent.getSelectedItem();
+                                carNumber = item;
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
+
+                            }
+                        });
+                    }else{
+                        Toast.makeText(getApplicationContext(), "해당하는 버스가 운행중이지 않습니다", Toast.LENGTH_LONG).show();
+
                     }
-
-                    ArrayAdapter<String> spinnerArray = new ArrayAdapter<String>(ActivitySetUp.this, android.R.layout.simple_spinner_item, locationList);
-                    spinner.setAdapter(spinnerArray);
-
-                    spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
-
-                        @Override
-                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            String item = (String)parent.getSelectedItem();
-                            carNumber = item;
-                        }
-
-                        @Override
-                        public void onNothingSelected(AdapterView<?> parent) {
-
-                        }
-                    });
                 }
             }
         );
@@ -206,30 +220,35 @@ public class ActivitySetUp extends Activity {
                         e.printStackTrace();
                     }
 
-                    Spinner Car_Area = (Spinner) findViewById(R.id.Car_Area);
 
-                    Car_Area.setVisibility(View.VISIBLE);
-                    bus_search.setVisibility(View.VISIBLE);
+                    if(isParsedWell) {
+                        Spinner Car_Area = (Spinner) findViewById(R.id.Car_Area);
 
-                    ArrayAdapter<String> spinnerArray = new ArrayAdapter<String>(ActivitySetUp.this, android.R.layout.simple_spinner_item, busAreaList);
-                    Car_Area.setAdapter(spinnerArray);
+                        Car_Area.setVisibility(View.VISIBLE);
+                        bus_search.setVisibility(View.VISIBLE);
 
-                    Car_Area.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+                        ArrayAdapter<String> spinnerArray = new ArrayAdapter<String>(ActivitySetUp.this, android.R.layout.simple_spinner_item, busAreaList);
+                        Car_Area.setAdapter(spinnerArray);
 
-                        @Override
-                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            String item = (String)parent.getSelectedItem();
-                            for( int i = 0 ; i < busAreaList.length; i++){
-                                if(busAreaList[i].compareTo(item) == 0)
-                                    routeId = busRouteIdList[i];
+                        Car_Area.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                String item = (String) parent.getSelectedItem();
+                                for (int i = 0; i < busAreaList.length; i++) {
+                                    if (busAreaList[i].compareTo(item) == 0)
+                                        routeId = busRouteIdList[i];
+                                }
                             }
-                        }
 
-                        @Override
-                        public void onNothingSelected(AdapterView<?> parent) {
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
 
-                        }
-                    });
+                            }
+                        });
+                    }else{
+                        Toast.makeText(getApplicationContext(), "해당하는 버스가 없습니다", Toast.LENGTH_LONG).show();
+                    }
 
                 }
             }
@@ -335,12 +354,20 @@ public class ActivitySetUp extends Activity {
 
                 if (jBody == null) {
                     System.out.print("nul,,?");
+                    //Toast.makeText(getApplicationContext(), "해당하는 버스가 없습니다", Toast.LENGTH_LONG).show();
+                    isParsedWell = false;
+                    return;
                 }
+
+                isParsedWell = true;
                 settedBus.setBusInfo(jBody);
                 settedBus.setVehicleNumber(routeId);
                 settedBus.setCarNumber(carNumber);
             } else {
+                isParsedWell = false;
                 Log.d("GET DATA ERR", "FAIL TO GET BUSLIST");
+                //Toast.makeText(getApplicationContext(), "해당하는 버스가 없습니다", Toast.LENGTH_LONG).show();
+
             }
 
         } catch (JSONException e) {
@@ -360,32 +387,47 @@ public class ActivitySetUp extends Activity {
 
             if(jHeader.getString("result").compareTo("true") == 0) {
 
-                JSONArray testarray = jsonObject.getJSONArray("body");
-                if(testarray==null){
-                    System.out.print("json is null when get buslocation");
+                try {
+                    JSONArray testarray = jsonObject.getJSONArray("body");
+
+                    if (testarray == null) {
+                        System.out.print("json is null when get buslocation");
+
+                        //Toast.makeText(getApplicationContext(), "해당하는 버스가 없습니다", Toast.LENGTH_LONG).show();
+
+
+                        isParsedWell = false;
+
+                        return;
+                    }
+
+                    isParsedWell = true;
+
+                    if (jHeader.getString("result").compareTo("true") != 0)
+                        System.out.println("errrr!!1");
+                    else {
+                        JSONArray BusList = jsonObject.getJSONArray("body");
+                        //강제로 null시켜서 비우기
+                        locationList = null;
+                        this.locationList = new String[BusList.length()];
+                        for (int i = 0; i < BusList.length(); i++) {
+                            JSONObject binfo = BusList.getJSONObject(i);
+                            Log.d("Compare", binfo.getString("plateNo").concat(" and ").concat(binfo.getString("stationSeq")));
+                            this.locationList[i] = binfo.getString("plateNo");
+                        }
+
+                        if (locationList == null) {
+                            this.locationList = new String[1];
+                            this.locationList[0] = "NO BUS";
+                        }
+
+                    }
+                }catch (JSONException e){
+                    isParsedWell = false;
                     return;
                 }
-
-                if (jHeader.getString("result").compareTo("true") != 0)
-                    System.out.println("errrr!!1");
-                else{
-                    JSONArray BusList = jsonObject.getJSONArray("body");
-                    //강제로 null시켜서 비우기
-                    locationList = null;
-                    this.locationList = new String[BusList.length()];
-                    for(int i = 0; i < BusList.length(); i++){
-                        JSONObject binfo = BusList.getJSONObject(i);
-                        Log.d("Compare", binfo.getString("plateNo").concat(" and ").concat(binfo.getString("stationSeq")));
-                        this.locationList[i] = binfo.getString("plateNo");
-                    }
-
-                    if(locationList == null){
-                        this.locationList = new String[1];
-                        this.locationList[0] = "NO BUS";
-                    }
-
-                }
             }else{
+                isParsedWell = false;
                 Log.d("fail to find","in Driver Activity AT BUSLOCATION");
             }
         } catch (JSONException e) {
@@ -404,39 +446,49 @@ public class ActivitySetUp extends Activity {
 
             if(jHeader.getString("result").compareTo("true") == 0) {
 
-                JSONArray testarray = jsonObject.getJSONArray("body");
-                if(testarray==null){
-                    System.out.print("json is null when get areaList");
-                    return;
-                }
+                try {
+                    JSONArray testarray = jsonObject.getJSONArray("body");
+                    if (testarray == null) {
+                        System.out.print("json is null when get areaList");
 
-                if (jHeader.getString("result").compareTo("true") != 0)
-                    System.out.println("errrr!!1");
-                else{
-                    JSONArray AreaList = jsonObject.getJSONArray("body");
-                    //강제로 null시켜서 비우기
-
-                    int count = 0;
-                    for(int i = 0; i < AreaList.length(); i++){
-                        JSONObject binfo = AreaList.getJSONObject(i);
-                        if(binfo.getString("routeNumber").compareTo(busID) == 0)
-                            count++;
+                        isParsedWell = false;
+                        return;
                     }
 
-                    this.busAreaList = new String[count];
-                    this.busRouteIdList = new String[count];
+                    isParsedWell = true;
 
-                    int number = 0;
+                    if (jHeader.getString("result").compareTo("true") != 0)
+                        System.out.println("errrr!!1");
+                    else {
+                        JSONArray AreaList = jsonObject.getJSONArray("body");
+                        //강제로 null시켜서 비우기
 
-                    for(int i = 0; i < AreaList.length(); i++){
-                        JSONObject binfo = AreaList.getJSONObject(i);
-                        if(binfo.getString("routeNumber").compareTo(busID) == 0) {
-                            this.busRouteIdList[number] = binfo.getString("routeID");
-                            this.busAreaList[number++] = binfo.getString("regionName");
+                        int count = 0;
+                        for (int i = 0; i < AreaList.length(); i++) {
+                            JSONObject binfo = AreaList.getJSONObject(i);
+                            if (binfo.getString("routeNumber").compareTo(busID) == 0)
+                                count++;
+                        }
+
+                        this.busAreaList = new String[count];
+                        this.busRouteIdList = new String[count];
+
+                        int number = 0;
+
+                        for (int i = 0; i < AreaList.length(); i++) {
+                            JSONObject binfo = AreaList.getJSONObject(i);
+                            if (binfo.getString("routeNumber").compareTo(busID) == 0) {
+                                this.busRouteIdList[number] = binfo.getString("routeID");
+                                this.busAreaList[number++] = binfo.getString("regionName");
+                            }
                         }
                     }
+                }catch(Exception e){
+                    e.printStackTrace();
+                    isParsedWell = false;
                 }
             }else{
+                isParsedWell = false;
                 Log.d("fail to find","in Driver Activity AT AREAINFO");
             }
         } catch (JSONException e) {

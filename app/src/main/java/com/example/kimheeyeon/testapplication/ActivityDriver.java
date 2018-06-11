@@ -16,6 +16,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -112,7 +113,7 @@ public class ActivityDriver extends Activity {
         FrontBus_Text.setText(SettedBus.getBusInfo().getPath().get(2).getStationName());
 
         //현재 버스 위치 출력
-        TextView CurrentStation = (TextView)findViewById(R.id.CurrentStation);
+        final TextView CurrentStation = (TextView)findViewById(R.id.CurrentStation);
         CurrentStation.setText(SettedBus.getBusInfo().getPath().get(1).getStationName());
 
         //뒷 버스 위치 출력
@@ -147,6 +148,7 @@ public class ActivityDriver extends Activity {
                 ts.setText(noGetInOff);
 
 
+                Log.d("Here?", "1111111111");
                 //해당하는 것의 모든 location data가져옴
 
                 String url_location = "http://stop-bus.tk/user/busLocationList";
@@ -171,6 +173,7 @@ public class ActivityDriver extends Activity {
                     e.printStackTrace();
                 }
 
+                Log.d("Here?", "2222222222");
 
                //버스의 노선번호와 station 번호를 전달하여, 해당 정류장으로부터 남은 시간 추출
                 String url_time = "http://stop-bus.tk/driver/gap";
@@ -180,7 +183,11 @@ public class ActivityDriver extends Activity {
                 try {
                     sendStation.put("routeID" , SettedBus.getBusInfo().getVehicleNumber());
                     Thread.sleep(300);
-                    sendStation.put("stationID", SettedBus.getBusInfo().getPath().get( SettedBus.getFrontBus_place()).getStationID());
+                    if(SettedBus.getFrontBus_place() != -1)
+                        sendStation.put("stationID", SettedBus.getBusInfo().getPath().get( SettedBus.getFrontBus_place()).getStationID());
+                    else
+                        sendStation.put("stationID", SettedBus.getBusInfo().getPath().get( SettedBus.getCurrent_place()).getStationID());
+
 
                     Log.d("sending", sendStation.getString("routeID"));
                     Log.d("sending", sendStation.getString("stationID"));
@@ -191,6 +198,7 @@ public class ActivityDriver extends Activity {
                 }
 
 
+                Log.d("Here?", "333333333333");
                 ActivityDriver.ConnectThread thread_Time = new ActivityDriver.ConnectThread(url_time, sendStation, getTime);
                 thread_Time.start();
 
@@ -203,12 +211,15 @@ public class ActivityDriver extends Activity {
                 }
 
 
+                Log.d("Here?", "444444444444");
 
                 //버스의 노선번호와 station 번호를 전달하여, 도착할 정류장으로부터 남은 시간 추출
                 String getGap = "remainGap";
 
                 JSONObject sendStationCurrent = new JSONObject();
                 try {
+                    Log.d("FORE LINE_UP!!!", SettedBus.getFrontBus_place() + "");
+
                     sendStationCurrent.put("routeID" , SettedBus.getBusInfo().getVehicleNumber());
                     sendStationCurrent.put("stationID", SettedBus.getBusInfo().getPath().get( SettedBus.getCurrent_place() + 1).getStationID());
 
@@ -222,6 +233,7 @@ public class ActivityDriver extends Activity {
                 }
 
 
+                Log.d("Here?", "55555555555");
                 ActivityDriver.ConnectThread thread_Gap = new ActivityDriver.ConnectThread(url_time, sendStationCurrent, getGap);
                 thread_Gap.start();
 
@@ -234,9 +246,10 @@ public class ActivityDriver extends Activity {
                 } catch (InterruptedException e){
                     e.printStackTrace();
                 }
+                Log.d("Here?", "6666666666");
 
-                System.out.println("left time is ".concat(String.valueOf(SettedBus.getLeftTime_Current())));
-                if(SettedBus.getLeftTime_Current() < 6) {
+                //System.out.println("left time is ".concat(String.valueOf(SettedBus.getLeftTime_Current())));
+                if(SettedBus.getLeftTime_Current() < 6 ) {
                     //승객의 여부 확인
                     String url_Passenger = "http://stop-bus.tk/driver/stop";
                     String getPassenger = "passengerInfo";
@@ -495,24 +508,71 @@ public class ActivityDriver extends Activity {
                     }else {
                         JSONObject JBody = jsonObject.getJSONObject("body");
 
-                        int predictTime1 = Integer.parseInt(JBody.getString("predictTime1"));
-                        int predictTime2 = Integer.parseInt(JBody.getString("predictTime2"));
+//                        int predictTime1 = Integer.parseInt(JBody.getString("predictTime1"));
+//                        int predictTime2 = Integer.parseInt(JBody.getString("predictTime2"));
+//
+//                        Log.d("FirstBus", JBody.getString("plateNo1").concat(" " + String.valueOf(predictTime1)));
+//                        Log.d("SecondBus", JBody.getString("plateNo2").concat(" " + String.valueOf(predictTime2 - predictTime1)));
 
-                        Log.d("FirstBus", JBody.getString("plateNo1").concat(" " + String.valueOf(predictTime1)));
-                        Log.d("SecondBus", JBody.getString("plateNo2").concat(" " + String.valueOf(predictTime2 - predictTime1)));
+                        int predictTime1 = -1;
+                        int predictTime2 = -2;
 
                         if(version.compareTo("time") == 0) {
+                            if(SettedBus.getFrontBus_place() == -1){
+                                Log.d("ttttttttttt", " 1111111111111");
+                                TextView FrontBus_Time = (TextView) findViewById(R.id.FrontBus_Time);
+                                FrontBus_Time.setText(ModifyString(3,"없음"));
 
-                            TextView FrontBus_Time = (TextView) findViewById(R.id.FrontBus_Time);
-                            SettedBus.setLeftTime1(predictTime1);
-                            FrontBus_Time.setText(ModifyString(3, String.valueOf(SettedBus.getLeftTime1())));
+                                SettedBus.setLeftTime1(-1);
 
-                            TextView BackBus_Time = (TextView) findViewById(R.id.BackBus_Time);
-                            if(predictTime2 - predictTime1 <= 0)
-                                SettedBus.setLeftTime2(0);
-                            else
-                                SettedBus.setLeftTime2(predictTime2 - predictTime1);
-                            BackBus_Time.setText(ModifyString(3, String.valueOf(SettedBus.getLeftTime2())));
+                            }else{
+                                Log.d("ttttttttttt", " 2222222222222");
+
+                                predictTime1 = Integer.parseInt(JBody.getString("predictTime1"));
+                                TextView FrontBus_Time = (TextView) findViewById(R.id.FrontBus_Time);
+                                SettedBus.setLeftTime1(predictTime1);
+                                FrontBus_Time.setText(ModifyString(3, String.valueOf(SettedBus.getLeftTime1())).concat("분"));
+                            }
+
+                            if(SettedBus.getBackBus_place() == -1){
+                                Log.d("ttttttttttt", " 3333333333333");
+
+                                TextView BackBus_Time = (TextView) findViewById(R.id.BackBus_Time);
+                                BackBus_Time.setText(ModifyString(3, "없음"));
+                                SettedBus.setLeftTime1(-1);
+                            }else{
+                                if(SettedBus.getFrontBus_place() == -1){
+                                    Log.d("ttttttttttt", " 444444444444");
+
+                                    predictTime1 = Integer.parseInt(JBody.getString("predictTime1"));
+                                    TextView BackBus_Time = (TextView) findViewById(R.id.BackBus_Time);
+                                    SettedBus.setLeftTime2(predictTime1);
+                                    BackBus_Time.setText(ModifyString(3, String.valueOf(SettedBus.getLeftTime2())).concat("분"));
+                                }else{
+                                    Log.d("ttttttttttt", " 5555555555");
+
+                                    TextView BackBus_Time = (TextView) findViewById(R.id.BackBus_Time);
+                                    if (predictTime2 - predictTime1 <= 0)
+                                        SettedBus.setLeftTime2(0);
+                                    else
+                                        SettedBus.setLeftTime2(predictTime2 - predictTime1);
+                                    BackBus_Time.setText(ModifyString(3, String.valueOf(SettedBus.getLeftTime2())).concat("분"));
+                                }
+
+                            }
+//                            if(SettedBus.getBackBus_place() != -1) {
+//
+//                                TextView FrontBus_Time = (TextView) findViewById(R.id.FrontBus_Time);
+//                                SettedBus.setLeftTime1(predictTime1);
+//                                FrontBus_Time.setText(ModifyString(3, String.valueOf(SettedBus.getLeftTime1())));
+//
+//                                TextView BackBus_Time = (TextView) findViewById(R.id.BackBus_Time);
+//                                if (predictTime2 - predictTime1 <= 0)
+//                                    SettedBus.setLeftTime2(0);
+//                                else
+//                                    SettedBus.setLeftTime2(predictTime2 - predictTime1);
+//                                BackBus_Time.setText(ModifyString(3, String.valueOf(SettedBus.getLeftTime2())));
+//                            }
 
                         }else if(version.compareTo("gap") == 0){
                             String b_getOff = loadScore();
@@ -681,6 +741,8 @@ public class ActivityDriver extends Activity {
                 FrontBus_String = SettedBus.getBusInfo().getPath().get(SettedBus.getFrontBus_place()).getStationName();
             }catch(Exception e){
                 FrontBus_String = "정보없음";
+                TextView FrontBus_Time = (TextView) findViewById(R.id.FrontBus_Time);
+                SettedBus.setLeftTime1(0);
             }
             FrontBus_Text.setText(ModifyString(1, FrontBus_String));
 
@@ -696,6 +758,7 @@ public class ActivityDriver extends Activity {
                 BackBus_String = SettedBus.getBusInfo().getPath().get(SettedBus.getBackBus_place()).getStationName();
             }catch(Exception e){
                 BackBus_String = "정보없음";
+
             }
             BackBus_Text.setText(ModifyString(2,BackBus_String));
 
@@ -780,7 +843,7 @@ public class ActivityDriver extends Activity {
             if(raw_text.length() <2 ) {
                 raw_text = "0".concat(raw_text);
             }
-            return raw_text.concat("분");
+            return raw_text;
         }
         else{
             return raw_text;
